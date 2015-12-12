@@ -140,6 +140,15 @@ function RandomChars($length = 4, $alpha = FALSE) {
 	return join($buf, '');
 }
 
+// 基於給定字符集構建數據庫鏈接
+function StorageConnect($host, $user, $pwd, $name, $charset) {
+	$mysql = mysqli_connect($host, $user, $pwd) or die('Could not connect: ' . mysqli_error($mysql));
+	mysqli_select_db($mysql, $name) or die('Permission denied for the database ' . $name);
+	mysqli_query($mysql, 'SET NAMES ' . $charset);
+
+	return $mysql;
+}
+
 // 將給定的數據數組添加到給定的數據表並且返回當前ID
 function StorageAdd($schema, $data = array()) {
 	global $mysql;
