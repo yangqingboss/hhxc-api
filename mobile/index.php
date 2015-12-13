@@ -16,4 +16,5 @@ define('API_VERSION', '1.8.0');
 require_once(API_ROOT . DIRECTORY_SEPARATOR . 'config.mobile.php');
 require_once(API_ROOT . DIRECTORY_SEPARATOR . 'common.php');
 
-
+?>
+<
