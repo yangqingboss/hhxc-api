@@ -5,7 +5,7 @@
 //
 // 好好修車手機網頁版 公共頁面模塊
 //
-// @authors hjboss <hongjiangproject@yahoo.com> 2015-12-10#
+// @authors hjboss <hongjiangproject@yahoo.com> 2015-12-12#
 // @version 1.0.0
 // @package hhxc
 define('HHXC',        TRUE);
@@ -15,4 +15,5 @@ define('API_VERSION', '1.8.0');
 
 require_once(API_ROOT . DIRECTORY_SEPARATOR . 'config.mobile.php');
 require_once(API_ROOT . DIRECTORY_SEPARATOR . 'common.php');
-?>
+
+
