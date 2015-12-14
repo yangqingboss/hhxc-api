@@ -111,7 +111,7 @@ function UnitTest($apicode, $request = array()) {
 		print_r($result);
 	} else {
 		echo "JSON ERROR: " . json_last_error();
-		print_r($response);
+		var_dump($response);
 	}
 }
 
@@ -316,6 +316,30 @@ function StorageQuery($schema, $fields = '*', $filter = '', $str = '') {
 	return FALSE;
 }
 
+// 基於給定的過濾條件查詢第一條數據
+function StorageQueryOne($schema, $fields = '*', $filter = '', $str = '') {
+	global $mysql;
+
+	$sql = "SELECT" . StorageFields($fields) . "FROM " . StorageSchema($schema) . StorageWhere($filter);
+	if (empty($str) == FALSE) $sql .= " {$str}";
+
+	$res = mysqli_query($mysql, $sql);
+	if ($res) {
+		while ($row = mysqli_fetch_array($res)) {
+			foreach ($row as $key => $val) {
+				$row[$key] = Charset($val, DB_CHARSET, CL_CHARSET);
+			}
+
+			return $row;
+		}
+
+		return array();
+	}
+
+	if (DEBUG) die(StorageError(__FUNCTION__, $sql));
+	return FALSE;
+}
+
 // 基於給定的過濾條件分頁查詢數據
 function StoragePage($schema, $fields = '*', $filter = '', $page = 1, $limit = 25, $str = '') {
 	global $mysql;
@@ -354,7 +378,6 @@ function StorageQueryByID($schema, $id, $fields = '*') {
 
 	$sql = "SELECT" . StorageFields($fields) . "FROM " . StorageSchema($schema) . StorageWhere(array('id' => $id));
 	if (empty($str) == FALSE) $sql .= " {$str}";
-
 	$res = mysqli_query($mysql, $sql);
 	if ($res) {
 		while ($row = mysqli_fetch_array($res)) {
@@ -376,12 +399,12 @@ function StorageQueryByID($schema, $id, $fields = '*') {
 function StorageCount($schema, $filter = '') {
 	global $mysql;
 
-	$sql = "SELECT COUNT(*) AS ct FROM " . StorageSchema($schema) . StorageWhere($filter);
+	$sql = "SELECT COUNT(*) AS h_ct FROM " . StorageSchema($schema) . StorageWhere($filter);
 	$res = mysqli_query($mysql, $sql);
 
 	if ($res) {
 		while ($row = mysqli_fetch_array($res)) {
-			return intval($row['ct']);
+			return intval($row['h_ct']);
 		}
 
 		return 0;

@@ -10,12 +10,12 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
-$data = array(
+$record = array(
 	'deviceid'  => Assign($params['deviceid']),
 	'type'      => strtoupper(Assign($params['device'])),
 	'createdat' => 'NOW()',
 );
 
-if (StorageAdd('hh_device', $data)) {
+if (StorageAdd('hh_device', $record)) {
 	$result = array('code' => '101', 'msg' => MESSAGE_SUCCESS);
 }
