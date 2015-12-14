@@ -56,14 +56,14 @@ $pictures = array(
 		<div class="row">
 			<div class="col-xs-6 col-sm-6" style="text-align:right">
 				<a href="http://www.haohaoxiuche.com/download/hhxcjsb.apk">
-					<img src="<?php $url_mobile;?>/images/anzapp.png" 
+					<img src="<?php echo $url_mobile;?>/images/anzapp.png" 
 						style="max-width:200px;width:100%"
 					/>
 				</a>
 			</div>
 			<div class="col-xs-6 col-sm-6" style="text-align:left">
 				<a href="https://appsto.re/hk/pzy-9.i">
-					<img src="<?php $url_mobile;?>/images/appios.png" 
+					<img src="<?php echo $url_mobile;?>/images/appios.png" 
 						style="max-width:200px;width:100%" 
 					/>
 				</a>
@@ -77,7 +77,7 @@ $pictures = array(
 		<div class="row">
 			<div class="col-xs-6 col-sm-6" style="text-align:center">
 				<a href="">
-					<img src="<?php $url_mobile;?>/images/fenxi.png" 
+					<img src="<?php echo $url_mobile;?>/images/fenxi.png" 
 						style="max-width:100px;width:100%;" 
 					/>
 				</a>
@@ -86,7 +86,7 @@ $pictures = array(
 			</div>
 			<div class="col-xs-6 col-sm-6" style="text-align:center">
 				<a href="">
-					<img src="<?php $url_mobile;?>/images/anli.png" 
+					<img src="<?php echo $url_mobile;?>/images/anli.png" 
 						style="max-width:100px;width:100%;" 
 					/>
 				</a>
@@ -95,7 +95,7 @@ $pictures = array(
 			</div>
 			<div class="col-xs-6 col-sm-6" style="text-align:center">
 				<a href="">
-					<img src="<?php $url_mobile;?>/images/guzhang.png" 
+					<img src="<?php echo $url_mobile;?>/images/guzhang.png" 
 						style="max-width:100px;width:100%" 
 					/>
 				</a>
@@ -104,7 +104,7 @@ $pictures = array(
 			</div>
 			<div class="col-xs-6 col-sm-6" style="text-align:center">
 				<a href="">
-					<img src="<?php $url_mobile;?>/images/peidui.png" 
+					<img src="<?php echo $url_mobile;?>/images/peidui.png" 
 						style="max-width:100px;width:100%" 
 					/>
 				</a>
@@ -118,7 +118,7 @@ $pictures = array(
 	<h4>最新消息</h4>
 	<?php foreach ($news_list as $number => $news): ?>
 	<div class="h-news-item">
-		<img src="<?php $url_mobile;?>/images/news.png" style="width: 36px" />
+		<img src="<?php echo $url_mobile;?>/images/news.png" style="width: 36px" />
 		<span>
 			<a href="index.php/content?id=<?php echo $news['id'];?>"><h5><?php echo $news['title'];?></h5></a>
 			<span class="h-date"><?php echo $news['date'];?></span>

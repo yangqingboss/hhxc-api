@@ -8,6 +8,7 @@
 // @authors hjboss <hongjiangproject@yahoo.com> 2015-12-14#
 // @version 1.0.0
 // @package hhxc
+$mysql = StorageConnect(DB_HOST, DB_USER, DB_PWD, DB_NAME, DB_CHARSET);
 $news = StorageQueryByID('news', $_REQUEST['id']);
 $content = str_replace('/ueditor/php/upload', 'http://goviewtech.com/ueditor/php/upload', $news['content']);
 echo <<<EOD

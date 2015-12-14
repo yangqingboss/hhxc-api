@@ -35,14 +35,14 @@
 	</p>
 	<div class="container-fluid h-picture">
 		<div class="row">
-			<div class="col-xs-6 col-sm-6"><img src="<?php $url_mobile;?>/images/jies1.jpg" /></div>
-			<div class="col-xs-6 col-sm-6"><img src="<?php $url_mobile;?>/images/jies2.jpg" /></div>
-			<div class="col-xs-6 col-sm-6"><img src="<?php $url_mobile;?>/images/jies3.jpg" /></div>
-			<div class="col-xs-6 col-sm-6"><img src="<?php $url_mobile;?>/images/jies4.jpg" /></div>
-			<div class="col-xs-6 col-sm-6"><img src="<?php $url_mobile;?>/images/jies5.jpg" /></div>
-			<div class="col-xs-6 col-sm-6"><img src="<?php $url_mobile;?>/images/jies6.jpg" /></div>
-			<div class="col-xs-6 col-sm-6"><img src="<?php $url_mobile;?>/images/jies7.jpg" /></div>
-			<div class="col-xs-6 col-sm-6"><img src="<?php $url_mobile;?>/images/jies8.jpg" /></div>
+			<div class="col-xs-6 col-sm-6"><img src="<?php echo $url_mobile;?>/images/jies1.jpg" /></div>
+			<div class="col-xs-6 col-sm-6"><img src="<?php echo $url_mobile;?>/images/jies2.jpg" /></div>
+			<div class="col-xs-6 col-sm-6"><img src="<?php echo $url_mobile;?>/images/jies3.jpg" /></div>
+			<div class="col-xs-6 col-sm-6"><img src="<?php echo $url_mobile;?>/images/jies4.jpg" /></div>
+			<div class="col-xs-6 col-sm-6"><img src="<?php echo $url_mobile;?>/images/jies5.jpg" /></div>
+			<div class="col-xs-6 col-sm-6"><img src="<?php echo $url_mobile;?>/images/jies6.jpg" /></div>
+			<div class="col-xs-6 col-sm-6"><img src="<?php echo $url_mobile;?>/images/jies7.jpg" /></div>
+			<div class="col-xs-6 col-sm-6"><img src="<?php echo $url_mobile;?>/images/jies8.jpg" /></div>
 		</div>
 	</div>
 </div>
