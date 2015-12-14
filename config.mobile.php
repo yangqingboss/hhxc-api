@@ -11,10 +11,10 @@
 if (!defined('HHXC')) die('Permission denied');
 
 define('DEBUG',      FALSE);
-define('DB_HOST',    '127.0.0.1');
+define('DB_HOST',    '120.24.163.194');
 define('DB_NAME',    'goview');
 define('DB_NAME_S',  'goview1');
-define('DB_USER',    'root');
+define('DB_USER',    'admin');
 define('DB_PWD',     'goodluck123@');
 define('DB_CHARSET', 'GB2312');
 define('CL_CHARSET', 'UTF-8');

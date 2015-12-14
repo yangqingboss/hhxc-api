@@ -30,11 +30,11 @@ $pictures = array(
 		<?php endforeach; ?>
 	</ol>
 	<div class="carousel-inner" role="listbox">
-		<?php foreach ($pictutres as $number => $picture): ?>
+		<?php foreach ($pictures as $number => $picture): ?>
 		<div class="item <?php if ($number == 0) echo 'active';?>">
-			<a href="<?php echo $picture['href'];?>" target="_block">
-				<img src="<?php echo $picture['src'];?>" alt="<?php echo $picture['title'];?>"
-					style="width: 100%"
+			<a href="<?php echo $url_mobile . '/' . $picture['href'];?>" target="_block">
+				<img src="<?php echo $url_mobile . '/' . $picture['src'];?>" 
+					alt="<?php echo $picture['title'];?>" style="width: 100%"
 				/>
 			</a>
 			<div class="carousel-caption"><?php echo $picture['title'];?></div>
@@ -56,12 +56,16 @@ $pictures = array(
 		<div class="row">
 			<div class="col-xs-6 col-sm-6" style="text-align:right">
 				<a href="http://www.haohaoxiuche.com/download/hhxcjsb.apk">
-					<img src="images/anzapp.png" style="max-width:200px;width:100%" />
+					<img src="<?php $url_mobile;?>/images/anzapp.png" 
+						style="max-width:200px;width:100%"
+					/>
 				</a>
 			</div>
 			<div class="col-xs-6 col-sm-6" style="text-align:left">
 				<a href="https://appsto.re/hk/pzy-9.i">
-					<img src="images/appios.png" style="max-width:200px;width:100%" />
+					<img src="<?php $url_mobile;?>/images/appios.png" 
+						style="max-width:200px;width:100%" 
+					/>
 				</a>
 			</div>
 		</div>
@@ -73,28 +77,36 @@ $pictures = array(
 		<div class="row">
 			<div class="col-xs-6 col-sm-6" style="text-align:center">
 				<a href="">
-					<img src="./images/fenxi.png" style="max-width:100px;width:100%;" />
+					<img src="<?php $url_mobile;?>/images/fenxi.png" 
+						style="max-width:100px;width:100%;" 
+					/>
 				</a>
 				<h4 class="h-title">故障分析</h5>
 				<p class="h-first">尽可能多的分析故障可能性</p>
 			</div>
 			<div class="col-xs-6 col-sm-6" style="text-align:center">
 				<a href="">
-					<img src="./images/anli.png" style="max-width:100px;width:100%;" />
+					<img src="<?php $url_mobile;?>/images/anli.png" 
+						style="max-width:100px;width:100%;" 
+					/>
 				</a>
 				<h4 class="h-title">汽修案例</h4>
 				<p class="h-first">互联网修车案例都在这里</p>
 			</div>
 			<div class="col-xs-6 col-sm-6" style="text-align:center">
 				<a href="">
-					<img src="images/guzhang.png" style="max-width:100px;width:100%" />
+					<img src="<?php $url_mobile;?>/images/guzhang.png" 
+						style="max-width:100px;width:100%" 
+					/>
 				</a>
 				<h4 class="h-title">查询故码</h4>
 				<p>详尽描述和最佳解决办法</p>
 			</div>
 			<div class="col-xs-6 col-sm-6" style="text-align:center">
 				<a href="">
-					<img src="images/peidui.png" style="max-width:100px;width:100%" />
+					<img src="<?php $url_mobile;?>/images/peidui.png" 
+						style="max-width:100px;width:100%" 
+					/>
 				</a>
 				<h4 class="h-title">匹配正时</h4>
 				<p>各种修车实用手册和工具</p>
@@ -106,9 +118,9 @@ $pictures = array(
 	<h4>最新消息</h4>
 	<?php foreach ($news_list as $number => $news): ?>
 	<div class="h-news-item">
-		<img src="images/news.png" style="width: 36px" />
+		<img src="<?php $url_mobile;?>/images/news.png" style="width: 36px" />
 		<span>
-			<a href="content.php?id=<?php echo $news['id'];?>"><h5><?php echo $news['title'];?></h5></a>
+			<a href="index.php/content?id=<?php echo $news['id'];?>"><h5><?php echo $news['title'];?></h5></a>
 			<span class="h-date"><?php echo $news['date'];?></span>
 		</span>
 	</div>
