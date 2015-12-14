@@ -53,7 +53,7 @@ if (DEBUG == FALSE) {
 }
 
 ## 加載相對應API接口腳本
-$script = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'api-' . substr(strval($params['code'] + 1000), 1, 3) . '.php';
+$script = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'API' . substr(strval($params['code'] + 1000), 1, 3) . '.php';
 if (file_exists($script) == FALSE) {
 	die('Permission denied for the APIs');
 } else {

@@ -23,7 +23,7 @@ define('SMS_ACTION_PASSWORD', '您的密码验证码：');
 define('MESSAGE_SUCCESS',     '提交成功！');
 define('MESSAGE_ERROR',       '提交失败！');
 
-$GLOBALS['DB_KEYWORDS'] = array('NOW', 'SUM', 'DATE', 'COUNT', 'MIN', 'MAX', 'HOUR', 'MINUTE', 'MONTH');
+$GLOBALS['DB_KEYWORDS'] = array('NOW', 'SUM', 'DATE', 'COUNT', 'MIN', 'MAX', 'HOUR', 'MINUTE', 'MONTH', '(');
 
 /**************************************** 公共函數 ****************************************/
 // 若參數是空值則返回給定的默認值
@@ -106,7 +106,13 @@ function UnitTest($apicode, $request = array()) {
 	echo "Request: ";
 	print_r($request);
 	echo "Response: ";
-	print_r(json_decode($response, TRUE));
+	$result = json_decode($response, TRUE);
+	if ($result) {
+		print_r($result);
+	} else {
+		echo "JSON ERROR: " . json_last_error();
+		print_r($response);
+	}
 }
 
 // 短信發送網絡服務
