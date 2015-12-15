@@ -22,8 +22,14 @@ define('SMS_ACTION_BANDINGS', '您的手机绑定验证码：');
 define('SMS_ACTION_PASSWORD', '您的密码验证码：');
 define('MESSAGE_SUCCESS',     '提交成功！');
 define('MESSAGE_ERROR',       '提交失败！');
+define('MESSAGE_WARING',      '验证失败！');
+define('MESSAGE_EMPTY',       '无数据！');
 
 $GLOBALS['DB_KEYWORDS'] = array('NOW', 'SUM', 'DATE', 'COUNT', 'MIN', 'MAX', 'HOUR', 'MINUTE', 'MONTH', '(');
+$GLOBALS['DB_SYMBOLS']  = array(
+	'EQ' => '=', 'NEQ' => '<>', 'GT'   => '>',      'EGT'      => '>=', 
+	'LT' => '<', 'ELT' => '<=', 'LIKE' => ' LIKE ', 'NOT LIKE' => ' NOT LIKE ', 
+);
 
 /**************************************** 公共函數 ****************************************/
 // 若參數是空值則返回給定的默認值
@@ -38,17 +44,29 @@ function SubString($str, $start = 0, $length = 1000000) {
 
 // 將字典數組編譯成JSON字符串
 function JsonEncode($object = array()) {
-	$buf = is_array($object) ? $object : array();
+	$buf = urldecode(json_encode(json_unicode($object)));
+	$buf = str_replace("\r\n", "\\n", $buf);
+	$buf = str_replace("\n",   "\\n", $buf);
 
-	foreach ($buf as $key => $val) {
-		$buf[urlencode($key)] = urlencode(str_replace('"', '\"', $val));
+	return $buf;
+}
+
+function json_unicode($object) {
+	if (is_array($object) == TRUE) {
+		$buf = array();
+
+		foreach ($object as $key => $val) {
+			if (is_array($val) == TRUE) {
+				$buf[urlencode($key)] = json_unicode($val);
+			} else {
+				$buf[urlencode($key)] =  urlencode(str_replace('"', '\"', $val));
+			}
+		}
+
+		return $buf;
 	}
 
-	$res = urldecode(json_encode($buf));
-	$res = str_replace("\r\n", "\\n", $res);
-	$res = str_replace("\n",   "\\n", $res);
-
-	return $res;
+	return urlencode(str_replace('"', '\"', $object));
 }
 
 // 基於GET方式發送HTTP請求
@@ -167,12 +185,9 @@ function StorageAdd($schema, $data = array()) {
 		if (is_null($val)) continue;
 
 		$fields[] = "`{$key}`"; $invalid = TRUE;
-		foreach ($GLOBALS['DB_KEYWORDS'] as $word) {
-			if (strpos($val, $word) === 0) {
-				$values[] = $val;
-				$invalid = FALSE;
-				break;
-			}
+		if (IsStorageExpress($val) == TRUE) {
+			$values[] = $val;
+			$invalid  = FALSE;
 		}
 
 		if ($invalid) {
@@ -243,12 +258,9 @@ function StorageEdit($schema, $fields, $filter) {
 			continue;
 		}
 
-		foreach ($DB_KEYWORDS as $word) {
-			if (strpos($val, $word) === 0) {
-				$values[] = $val;
-				$invalid = FALSE;
-				break;
-			}
+		if (IsStorageExpress($val) == TRUE) {
+			$values[] = $val;
+			$invalid  = FALSE;
 		}
 
 		if ($invalid) {
@@ -489,88 +501,51 @@ function StorageWhere($filter, $default = array()) {
 function StorageWhereSimple($key, $args = array()) {
 	global $mysql;
 
-	$str = "`{$key}`";
-	$buf = Charset($args[1], CL_CHARSET, DB_CHARSET);
+	foreach ($GLOBALS['DB_SYMBOLS'] as $key => $val) {
+		if (strtoupper($args[0]) == $key) {
+			$str = array("`{$key}`{$val}");
 
-	switch (strtoupper($args[0])) {
-	case 'EQ':
-		$str .= "='" . mysqli_real_escape_string($mysql, $buf) . "'";
-		break;
+			if (IsStorageExpress(Assign($args[1])) == TRUE) {
+				$str[] = $args[1];
+			} else {
+				$buf   = Charset($args[1], CL_CHARSET, DB_CHARSET);
+				$str[] = "'" . mysqli_real_escape_string($mysql, $buf) . "'";
+			}
 
-	case 'NEQ':
-		$str .= "<>'" . mysqli_real_escape_string($mysql, $buf) . "'";
-		break;
+			return join($str, '');
+		}
+	}
 
-	case 'GT':
-		$str .= ">'" . mysqli_real_escape_string($mysql, $buf) . "'";
-		break;
-
-	case 'EGT':
-		$str .= ">='" . mysqli_real_escape_string($mysql, $buf) . "'";
-		break;
-
-	case 'LT':
-		$str .= "<'" . mysqli_real_escape_string($mysql, $buf) . "'";
-		break;
-
-	case 'ELT':
-		$str .= "<='" . mysqli_real_escape_string($mysql, $buf) . "'";
-		break;
-
-	case 'LIKE':
-		$str .= " LIKE '" . mysqli_real_escape_string($mysql, $buf) . "'";
-		break;
-
-	case 'NOT LIKE':
-		$str .= " NOT LIKE '" . mysqli_real_escape_string($mysql, $buf) . "'";
-		break;
-
+	switch strtoupper($args[1]) {
 	case 'BETWEEN':
 		if (is_array($args[1]) == FALSE) die('StorageWhereSimple Error: BETWEEN Not Array');
 
-		$buffer = array();
-		foreach ($args[1] as $num => $val) {
-			$buffer[] = vsprintf("'%s'", mysqli_real_escape_string($mysql, (string)$val));
+		$buf = array();
+		foreach ($args[1] as $index => $row) {
+			if (
 		}
-
-		$str .= ' BETWEEN ' . join($buffer, ' AND ');
-		break;
-
 	case 'NOT BETWEEN':
-		if (is_array($args[1]) == FALSE) die('StorageWhereSimple Error: NOT BETWEEN Not Array');
-
-		$buffer = array();
-		foreach ($args[1] as $num => $val) {
-			$buffer[] = vsprintf("'%s'", mysqli_real_escape_string($mysql, (string)$val));
-		}
-
-		$str .= ' NOT BETWEEN ' . join($buffer, ' AND ');
-		break;
-
 	case 'IN':
-		if (is_array($args[1]) == FALSE) die('StorageWhereSimple Error: NOT BETWEEN Not Array');
-
-		$buffer = array();
-		foreach ($args[1] as $num => $val) {
-			$buffer[] = vsprintf("'%s'", mysqli_real_escape_string($mysql, (string)$val));
-		}
-
-		$str .= ' IN (' . join($buffer, ', ') . ')';
-		break;
-
 	case 'NOT IN':
-		if (is_array($args[1]) == FALSE) die('StorageWhereSimple Error: NOT BETWEEN Not Array');
-
-		$buffer = array();
-		foreach ($args[1] as $num => $val) {
-			$buffer[] = vsprintf("'%s'", mysqli_real_escape_string($mysql, (string)$val));
-		}
-
-		$str .= ' NOT IN (' . join($buffer, ', ') . ')';
-		break;
 	}
 
-	return $str;
+	return '';
+}
+
+function IsStorageExpress($express) {
+	foreach ($GLOBALS['DB_KEYWORDS'] as $word) {
+		if (strpos($express, $word) === 0) {
+			return TRUE;
+		}
+	}
+
+	for ($index = 0; $index <= 9; $index++) {
+		if (strpos($express, "t{$index}.") === 0) {
+			return TRUE;
+		}
+	}
+
+	return False;
 }
 
 function StorageSchema($schema) {
