@@ -111,7 +111,7 @@ function UnitTest($apicode, $request = array()) {
 		print_r($result);
 	} else {
 		echo "JSON ERROR: " . json_last_error();
-		var_dump($response);
+		print_r($response);
 	}
 }
 
@@ -164,9 +164,9 @@ function StorageAdd($schema, $data = array()) {
 
 	$fields = $values = array();
 	foreach ($data as $key => $val) {
-		$fields[] = "`{$key}`";
+		if (is_null($val)) continue;
 
-		$invalid = TRUE;
+		$fields[] = "`{$key}`"; $invalid = TRUE;
 		foreach ($GLOBALS['DB_KEYWORDS'] as $word) {
 			if (strpos($val, $word) === 0) {
 				$values[] = $val;
@@ -291,49 +291,47 @@ function StorageEditByID($schema, $fields, $id) {
 }
 
 // 基於給定的過濾條件查詢數據
-function StorageQuery($schema, $fields = '*', $filter = '', $str = '') {
-	global $mysql;
+function StorageFind($condition = array()) {
+	return StorageQuery($condition['schema'], $condition['fields'], $condition['filter'], $condition['others']);
+}
 
-	$sql = "SELECT" . StorageFields($fields) . "FROM " . StorageSchema($schema) . StorageWhere($filter);
-	if (empty($str) == FALSE) $sql .= " {$str}";
+// 基於給定的過濾條件查詢第一條數據
+function StorageFindOne($condition = array()) {
+	$condition['others'] = Assign($condition['others']) . ' LIMIT 1';
+	$recordset = StorageFind($condition);
 
-	$res = mysqli_query($mysql, $sql);
-	if ($res) {
-		$data = array();
-
-		while ($row = mysqli_fetch_array($res)) {
-			foreach ($row as $key => $val) {
-				$row[$key] = Charset($val, DB_CHARSET, CL_CHARSET);
-			}
-
-			$data[] = $row;
-		}
-
-		return $data;
+	if (is_array($recordset) and empty($recordset) == FALSE) {
+		return $recordset[0];
 	}
 
 	if (DEBUG) die(StorageError(__FUNCTION__, $sql));
 	return FALSE;
 }
 
-// 基於給定的過濾條件查詢第一條數據
-function StorageQueryOne($schema, $fields = '*', $filter = '', $str = '') {
+// 基於給定的過濾條件查詢數據
+function StorageQuery($schema, $fields = '*', $filter = '', $str = '') {
 	global $mysql;
 
 	$sql = "SELECT" . StorageFields($fields) . "FROM " . StorageSchema($schema) . StorageWhere($filter);
 	if (empty($str) == FALSE) $sql .= " {$str}";
-
+	
 	$res = mysqli_query($mysql, $sql);
 	if ($res) {
+		$data = array();
+
 		while ($row = mysqli_fetch_array($res)) {
 			foreach ($row as $key => $val) {
-				$row[$key] = Charset($val, DB_CHARSET, CL_CHARSET);
+				if (is_string($val) == FALSE) {
+					$row[$key] = $val;
+				} else {
+					$row[$key] = Charset($val, DB_CHARSET, CL_CHARSET);
+				}
 			}
 
-			return $row;
+			$data[] = $row;
 		}
 
-		return array();
+		return $data;
 	}
 
 	if (DEBUG) die(StorageError(__FUNCTION__, $sql));
@@ -359,7 +357,11 @@ function StoragePage($schema, $fields = '*', $filter = '', $page = 1, $limit = 2
 
 		while ($row = mysqli_fetch_array($res)) {
 			foreach ($row as $key => $val) {
-				$row[$key] = Charset($val, DB_CHARSET, CL_CHARSET);
+				if (is_string($val) == FALSE) {
+					$row[$key] = $val;
+				} else {
+					$row[$key] = Charset($val, DB_CHARSET, CL_CHARSET);
+				}
 			}
 
 			$data[] = $row;
@@ -587,10 +589,10 @@ function StorageSchema($schema) {
 }
 
 function StorageFields($fields = '*') {
-	if (empty($fields) or $fields = '*') return ' * ';
+	if (empty($fields) or $fields == '*') return ' * ';
 
 	if (is_array($fields) == FALSE) die('StorageField Error: Fields Not String or Array');
-
+	
 	return ' ' . join($fields, ', ') . ' ';
 }
 
