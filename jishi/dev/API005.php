@@ -11,7 +11,7 @@
 if (!defined('HHXC')) die('Permission denied');
 
 if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
-	$result['msg'] = MESSAGE_WARING;
+	$result['msg'] = MESSAGE_WARNING;
 } else {
 	$num = 0;
 

@@ -11,7 +11,7 @@
 if (!defined('HHXC')) die('Permission denied');
 
 if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
-	$result['msg'] = MESSAGE_WARING;
+	$result['msg'] = MESSAGE_WARNING;
 } else {
 	$fields = array('lockby' => 0, 'locktime' => 'NOW()', 'zhuangtai' => 0);
 	$filter = array(

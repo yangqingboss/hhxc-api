@@ -22,7 +22,7 @@ define('SMS_ACTION_BANDINGS', '您的手机绑定验证码：');
 define('SMS_ACTION_PASSWORD', '您的密码验证码：');
 define('MESSAGE_SUCCESS',     '提交成功！');
 define('MESSAGE_ERROR',       '提交失败！');
-define('MESSAGE_WARING',      '验证失败！');
+define('MESSAGE_WARNING',     '验证失败！');
 define('MESSAGE_EMPTY',       '无数据！');
 
 $GLOBALS['DB_KEYWORDS'] = array('NOW', 'SUM', 'DATE', 'COUNT', 'MIN', 'MAX', 'HOUR', 'MINUTE', 'MONTH', '(');
@@ -264,7 +264,11 @@ function StorageEditByID($schema, $fields, $id) {
 
 	$values = array();
 	foreach ($fields as $key => $val) {
-		$values[] = "`{$key}`='" . mysqli_real_escape_string($mysql, $val) . "'";
+		if (strpos($val, $key) === 0) {
+			$values[] = "`{$key}`={$val}";
+		} else {
+			$values[] = "`{$key}`=" . StorageExpress($val);
+		}
 	}
 	$sql = "UPDATE `{$schema}` SET " . join($values, ',') . StorageWhere(array('id' => $id));
 	$res = mysqli_query($mysql, $sql);

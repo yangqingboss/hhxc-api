@@ -3,7 +3,7 @@
 // Use of this source that is governed by a Apache-style
 // license that can be found in the LICENSE file.
 //
-// 技術版API編號006 獲取汽修人主題詳細信息
+// 技術版API編號012 獲取汽修人主題詳細信息
 //
 // @authors hjboss <hongjiangproject@yahoo.com> 2015-12-16#
 // @version 1.0.0
@@ -28,6 +28,18 @@ if (empty(Assign($params['tid'])) == FALSE) {
 	if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 		$result['msg'] = MESSAGE_EMPTY;
 	} else {
+		$result = array('code' => '101', 'data' => array());
+
+		foreach ($recordset as $index => $row) {
+			$recordset['data'][] = array(
+				'uid'      => $row['pubuser'],
+				'userpic'  => $row['h_headerimg'],
+				'usernick' => $row['h_nick'],
+				'posttime' => $row['pubtime'],
+				'content'  => $row['content'],
+				'index'    => $row['no'],
+			);
+		}
 	}
 }
 
