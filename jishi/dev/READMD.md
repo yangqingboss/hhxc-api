@@ -1,3 +1,4 @@
-## 2015-12-15
-* API001 已實現+已測試
-* API002 已實現+已測試
+# 數據庫詳細信息
+
+## 2015-12-17
+alter table hh_techuser modify column percent float(5, 2);

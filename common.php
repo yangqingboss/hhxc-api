@@ -24,6 +24,7 @@ define('MESSAGE_SUCCESS',     '提交成功！');
 define('MESSAGE_ERROR',       '提交失败！');
 define('MESSAGE_WARNING',     '验证失败！');
 define('MESSAGE_EMPTY',       '无数据！');
+define('KEY_PHONE',           'phone_d'); ## 兼容舊版API所新添的未加密手機號碼
 
 $GLOBALS['DB_KEYWORDS'] = array('NOW', 'SUM', 'DATE', 'COUNT', 'MIN', 'MAX', 'HOUR', 'MINUTE', 'MONTH', '(');
 $GLOBALS['DB_SYMBOLS']  = array(
@@ -586,5 +587,10 @@ function Charset($str, $from, $to) {
 	}
 
 	return mb_convert_encoding($str, $to, $from);
+}
+
+## 構建邀請碼字符串
+function WithCode($username, $id, $others = '') {
+	return substr(strtoupper(md5($username . $id . $others)), 0, 6);
 }
 
