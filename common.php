@@ -52,21 +52,15 @@ function JsonEncode($object = array()) {
 }
 
 function json_unicode($object) {
-	if (is_array($object) == TRUE) {
-		$buf = array();
-
+	if (is_array($object) == FALSE) {
+		$object = urlencode(str_replace('"', '\"', $object));
+	} else {
 		foreach ($object as $key => $val) {
-			if (is_array($val) == TRUE) {
-				$buf[urlencode($key)] = json_unicode($val);
-			} else {
-				$buf[urlencode($key)] =  urlencode(str_replace('"', '\"', $val));
-			}
+			$object[urlencode($key)] = json_unicode($val);
 		}
-
-		return $buf;
 	}
 
-	return urlencode(str_replace('"', '\"', $object));
+	return $object;
 }
 
 // 基於GET方式發送HTTP請求
@@ -118,7 +112,7 @@ function UnitTest($apicode, $request = array()) {
 	if (strpos($script, 'http') === 0) {
 		$response = HttpPost($script, array('data' => $params));
 	} else {
-		$response = exec(sprintf("/usr/bin/php %s '%s'", $script, $params));
+		$response = shell_exec(sprintf("/usr/bin/php %s '%s'", $script, $params));
 	}
 
 	echo "Request: ";
@@ -128,7 +122,6 @@ function UnitTest($apicode, $request = array()) {
 	if ($result) {
 		print_r($result);
 	} else {
-		echo "JSON ERROR: " . json_last_error();
 		print_r($response);
 	}
 }
@@ -184,19 +177,11 @@ function StorageAdd($schema, $data = array()) {
 	foreach ($data as $key => $val) {
 		if (is_null($val)) continue;
 
-		$fields[] = "`{$key}`"; $invalid = TRUE;
-		if (IsStorageExpress($val) == TRUE) {
-			$values[] = $val;
-			$invalid  = FALSE;
-		}
-
-		if ($invalid) {
-			$buf = Charset($val, CL_CHARSET, DB_CHARSET);
-			$values[] = "'" . mysqli_real_escape_string($mysql, $buf) . "'";
-		}
+		$fields[] = "`{$key}`";
+		$values[] = StorageExpress($val);
 	}
 
-	$sql = "INSERT INTO `{$schema}` (" . join($fields, ',') . ') VALUES (' . join($values, ',') . ')';
+	$sql = "INSERT INTO `{$schema}` (" . join($fields, ', ') . ') VALUES (' . join($values, ', ') . ')';
 	$res = mysqli_query($mysql, $sql);
 
 	if ($res) {
@@ -245,30 +230,20 @@ function StorageDelByID($schema, $id) {
 function StorageEdit($schema, $fields, $filter) {
 	global $mysql;
 
-	if (is_array($fields) == FALSE) die('StorageEdit Error: Field Not Array');
+	if (is_array($fields) == FALSE) die('StorageEdit Error: Fields Not Array');
 	if (empty($fields)) die('StorageEdit Error: Fields Empty Array');
 	if (empty($filter)) die('StorageEdit Error: Filter String Empty');
 
 	$values = array();
 	foreach ($fields as $key => $val) {
-		$invalid = TRUE;
-
 		if (strpos($val, $key) === 0) {
-			$values[] = $val;
-			continue;
-		}
-
-		if (IsStorageExpress($val) == TRUE) {
-			$values[] = $val;
-			$invalid  = FALSE;
-		}
-
-		if ($invalid) {
-			$buf = Charset($val, CL_CHARSET, DB_CHARSET);
-			$values[] = "`{$key}`='" . mysqli_real_escape_string($mysql, $val) . "'";
+			$values[] = "`{$key}`={$val}";
+		} else {
+			$values[] = "`{$key}`=" . StorageExpress($val);
 		}
 	}
-	$sql = "UPDATE `{$schema}` SET " . join($values, ',') . StorageWhere($filter);
+	
+	$sql = "UPDATE `{$schema}` SET " . join($values, ', ') . StorageWhere($filter);
 	$res = mysqli_query($mysql, $sql);
 
 	if ($res) {
@@ -303,30 +278,37 @@ function StorageEditByID($schema, $fields, $id) {
 }
 
 // 基於給定的過濾條件查詢數據
-function StorageFind($condition = array()) {
-	return StorageQuery($condition['schema'], $condition['fields'], $condition['filter'], $condition['others']);
+function StorageFind($condition = array(), $debug = FALSE) {
+	return StorageQuery(
+		$condition['schema'], $condition['fields'], $condition['filter'], $condition['others'], $debug
+	);
 }
 
 // 基於給定的過濾條件查詢第一條數據
-function StorageFindOne($condition = array()) {
+function StorageFindOne($condition = array(), $debug = FALSE) {
 	$condition['others'] = Assign($condition['others']) . ' LIMIT 1';
-	$recordset = StorageFind($condition);
+	$recordset = StorageFind($condition, $debug);
 
 	if (is_array($recordset) and empty($recordset) == FALSE) {
 		return $recordset[0];
 	}
 
-	if (DEBUG) die(StorageError(__FUNCTION__, $sql));
-	return FALSE;
+	return array();
+}
+
+// 基於給定ID值查詢特定的數據
+function StorageFindID($schema, $id, $fields = '*', $debug = FALSE) {
+	return StorageQueryByID($schema, $id, $fields, $debug);
 }
 
 // 基於給定的過濾條件查詢數據
-function StorageQuery($schema, $fields = '*', $filter = '', $str = '') {
+function StorageQuery($schema, $fields = '*', $filter = '', $str = '', $debug = FALSE) {
 	global $mysql;
 
 	$sql = "SELECT" . StorageFields($fields) . "FROM " . StorageSchema($schema) . StorageWhere($filter);
 	if (empty($str) == FALSE) $sql .= " {$str}";
-	
+	if ($debug == TRUE) die($sql);
+
 	$res = mysqli_query($mysql, $sql);
 	if ($res) {
 		$data = array();
@@ -387,11 +369,13 @@ function StoragePage($schema, $fields = '*', $filter = '', $page = 1, $limit = 2
 }
 
 // 基於給定ID值查詢特定的數據
-function StorageQueryByID($schema, $id, $fields = '*') {
+function StorageQueryByID($schema, $id, $fields = '*', $debug = FALSE) {
 	global $mysql;
 
 	$sql = "SELECT" . StorageFields($fields) . "FROM " . StorageSchema($schema) . StorageWhere(array('id' => $id));
 	if (empty($str) == FALSE) $sql .= " {$str}";
+	if ($debug) die($sql);
+
 	$res = mysqli_query($mysql, $sql);
 	if ($res) {
 		while ($row = mysqli_fetch_array($res)) {
@@ -467,85 +451,87 @@ function StorageWhere($filter, $default = array()) {
 	if (empty($filter)) die('StorageWhere Error: Filter Array Empty');
 
 	$sign = ' AND '; $columns = array();
-	foreach ($filter as $key => $value) {
+	foreach ($filter as $key => $val) {
 		if (strtoupper($key) == '@SIGN') {
 			$sign = ' OR ';
 
-		} else if (is_array($value) == FALSE) {
-			$buf = Charset($value, CL_CHARSET, DB_CHARSET);
-			$columns[] = sprintf("`{$key}`='%s'", mysqli_real_escape_string($mysql, $buf));
+		} else if (is_array($val) == FALSE) {
+			$columns[] = "{$key}=" . StorageExpress($val);
 
-		} else if (empty($value)) {
+		} else if (empty($val)) {
 			continue;
 
-		} else if (is_string($value[0])) {
-			$columns[] = StorageWhereSimple($key, $value);
+		} else if (is_string($val[0])) {
+			$columns[] = StorageWhereSimple($key, $val);
 
-		} else if (is_array($value[0])) {
-			$buffer = array(); $buffer_sign = ' AND ';
-			foreach ($value as $buffer_num => $buffer_val) {
-				if (is_string($buffer_val)) {
-					$buffer_sign = strtoupper($buffer_val);
+		} else if (is_array($val[0])) {
+			$buf = array(); $buf_sign = ' AND ';
+			foreach ($val as $buf_num => $buf_val) {
+				if (is_string($buf_val)) {
+					$buf_sign = strtoupper($buf_val);
 					continue;
 				}
 
-				$buffer[] = StorageWhereSimple($key, $buffer_val);
+				$buf[] = StorageWhereSimple($key, $buf_val);
 			}
-			$columns[] = '(' . join($buffer, $buffer_sign) . ')';
+			$columns[] = '(' . join($buf, $buf_sign) . ')';
 		}
 	}
 
 	return ' WHERE ' . join($columns, $sign);
 }
 
-function StorageWhereSimple($key, $args = array()) {
-	global $mysql;
+function StorageWhereSimple($field, $args = array()) {
+	$sign = strtoupper(Assign($args[0]));
 
 	foreach ($GLOBALS['DB_SYMBOLS'] as $key => $val) {
-		if (strtoupper($args[0]) == $key) {
-			$str = array("`{$key}`{$val}");
-
-			if (IsStorageExpress(Assign($args[1])) == TRUE) {
-				$str[] = $args[1];
-			} else {
-				$buf   = Charset($args[1], CL_CHARSET, DB_CHARSET);
-				$str[] = "'" . mysqli_real_escape_string($mysql, $buf) . "'";
-			}
-
-			return join($str, '');
+		if ($sign == $key) {
+			return "{$field}{$val}" . StorageExpress(Assign($args[1]));
 		}
 	}
 
-	switch strtoupper($args[1]) {
-	case 'BETWEEN':
-		if (is_array($args[1]) == FALSE) die('StorageWhereSimple Error: BETWEEN Not Array');
+	if (in_array($sign, array('BETWEEN', 'NOT BETWEEN')) == TRUE) {
+		if (is_array($args[1]) == FALSE) die("StorageWhereSimple Error: {$sign} Not Array");
 
 		$buf = array();
-		foreach ($args[1] as $index => $row) {
-			if (
+		for ($index = 0; $index < 2; $index++) {
+			$buf[] = StorageExpress($args[$index]);
 		}
-	case 'NOT BETWEEN':
-	case 'IN':
-	case 'NOT IN':
+
+		return "{$field} {$sign} " . join($buf, ' AND ');
+	}
+
+	if (in_array($sign, array('IN', 'NOT IN')) == TRUE) {
+		if (is_array($args[1]) == FALSE) die("StorageWhereSimple Error: {$sign} Not Array");
+
+		$buf = array();
+		foreach ($args[1] as $key => $val) {
+			$buf[] = StorageExpress($val);
+		}
+
+		return "{$field} {$sign} " . join($buf, ', ');
 	}
 
 	return '';
 }
 
-function IsStorageExpress($express) {
+function StorageExpress($express) {
+	global $mysql;
+
 	foreach ($GLOBALS['DB_KEYWORDS'] as $word) {
 		if (strpos($express, $word) === 0) {
-			return TRUE;
+			return $express;
 		}
 	}
 
 	for ($index = 0; $index <= 9; $index++) {
 		if (strpos($express, "t{$index}.") === 0) {
-			return TRUE;
+			return $express;
 		}
 	}
 
-	return False;
+	$express = Charset($express, DB_CHARSET, CL_CHARSET);
+	return "'" . mysqli_real_escape_string($mysql, $express) . "'";
 }
 
 function StorageSchema($schema) {
