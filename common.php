@@ -25,6 +25,7 @@ define('MESSAGE_ERROR',       '提交失败！');
 define('MESSAGE_WARNING',     '验证失败！');
 define('MESSAGE_EMPTY',       '无数据！');
 define('KEY_PHONE',           'phone_d'); ## 兼容舊版API所新添的未加密手機號碼
+define('IMAGE_ROOT',          dirname(API_ROOT) . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR . 'userimg');
 
 $GLOBALS['DB_KEYWORDS'] = array('NOW', 'SUM', 'DATE', 'COUNT', 'MIN', 'MAX', 'HOUR', 'MINUTE', 'MONTH', '(');
 $GLOBALS['DB_SYMBOLS']  = array(
@@ -514,7 +515,7 @@ function StorageWhereSimple($field, $args = array()) {
 			$buf[] = StorageExpress($val);
 		}
 
-		return "{$field} {$sign} " . join($buf, ', ');
+		return "{$field} {$sign} (" . join($buf, ', ') . ')';
 	}
 
 	return '';
@@ -544,7 +545,13 @@ function StorageSchema($schema) {
 		die('StorageSchema Error: Schema Not String or Array');
 	}
 
-	if (is_string($schema)) return "`{$schema}`";
+	if (is_string($schema)) {
+		if (strpos($schema, '(') === 0) {
+			return $schema;
+		}
+
+		return "`{$schema}`";
+	}
 
 	$buffer = array();
 	foreach ($schema as $number => $name) {
@@ -576,6 +583,15 @@ function StorageError($function, $sql) {
 	return $msg;
 }
 
+// 構建子查詢SQL語句
+function SQLSub($condition) {
+	$sql = "SELECT" . StorageFields($condition['fields']) . "FROM " . StorageSchema($condition['schema']);
+	$sql .= StorageWhere($condition['filter']);
+	if (empty($condition['others']) == FALSE) $sql .= " {$condition['others']}";
+
+	return $sql;
+}
+
 // 字符串編碼轉換
 function Charset($str, $from, $to) {
 	if ($from == 'LATIN1' or $from == 'GBK') {
@@ -594,3 +610,87 @@ function WithCode($username, $id, $others = '') {
 	return substr(strtoupper(md5($username . $id . $others)), 0, 6);
 }
 
+## 將語音輸入全角字符轉換成半角字符
+function SpeechWords($content) {
+	$chars = array(
+		'零', '一', '二', '三', '四', '五', '六', '七', '八', '九', 
+		'零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖',
+	);
+
+	$alpha = array(
+		'Ｑ' => 'Q', 'Ｗ' => 'W', 'Ｅ' => 'E', 'Ｒ' => 'R', 'Ｔ' => 'T', 'Ｙ' => 'Y',
+		'Ｕ' => 'U', 'Ｉ' => 'I', 'Ｏ' => 'O', 'Ｐ' => 'P', 'Ａ' => 'A', 'Ｓ' => 'S', 
+		'Ｄ' => 'D', 'Ｆ' => 'F', 'Ｇ' => 'G', 'Ｈ' => 'H', 'Ｊ' => 'J', 'Ｋ' => 'K', 
+		'Ｌ' => 'L', 'Ｚ' => 'Z', 'Ｘ' => 'X', 'Ｃ' => 'C', 'Ｖ' => 'V', 'Ｂ' => 'B',
+		'Ｎ' => 'N', 'Ｍ' => 'M',
+		'ｑ' => 'q', 'ｗ' => 'w', 'ｅ' => 'e', 'ｒ' => 'r', 'ｔ' => 't', 'ｙ' => 'y', 
+		'ｕ' => 'u', 'ｉ' => 'i', 'ｏ' => 'o', 'ｐ' => 'p', 'ａ' => 'a', 'ｓ' => 's', 
+		'ｄ' => 'd', 'ｆ' => 'f', 'ｇ' => 'g', 'ｈ' => 'h', 'ｊ' => 'j', 'ｋ' => 'k', 
+		'ｌ' => 'l', 'ｚ' => 'z', 'ｘ' => 'x', 'ｃ' => 'c', 'ｖ' => 'v', 'ｂ' => 'b',
+		'ｎ' => 'n', 'ｍ' => 'm',
+	);
+
+	$content = trim($content);
+
+	foreach ($chars as $number => $char) {
+		$num = $number % 10;
+		$content = str_replace($char, $num, $content);
+	}
+
+	foreach ($alpha as $upper => $lower) {
+		$content = str_replace($upper, $lower, $content);
+	}
+
+	return trim($content, '.。,，');
+}
+
+function escape($str) {
+	$ret = '';
+	$str = iconv('utf-8', 'GBK//IGNORE',$str);
+
+	for ($index = 0; $index < strlen($str); $index++) {
+		if (ord($str[$index]) < 127) {
+			$ret .= '%' . dechex(ord($str[$index]));
+		} else {
+			$buf = bin2hex(iconv('gb2312', 'ucs-2', substr($str, $index, 2)));
+			$ret .= "%u" . $buf;
+			$index++;
+		}
+	}
+
+	return $ret;
+}
+
+function unescape($str) {
+	$str = rawurldecode($str);
+	preg_match_all('/%u.{4}|&#x.{4};|&#d+;|.+/U', $str, $ret);
+
+	$buf = $ret[0];
+	foreach ($buf as $key => $val) {
+		if (substr($val, 0, 2) == '%u') {
+			$buf[$key] = iconv('UCS-2', 'gb2312', pack('H4', substr($val, -4)));
+
+		} else if (substr($val, 0, 3) == '&#x') {
+			$buf[$key] = iconv('UCS-2', 'gb2312', pack('H4', substr($val, 3, -1)));
+
+		} else if (substr($val, 0, 2) == '&#') {
+			$buf[$key] = iconv('UCS-2', 'gb2312', pack('n', substr($val, 2, -1)));
+		}
+	}
+
+	return join($buf, '');
+}
+
+function gethttp($url, $params = '') {
+	$ch = curl_init();
+
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+	curl_setopt($ch, CURLOPT_POST, TRUE);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+
+	$ret = curl_exec($ch);
+	curl_close($ch);
+
+	return $ret;
+}

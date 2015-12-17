@@ -83,22 +83,23 @@ function CheckOpenID($loginid, $uid = 0) {
 ## 若達到每日積分極限則返回-1 
 ## 若達到最終積分極限則返回-2
 ## 否則返回當前新增積分
-function Techuser_setScore($id, $scoretype, $apicode = '') {
-	$schema = 'hh_techuser'; $schema_s = 'hh_score';
+function Techuser_setScore($id, $scoretype) {
+	global $params;
+	$schema = 'hh_techuser'; $schema_s = 'hh_score'; $schema_log = 'hh_score_log';
 
 	## 獲取當前級別積分限制
 	$record = StorageFindID('hh_score_type', $scoretype);
 	if (is_array($record) == FALSE or empty($record) == TRUE) {
 		return FALSE;
 	}
-
+	
 	$score    = intval($record['score']);
 	$dayscore = intval($record['dayscore']);
 	$maxscore = intval($record['maxscore']);
 
 	## 獲取已使用積分次數
 	$techuser   = Assign(StorageFindID($schema, $id), array());
-	$dengji     = StorageFindOne($schema_s, '*', array('dengji' => intval($techuser['grade'])));
+	$dengji     = StorageFindOne(array('schema' => $schema_s, 'filter' => array('dengji' => $techuser['grade'])));
 	$times_used = $dengji['chakan'] - $techuser['times_cx'];
 
 	## 判斷每日積分限制
@@ -112,8 +113,8 @@ function Techuser_setScore($id, $scoretype, $apicode = '') {
 	}
 
 	$fields = array(
-		"s{$scoretype}"     => "s{$scoretype}+1",
-		"s{$scoretype}_day" => "s{$scoretype}_day+1"
+		"s{$scoretype}"     => "s{$scoretype}+{$score}",
+		"s{$scoretype}_day" => "s{$scoretype}_day+{$score}"
 	);
 	StorageEditByID($schema, $fields, $id);
 
@@ -127,13 +128,13 @@ function Techuser_setScore($id, $scoretype, $apicode = '') {
 	$other_g = 'ORDER BY score DESC LIMIT 1';
 	$other_n = 'ORDER BY score ASC  LIMIT 1';
 	$fields = array(
-		'grade'     => "(SELECT dengji FROM {$schema_s} WHERE score<={$schema}.score {$other_g}",
-		'needscore' => "(SELECT score FROM {$schema_s} WHERE score>{$schema}.score {$other_n})-score)",
+		'grade'     => "(SELECT dengji FROM {$schema_s} WHERE score<={$schema}.score {$other_g})",
+		'needscore' => "((SELECT score FROM {$schema_s} WHERE score>{$schema}.score {$other_n})-score)",
 	);
 	$num = StorageEditByID($schema, $fields, $id);
 	if (empty($num) == FALSE) {
 		$fields = array(
-			'times_cx' => "(SELECT chakan FROM {$schema_s} WHERE dengji=grade)-{$time_used}",
+			'times_cx' => "(SELECT chakan FROM {$schema_s} WHERE dengji=grade)-{$times_used}",
 		);
 		StorageEditByID($schema, $fields, $id);
 	}
@@ -143,20 +144,72 @@ function Techuser_setScore($id, $scoretype, $apicode = '') {
 	$condition = array(
 		'schema' => array($schema),
 		'fields' => array(
-			'COUNT(*) AS h_count',
+			"(SELECT COUNT(*) AS h_count FROM {$schema}) AS h_count",
 			"(SELECT COUNT(*) FROM {$schema} WHERE score<=t0.score) AS h_self",
 		),
 		'filter' => array('t0.id' => $id),
 	);
-	$record = StorageFindOne($condition);
-	if (is_array($record) and empty($record) == FALSE) {
-		$percent = round($record['h_self']*100/$record['h_count'], 2);
+	$buf = StorageFindOne($condition);
+	if (is_array($buf) and empty($buf) == FALSE) {
+		$percent = round($buf['h_self']*100/$buf['h_count'], 2);
 	}
 	StorageEditByID($schema, array('percent' => $percent), $id);
 
 	## 添加積分日誌
-	
+	$log = array(
+		'uid'       => $id,
+		'createdat' => 'NOW()',
+		'scoretype' => $scoretype,
+		'score'     => $score,
+		'apicode'   => Assign($params['code'], 0),
+		'oldscore'  => $techuser['score'],
+	);
+	StorageAdd($schema_log, $log);
 
 	return $score;
+}
+
+function httpURL($url, $text) {
+	$ret    = '';
+	$params = $url . escape($text);
+
+	if (DEBUG == false) {
+		$ret = gethttp('http://www.goviewtech.com:3002/bnc_search2_ctrl.ben?' . $params);
+	} else {
+		$ret = gethttp('http://www.goviewtech.com:3000/bnc_search2_ctrl.ben?' . $params);
+	}
+
+	if (empty($ret)) $ret = '0';
+	return $ret;
+}
+
+function GetWord($text) {
+	$p = httpURL('cmd1=getword&cmd2=pinpai&cmd3=', $text);
+	$k = httpURL('cmd1=getword&cmd2=keyword&cmd3=', $text);
+	return "{$p};{$k}";
+}
+
+function GetPinpai($text) {
+	return httpURL('cmd1=getword&cmd2=pinpai&cmd3=', $text);
+}
+
+function GetFault($text) {
+	return httpURL('cmd1=getword&cmd2=fault&cmd3=', $text);
+}
+
+function GetKeyword($text) {
+	return httpURL('cmd1=getword&cmd2=keyword&cmd3=', $text);
+}
+
+function GetAnliKeyword($text) {
+	return httpURL('cmd1=getword&cmd2=anlikeyword&cmd3=', $text);
+}
+
+function GetAnli($text) {
+	return httpURL('cmd1=getword&cmd2=getanli&cmd3=', $text);
+}
+
+function GetAnli_list($text) {
+	return httpURL('cmd1=getword&cmd2=getanli_list&cmd3=', $text);
 }
 
