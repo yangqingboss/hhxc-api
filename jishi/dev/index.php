@@ -170,17 +170,8 @@ function Techuser_setScore($id, $scoretype) {
 }
 
 function httpURL($url, $text) {
-	$ret    = '';
-	$params = $url . escape($text);
-
-	if (DEBUG == false) {
-		$ret = gethttp('http://www.goviewtech.com:3002/bnc_search2_ctrl.ben?' . $params);
-	} else {
-		$ret = gethttp('http://www.goviewtech.com:3000/bnc_search2_ctrl.ben?' . $params);
-	}
-
-	if (empty($ret)) $ret = '0';
-	return $ret;
+	$domain = sprintf('http://www.goviewtech.com:%d/bnc_search2_ctrl.ben?', DEBUG ? 3000 : 3000);
+	return Assign(gethttp($domain . $url . escape($text)), '0');
 }
 
 function GetWord($text) {

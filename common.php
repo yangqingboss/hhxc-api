@@ -418,6 +418,21 @@ function StorageCount($schema, $filter = '') {
 	return FALSE;
 }
 
+// 基於給定的過濾條件統計數據數量
+function StorageRows($condition = array()) {
+	global $mysql;
+	
+	$sql = SQLSub($condition);
+	$res = mysqli_query($mysql, $sql);
+
+	if ($res) {
+		return mysqli_num_rows($res);
+	}
+
+	if (DEBUG) die(StorageError(__FUNCTION__, $sql));
+	return FALSE;
+}
+
 // 執行給定的SQL語句
 function StorageSQL($sql) {
 	global $mysql;
@@ -508,6 +523,10 @@ function StorageWhereSimple($field, $args = array()) {
 	}
 
 	if (in_array($sign, array('IN', 'NOT IN')) == TRUE) {
+		if (is_string($args[1]) == TRUE) {
+			return "{$field} {$sign} ({$args[1]})";
+		}
+
 		if (is_array($args[1]) == FALSE) die("StorageWhereSimple Error: {$sign} Not Array");
 
 		$buf = array();
@@ -645,40 +664,21 @@ function SpeechWords($content) {
 }
 
 function escape($str) {
-	$ret = '';
-	$str = iconv('utf-8', 'GBK//IGNORE',$str);
+	$ret = array();
+	$buf = Charset($str, CL_CHARSET, DB_CHARSET);
 
-	for ($index = 0; $index < strlen($str); $index++) {
-		if (ord($str[$index]) < 127) {
-			$ret .= '%' . dechex(ord($str[$index]));
+	for ($index = 0; $index < strlen($buf); $index++) {
+		if (ord($buf[$index]) < 127) {
+			$ret[] = '%' . dechex($buf[$index]);
+
 		} else {
-			$buf = bin2hex(iconv('gb2312', 'ucs-2', substr($str, $index, 2)));
-			$ret .= "%u" . $buf;
+			$tmp = bin2hex(Charset(substr($buf, $index, 2), DB_CHARSET, 'ucs-2'));
+			$ret[] = '%u' . $tmp;
 			$index++;
 		}
 	}
 
-	return $ret;
-}
-
-function unescape($str) {
-	$str = rawurldecode($str);
-	preg_match_all('/%u.{4}|&#x.{4};|&#d+;|.+/U', $str, $ret);
-
-	$buf = $ret[0];
-	foreach ($buf as $key => $val) {
-		if (substr($val, 0, 2) == '%u') {
-			$buf[$key] = iconv('UCS-2', 'gb2312', pack('H4', substr($val, -4)));
-
-		} else if (substr($val, 0, 3) == '&#x') {
-			$buf[$key] = iconv('UCS-2', 'gb2312', pack('H4', substr($val, 3, -1)));
-
-		} else if (substr($val, 0, 2) == '&#') {
-			$buf[$key] = iconv('UCS-2', 'gb2312', pack('n', substr($val, 2, -1)));
-		}
-	}
-
-	return join($buf, '');
+	return join($ret, '');
 }
 
 function gethttp($url, $params = '') {
@@ -693,4 +693,10 @@ function gethttp($url, $params = '') {
 	curl_close($ch);
 
 	return $ret;
+}
+
+function fmtstr($str) {
+	$buf = str_replace("\"", "\\\"", $str);
+	$buf = str_replace("\t", "\\\t", $buf);
+	return $buf;
 }

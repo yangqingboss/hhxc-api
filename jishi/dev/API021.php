@@ -44,5 +44,54 @@ $condition = array(
 	'others' => 'GROUP BY resultid ORDER BY score DESC',
 );
 
+## 統計查詢總數
+$count = StorageRows($condition);
+
+## 截獲最新20條數據
+$condition['others'] .= ' LIMIT 20';
 $recordset = StorageFind($condition);
-var_dump($recordset);
+if (is_array($recordset) and empty($recordset) == FALSE) {
+	$result = array('code' => '101', 'data' => array());
+
+	$item = array(
+		'total' => $count,
+		'list'  => array(),
+		'keys'  => array(),
+	);
+
+	foreach ($recordset as $index => $row) {
+		$item['list'][] = array(
+			'id'      => $row['id'],
+			'title'   => fmtstr($row['title']),
+			'lable'   => fmtstr($row['lable']),
+			'miaoshu' => fmtstr($row['miaoshu']),
+		);
+	}
+
+	$condition_buf = array(
+		'schema' => 'car_word',
+		'filter' => array(
+			'id' => array('IN', $word_id),
+		),
+	);
+
+	$buf = StorageFind($condition_buf);
+	if (is_array($buf) and empty($buf) == FALSE) {
+		foreach ($buf as $row) {
+			$item['keys'][] = $row['keyword'];
+
+			for ($index = 1; $index <= 9; $index++) {
+				if (empty($row['keyword' . $index]) == FALSE) {
+					$item['keys'][] = $row['keyword' . $index];
+				}
+			}
+		}
+	}
+
+	$result['data'][] = $item;
+
+	## 積累積分
+	if (CheckOpenID($params['openid'], $params['uid']) == TRUE) {
+		Techuser_setScore($params['uid'], 2);
+	}
+}
