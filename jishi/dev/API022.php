@@ -5,7 +5,7 @@
 //
 // 技術版API編號022 查現象之獲取故障點列表
 //
-// @authors hjboss <hongjiangproject@yahoo.com> 2015-12-14#
+// @authors hjboss <hongjiangproject@yahoo.com> 2015-12-17#
 // @version 1.0.0
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
