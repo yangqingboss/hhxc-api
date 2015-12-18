@@ -10,3 +10,19 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
+	$result['msg'] = '电话号码已注册！';
+} else {
+	$fields = array(
+		'username_d' => Assign($params[KEY_PHONE]),
+		'password'   => Assign($params['pwd']),
+	);
+
+	$num = StorageEditByID('hh_techuser', $fields, $params['uid']);
+	if ($num <= 0) {
+		$result['msg'] = '绑定失败！';
+	} else {
+		$result = array('code' => '101', 'msg' => '绑定成功！');
+	}
+}
+
