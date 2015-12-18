@@ -31,10 +31,8 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		);
 
 		$num = StorageEdit('hh_techuser_shoucang', $fields, $condition['filter']);
-		if (empty($num) == FALSE) {
-			$message = empty($params['type']) ? '取消成功！' : '收藏成功！';
-			$result  = array('code' => '101', 'msg' => $message);
-		}
+		$message = empty($params['type']) ? '取消成功！' : '收藏成功！';
+		$result  = array('code' => '101', 'msg' => $message);
 
 	} else {
 		$data = array(

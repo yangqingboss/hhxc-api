@@ -169,7 +169,7 @@ function StorageConnect($host, $user, $pwd, $name, $charset) {
 }
 
 // 將給定的數據數組添加到給定的數據表並且返回當前ID
-function StorageAdd($schema, $data = array()) {
+function StorageAdd($schema, $data = array(), $debug = FALSE) {
 	global $mysql;
 
 	## 數據類型不合理
@@ -184,6 +184,7 @@ function StorageAdd($schema, $data = array()) {
 	}
 
 	$sql = "INSERT INTO `{$schema}` (" . join($fields, ', ') . ') VALUES (' . join($values, ', ') . ')';
+	if ($debug) die($sql);
 	$res = mysqli_query($mysql, $sql);
 
 	if ($res) {
@@ -229,7 +230,7 @@ function StorageDelByID($schema, $id) {
 }
 
 // 基於給定的過濾條件在給定的數據表更新相對應的數據記錄
-function StorageEdit($schema, $fields, $filter) {
+function StorageEdit($schema, $fields, $filter, $debug = FALSE) {
 	global $mysql;
 
 	if (is_array($fields) == FALSE) die('StorageEdit Error: Fields Not Array');
@@ -246,6 +247,7 @@ function StorageEdit($schema, $fields, $filter) {
 	}
 	
 	$sql = "UPDATE `{$schema}` SET " . join($values, ', ') . StorageWhere($filter);
+	if ($debug) die($sql);
 	$res = mysqli_query($mysql, $sql);
 
 	if ($res) {
