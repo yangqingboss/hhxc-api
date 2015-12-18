@@ -10,3 +10,12 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+$content = SpeechWords(Assign($params['content']));
+$word_id = GetAnliKeyword($content);
+
+if ($word_id == '0') {
+} else {
+}
+
+if (CheckOpenID($params['openid'], $params['uid']) == TRUE) {
+
