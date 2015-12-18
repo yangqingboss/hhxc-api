@@ -19,3 +19,4 @@ if ($word_id == '0') {
 
 if (CheckOpenID($params['openid'], $params['uid']) == TRUE) {
 
+}
