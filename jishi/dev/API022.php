@@ -3,7 +3,7 @@
 // Use of this source that is governed by a Apache-style
 // license that can be found in the LICENSE file.
 //
-// 技術版API編號022 查現象之獲取故障點列表
+// 技術版API編號022 查現象之獲取故障點列表 ##已取消 新接口054
 //
 // @authors hjboss <hongjiangproject@yahoo.com> 2015-12-17#
 // @version 1.0.0

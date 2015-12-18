@@ -3,7 +3,7 @@
 // Use of this source that is governed by a Apache-style
 // license that can be found in the LICENSE file.
 //
-// 技術版API編號014 發表汽修人跟帖
+// 技術版API編號014 發表汽修人跟帖 ##已取消 新接口014
 //
 // @authors hjboss <hongjiangproject@yahoo.com> 2015-12-16#
 // @version 1.0.0
