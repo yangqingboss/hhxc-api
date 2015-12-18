@@ -3,7 +3,7 @@
 // Use of this source that is governed by a Apache-style
 // license that can be found in the LICENSE file.
 //
-// 技術版API編號015 發送用戶註冊請求
+// 技術版API編號015 發送用戶註冊請求 ##已取消 新接口096
 //
 // @authors hjboss <hongjiangproject@yahoo.com> 2015-12-17#
 // @version 1.0.0

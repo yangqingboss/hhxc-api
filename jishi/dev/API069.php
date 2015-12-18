@@ -3,7 +3,7 @@
 // Use of this source that is governed by a Apache-style
 // license that can be found in the LICENSE file.
 //
-// 技術版API編號069 汽修人之信息盒子-我的貼信息
+// 技術版API編號069 汽修人之信息盒子-我的貼信息 ##已取消 新接口085
 //
 // @authors hjboss <hongjiangproject@yahoo.com> 2015-12-18#
 // @version 1.0.0

@@ -3,7 +3,7 @@
 // Use of this source that is governed by a Apache-style
 // license that can be found in the LICENSE file.
 //
-// 技術版API編號039 軟件更新檢查
+// 技術版API編號039 軟件更新檢查 ##已取消 新接口089
 //
 // @authors hjboss <hongjiangproject@yahoo.com> 2015-12-18#
 // @version 1.0.0
