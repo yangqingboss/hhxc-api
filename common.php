@@ -143,7 +143,7 @@ function SMS($mobile, $message) {
 	$res = curl_exec($ch);
 	curl_close($ch);
 
-	return strpos($res, 'Success') > -1 ? true : false;
+	return strpos($res, 'Success') > -1 ? TRUE : FALSE;
 }
 
 // 生成給定長度隨機字符
