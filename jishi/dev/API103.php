@@ -13,12 +13,34 @@ if (!defined('HHXC')) die('Permission denied');
 if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	$result['msg'] = MESSAGE_WARNING;
 } else {
-	$the_times = CheckTimes($params['openid'], $params['id']);
-
+	$the_times = CheckTimes($params['openid'], $params['uid']);
 	$url_anli = sprintf(PAGE_ANLI, $params['uid'], $params['openid'], DEBUG);
-	die(var_dump($url_anli));
+
 	if (empty($the_times) == FALSE) {
+		$result = array('code' => '101');
+
+		$record = StorageFindID('search_result', Assign($params['cid'], 0));
+		if (is_array($record) and empty($record) == FALSE) {
+			$result['caseurl'] = $url_anli . $record['id'];
+		}
 	} else {
+		$condition_sub = array(
+			'schema' => 'hh_techuser',
+			'fields' => array('grade'),
+			'filter' => array(
+				'id' => Assign($params['uid'], 0),
+			),
+		);
+		$condition = array(
+			'schema' => 'hh_score',
+			'fields' => array('chakan'),
+			'filter' => '(' . SQLSub($condition_sub) . ')',
+		);
+
+		$record = StorageFindOne($condition);
+		if (is_array($record) and empty($record) == FALSE) {
+			$result = array('code' => '103', 'msg' => $recod['chakan']);
+		}
 	}
 }
 

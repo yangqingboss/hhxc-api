@@ -330,7 +330,7 @@ function StorageQuery($schema, $fields = '*', $filter = '', $str = '', $debug = 
 	$res = mysqli_query($mysql, $sql);
 	if ($res) {
 		$data = array();
-
+		
 		while ($row = mysqli_fetch_array($res)) {
 			foreach ($row as $key => $val) {
 				if (is_string($val) == FALSE) {
