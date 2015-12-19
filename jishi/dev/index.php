@@ -14,7 +14,7 @@ define('API_VERSION', basename(dirname(__FILE__)));
 define('API_NAME',    str_replace(API_ROOT . DIRECTORY_SEPARATOR, '', dirname(dirname(__FILE__))));
 
 ## 頁面URL設置
-define('PAGE_ANLI',   'http://www.haohaoxiuche.com/html_hhxc_anli.php?uid=%d&openid=%d&debug=%d&resultid=%d');
+define('PAGE_ANLI',   'http://www.haohaoxiuche.com/html_hhxc_anli.php?uid=%d&openid=%d&debug=%d&resultid=');
 
 ## 預加載全局配置文件
 if (API_VERSION != 'dev') {

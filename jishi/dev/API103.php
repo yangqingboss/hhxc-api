@@ -15,6 +15,8 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 } else {
 	$the_times = CheckTimes($params['openid'], $params['id']);
 
+	$url_anli = sprintf(PAGE_ANLI, $params['uid'], $params['openid'], DEBUG);
+	die(var_dump($url_anli));
 	if (empty($the_times) == FALSE) {
 	} else {
 	}
