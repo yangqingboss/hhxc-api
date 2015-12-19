@@ -10,3 +10,13 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
+	$result['msg'] = MESSAGE_WARNING;
+} else {
+	$the_times = CheckTimes($params['openid'], $params['id']);
+
+	if (empty($the_times) == FALSE) {
+	} else {
+	}
+}
+

@@ -10,6 +10,8 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'SSDB.php');
+
 /**************************************** 全局參數 ****************************************/
 define('API_URL',             'http://www.haohaoxiuche.com/hhxc-api/%s/%s/index.php');
 define('API_TEST_URL',        'http://192.168.16.180:8080/hhxc-api/%s/%s/index.php');
@@ -32,6 +34,10 @@ $GLOBALS['DB_SYMBOLS']  = array(
 	'EQ' => '=', 'NEQ' => '<>', 'GT'   => '>',      'EGT'      => '>=', 
 	'LT' => '<', 'ELT' => '<=', 'LIKE' => ' LIKE ', 'NOT LIKE' => ' NOT LIKE ', 
 );
+
+$mysql = NULL;
+$ssdb  = NULL;
+$ssdb_prefix = '';
 
 /**************************************** 公共函數 ****************************************/
 // 若參數是空值則返回給定的默認值
@@ -161,9 +167,13 @@ function RandomChars($length = 4, $alpha = FALSE) {
 
 // 基於給定字符集構建數據庫鏈接
 function StorageConnect($host, $user, $pwd, $name, $charset) {
-	$mysql = mysqli_connect($host, $user, $pwd) or die('Could not connect: ' . mysqli_error($mysql));
-	mysqli_select_db($mysql, $name) or die('Permission denied for the database ' . $name);
-	mysqli_query($mysql, 'SET NAMES ' . $charset);
+	global $mysql;
+
+	if (empty($mysql) == TRUE) {
+		$mysql = mysqli_connect($host, $user, $pwd) or die('Could not connect: ' . mysqli_error($mysql));
+		mysqli_select_db($mysql, $name) or die('Permission denied for the database ' . $name);
+		mysqli_query($mysql, 'SET NAMES ' . $charset);
+	}
 
 	return $mysql;
 }
@@ -613,6 +623,133 @@ function SQLSub($condition) {
 	return $sql;
 }
 
+// 鍵值數據庫鏈接
+function KVStorageConnect($host, $port, $pwd, $name) {
+	global $ssdb;
+	global $ssdb_prefix;
+
+	if (empty($ssdb) == TRUE) {
+		try {
+			$ssdb = new SimpleSSDB($host, $port);
+			if (empty($pwd) == FALSE) {
+				$ssdb->auth(SSDB_PWD);
+			}
+	
+			$ssdb_prefix = $name . '_';
+			return $ssdb;
+
+		} catch (SSDBException $e) {
+			if (DEBUG == TRUE) {
+				die('KVStorageConnect Error: ' . $e->getMessage());
+			}
+		}
+
+		return FALSE;
+	}
+
+	return $ssdb;
+}
+
+// 鍵值數據庫添加數據
+function KVStorageSet($key, $data) {
+	global $ssdb;
+	global $ssdb_prefix;
+
+	if (is_array($data) == FALSE) die('KVStorageAdd Error: Data Not Array');
+
+	try {
+		return $ssdb->multi_hset($ssdb_prefix . $key, $data);
+
+	} catch (SSDBException $e) {
+		if (DEBUG == TRUE) {
+			die('KVStorageSet Error: ' . $e->getMessage());
+		}
+	}
+
+	return FALSE;
+}
+
+// 鍵值數據庫獲取數據
+function KVStorageGet($key) {
+	global $ssdb;
+	global $ssdb_prefix;
+
+	try {
+		return $ssdb->hgetall($ssdb_prefix . $key);
+
+	} catch (SSDBException $e) {
+		if (DEBUG == TRUE) {
+			die('KVStorageGet Error: ' . $e->getMessage());
+		}
+	}
+
+	return FALSE;
+}
+
+// 鍵值數據庫刪除數據
+function KVStorageDel($key) {
+	global $ssdb;
+	global $ssdb_prefix;
+
+	try {
+		return $ssdb->hclear($ssdb_prefix . $key);
+
+	} catch (SSDBException $e) {
+		if (DEBUG == TRUE) {
+			die('KVStorageDel Error: ' . $e->getMessage());
+		}
+	}
+
+	return FALSE;
+}
+
+// 鍵值數據庫判斷存在
+function KVStorageExists($key) {
+	global $ssdb;
+	global $ssdb_prefix;
+
+	try {
+		return $ssdb->hsize($ssdb_prefix . $key) != 0;
+
+	} catch (SSDBException $e) {
+		if (DEBUG == TRUE) {
+			die('KVStorageExists Error: ' . $e->getMessage());
+		}
+	}
+
+	return FALSE;
+}
+
+// 鍵值數據庫獲取區間數據
+function KVStorageScan($key_start, $key_end, $limit = 128, $order = TRUE) {
+	global $ssdb;
+	global $ssdb_prefix;
+
+	try {
+		$recordset = array(); $keys = array();
+
+		if ($order == FALSE) {
+			$keys = $ssdb->rhlist($ssdb_prefix . $key_start, $ssdb_prefix . $key_end, $limit);
+
+		} else {
+			$keys = $ssdb->hlist($ssdb_prefix . $key_start, $ssdb_prefix . $key_end, $limit);
+		}
+
+		foreach ($keys as $key) {
+			$recordset[] = $ssdb->hgetall($key);
+		}
+
+		return $recordset;
+
+	} catch (SSDBException $e) {
+		if (DEBUG == TRUE) {
+			die('KVStorageScan Error: ' . $e->getMessage());
+		}
+	}
+
+	return FALSE;
+}
+
 // 字符串編碼轉換
 function Charset($str, $from, $to) {
 	if ($from == 'LATIN1' or $from == 'GBK') {
@@ -671,7 +808,7 @@ function escape($str) {
 
 	for ($index = 0; $index < strlen($buf); $index++) {
 		if (ord($buf[$index]) < 127) {
-			$ret[] = '%' . dechex($buf[$index]);
+			$ret[] = '%' . dechex(ord($buf[$index]));
 
 		} else {
 			$tmp = bin2hex(Charset(substr($buf, $index, 2), DB_CHARSET, 'ucs-2'));

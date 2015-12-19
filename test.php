@@ -1,21 +1,12 @@
+#!/usr/bin/php
 <?php
-define('HHXC',       TRUE);
-define('DEBUG',      TRUE);
-define('DB_HOST',    '127.0.0.1');
-define('DB_NAME',    'test');
-define('DB_USER',    'root');
-define('DB_PWD',     '');
-define('DB_CHARSET', 'UTF-8');
-define('CL_CHARSET', 'UTF-8');
+define('HHXC',        TRUE);
+define('API_ROOT',    dirname(dirname(dirname(__FILE__))));
 
+require_once('config.development.php');
 require_once('common.php');
-$mysql = StorageConnect('127.0.0.1', 'root', '', 'test', 'UTF-8');
-$fields = array(
-	'ofuser' => 1,
-	'sender' => 'test0',
-	'sendtime' => 'NOW()',
-);
-$filter = array(
-	'sender' => array('LIKE', 'test%')
-);
-var_dump(StorageEdit('sms', $fields, $filter));
+
+KVStorageConnect(SSDB_HOST, SSDB_PORT, SSDB_PWD, SSDB_NAME);
+var_dump(KVStorageSet("asd", array('id' => '12', 'key' => 12)));
+var_dump(KVStorageExists("asd"));
+var_dump(KVStorageScan('', 'asz'));

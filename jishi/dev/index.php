@@ -13,6 +13,9 @@ define('API_ROOT',    dirname(dirname(dirname(__FILE__))));
 define('API_VERSION', basename(dirname(__FILE__)));
 define('API_NAME',    str_replace(API_ROOT . DIRECTORY_SEPARATOR, '', dirname(dirname(__FILE__))));
 
+## 頁面URL設置
+define('PAGE_ANLI',   'http://www.haohaoxiuche.com/html_hhxc_anli.php?uid=%d&openid=%d&debug=%d&resultid=%d');
+
 ## 預加載全局配置文件
 if (API_VERSION != 'dev') {
 	require_once(API_ROOT . DIRECTORY_SEPARATOR . 'config.production.php');
@@ -30,6 +33,7 @@ require_once(API_ROOT . DIRECTORY_SEPARATOR . 'common.php');
 $mysql = mysqli_connect(DB_HOST, DB_USER, DB_PWD) or die('Could not connect ' . mysqli_error($mysql));
 mysqli_select_db($mysql, DB_NAME) or die('Permission denied for the database ' . DB_NAME);
 mysqli_query($mysql, 'SET NAMES ' . DB_CHARSET);
+KVStorageConnect(SSDB_HOST, SSDB_PORT, SSDB_PWD, SSDB_NAME);
 
 ## 提交參數值和返回值
 $params = count($argv) >= 2 ? json_decode($argv[1], TRUE) : json_decode(Assign($_REQUEST['data'], '{}'), TRUE);
@@ -156,22 +160,46 @@ function Techuser_setScore($id, $scoretype) {
 	StorageEditByID($schema, array('percent' => $percent), $id);
 
 	## 添加積分日誌
-	$log = array(
+	$score_log = array(
 		'uid'       => $id,
-		'createdat' => 'NOW()',
+		'createdat' => date('Y-m-d H:i:s'),
 		'scoretype' => $scoretype,
 		'score'     => $score,
 		'apicode'   => Assign($params['code'], 0),
 		'oldscore'  => $techuser['score'],
 	);
-	StorageAdd($schema_log, $log);
+	$score_log_key = $id . '_' . time();
+	KVStorageSet($score_log_key, $score_log);
+	//StorageAdd($schema_log, $log);
 
 	return $score;
 }
 
-function httpURL($url, $text) {
+## 記錄用戶搜索記錄
+function Techuser_search($uid, $content, $type, $word_id = array(), $count = 0) {
+	if (is_array($word_id)) $word_id = join($word_id, ',');
+
+	$data = array(
+		'ofuser'      => $uid,
+		'content'     => $content,
+		'createdat'   => 'NOW()',
+		'type'        => $type,
+		'wordid'      => $word_id,
+		'resultcount' => $count,
+	);
+
+	$id = StorageAdd('hh_techuser_search', $data);
+	if (empty($id) == FALSE) {
+		return $id;
+	}
+
+	return FALSE;
+}
+
+function httpURL($url, $text, $numeric = FALSE) {
 	$domain = sprintf('http://www.goviewtech.com:%d/bnc_search2_ctrl.ben?', DEBUG ? 3000 : 3000);
-	return Assign(gethttp($domain . $url . escape($text)), '0');
+	$text   = $numeric ? $text : escape($text);
+	return Assign(gethttp($domain . $url . $text), '0');
 }
 
 function GetWord($text) {
@@ -197,10 +225,33 @@ function GetAnliKeyword($text) {
 }
 
 function GetAnli($text) {
-	return httpURL('cmd1=getword&cmd2=getanli&cmd3=', $text);
+	return httpURL('cmd1=getword&cmd2=getanli&cmd3=', $text, TRUE);
 }
 
-function GetAnli_list($text) {
-	return httpURL('cmd1=getword&cmd2=getanli_list&cmd3=', $text);
+function GetAnliList($text) {
+	return httpURL('cmd1=getword&cmd2=getanli_list&cmd3=', $text, TRUE);
 }
 
+function CheckTimes($openid, $uid) {
+	$condition = array(
+		'schema' => 'hh_techuser',
+		'fields' => array('times_cx'),
+		'filter' => array(
+			'loginid' => $openid,
+			'id'      => $uid,
+		),
+	);
+
+	$record = StorageFindOne($condition);
+	if (is_array($record) and empty($record) == FALSE) {
+		return $record['times_cx'];
+	}
+
+	return FALSE;
+}
+
+function SetTimes($openid, $uid) {
+	$fields = array('times_cx' => 'times_cx+1');
+	$filter = array('loginid' => $params['openid'], 'id' => $params['id']);
+	return StorageEdit('hh_techuser', $fields, $filter);
+}

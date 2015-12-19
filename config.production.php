@@ -17,4 +17,8 @@ define('DB_USER',    'root');
 define('DB_PWD',     'goodluck123@');
 define('DB_CHARSET', 'LATIN1');
 define('CL_CHARSET', 'UTF-8');
+define('SSDB_HOST',  '120.24.163.194');
+define('SSDB_PORT',  8889);
+define('SSDB_PWD',   'goodluck123@');
+define('SSDB_NAME',  'gocar');
 
