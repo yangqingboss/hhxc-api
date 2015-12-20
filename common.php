@@ -189,6 +189,10 @@ function StorageAdd($schema, $data = array(), $debug = FALSE) {
 	foreach ($data as $key => $val) {
 		if (is_null($val)) continue;
 
+		if (is_string($val)) {
+			$val =  Charset($val, CL_CHARSET, DB_CHARSET);
+		}
+
 		$fields[] = "`{$key}`";
 		$values[] = StorageExpress($val);
 	}
@@ -249,6 +253,10 @@ function StorageEdit($schema, $fields, $filter, $debug = FALSE) {
 
 	$values = array();
 	foreach ($fields as $key => $val) {
+		if (is_string($val)) {
+			$val =  Charset($val, CL_CHARSET, DB_CHARSET);
+		}
+
 		if (strpos($val, $key) === 0) {
 			$values[] = "`{$key}`={$val}";
 		} else {
@@ -298,7 +306,8 @@ function StorageEditByID($schema, $fields, $id) {
 // 基於給定的過濾條件查詢數據
 function StorageFind($condition = array(), $debug = FALSE) {
 	return StorageQuery(
-		$condition['schema'], $condition['fields'], $condition['filter'], $condition['others'], $debug
+		$condition['schema'], $condition['fields'], $condition['filter'], $condition['others'], $debug, 
+		$condition['charset']
 	);
 }
 
@@ -320,7 +329,7 @@ function StorageFindID($schema, $id, $fields = '*', $debug = FALSE) {
 }
 
 // 基於給定的過濾條件查詢數據
-function StorageQuery($schema, $fields = '*', $filter = '', $str = '', $debug = FALSE) {
+function StorageQuery($schema, $fields = '*', $filter = '', $str = '', $debug = FALSE, $charset = FALSE) {
 	global $mysql;
 
 	$sql = "SELECT" . StorageFields($fields) . "FROM " . StorageSchema($schema) . StorageWhere($filter);
@@ -336,7 +345,7 @@ function StorageQuery($schema, $fields = '*', $filter = '', $str = '', $debug = 
 				if (is_string($val) == FALSE) {
 					$row[$key] = $val;
 				} else {
-					$row[$key] = Charset($val, DB_CHARSET, CL_CHARSET);
+					$row[$key] = $charset ? $val : Charset($val, DB_CHARSET, CL_CHARSET);
 				}
 			}
 
@@ -398,7 +407,11 @@ function StorageQueryByID($schema, $id, $fields = '*', $debug = FALSE) {
 	if ($res) {
 		while ($row = mysqli_fetch_array($res)) {
 			foreach ($row as $key => $val) {
-				$row[$key] = Charset($val, DB_CHARSET, CL_CHARSET);
+				if (is_string($val) == FALSE) {
+					$row[$key] = $val;
+				} else {
+					$row[$key] = Charset($val, DB_CHARSET, CL_CHARSET);
+				}
 			}
 
 			return $row;
