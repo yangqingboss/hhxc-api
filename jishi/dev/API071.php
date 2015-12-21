@@ -10,3 +10,25 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
+	$result['msg'] = MESSAGE_WARNING;
+} else {
+	$result = array('code' => '101', 'data' => array());
+
+	$record = StorageFindID('hh_techuser', Assign($params['cuid'], 0));
+	if (is_array($record) and empty($record) == FALSE) {
+		$h_grade = ($record['grade']>50) ? 'V' . ($record['grade']-50) : 'L' . $record['grade'];
+
+		$result['data'][] = array(
+			'image'      => $record['image'],
+			'nick'       => $record['nick'],
+			'grade'      => $h_grade,
+			'city'       => $record['city'],
+			'cars'       => $record['cars'],
+			'job'        => $record['job'],
+			'level'      => $record['level'],
+			'experience' => $record['experience'],
+		);
+	}
+}
+

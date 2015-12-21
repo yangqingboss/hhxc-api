@@ -10,3 +10,29 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
+	$result['msg'] = MESSAGE_WARNING;
+} else {
+	$condition = array(
+		'schema' => 'hh_techuser',
+		'fields' => array(
+			'*',
+			'(SELECT title FROM hh_score WHERE dengji=grade) AS h_grade',
+		),
+		'filter' => array(
+			'id' => Assign($params['uid'], 0),
+		),
+	);
+
+	$record = StorageFindOne($condition);
+	if (is_array($record) and empty($record) == FALSE) {
+		$result = array(
+			'code'      => '101',
+			'grade'     => $record['h_grade'],
+			'score'     => $record['score'],
+			'percent'   => $record['percent'],
+			'needscore' => $record['needscore'],
+		);
+	}
+}
+

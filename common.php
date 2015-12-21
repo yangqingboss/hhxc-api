@@ -42,7 +42,7 @@ $ssdb_prefix = '';
 /**************************************** 公共函數 ****************************************/
 // 若參數是空值則返回給定的默認值
 function Assign($object, $default = '') {
-	return empty($object) ? $default : $object;
+	return (empty($object) and is_numeric($object) == FALSE) ? $default : $object;
 }
 
 // 基於字符獲取子字符串

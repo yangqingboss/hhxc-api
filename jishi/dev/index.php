@@ -14,10 +14,11 @@ define('API_VERSION', basename(dirname(__FILE__)));
 define('API_NAME',    str_replace(API_ROOT . DIRECTORY_SEPARATOR, '', dirname(dirname(__FILE__))));
 
 ## 頁面URL設置
-define('PAGE_ANLI',    'http://www.haohaoxiuche.com/html_hhxc_anli.php?uid=%d&openid=%d&debug=%d&resultid=');
-define('ICON_DEFAULT', 'http://haohaoxiuche.com/css/icon_default.png');
-define('ICON_PATH',    'http://haohaoxiuche.com/api/userimg/');
-define('NICK_DEFAULT', '汽修人');
+define('PAGE_ANLI',     'http://www.haohaoxiuche.com/html_hhxc_anli.php?uid=%d&openid=%s&debug=%d&resultid=');
+define('PAGE_ZHENGSHI', 'http://www.haohaoxiuche.com/api_zhengshi.php?uid=%d&openid=%s&theid=');
+define('ICON_DEFAULT',  'http://haohaoxiuche.com/css/icon_default.png');
+define('ICON_PATH',     'http://haohaoxiuche.com/api/userimg/');
+define('NICK_DEFAULT',  '汽修人');
 
 ## 預加載全局配置文件
 if (API_VERSION != 'dev') {
@@ -74,7 +75,7 @@ die(JsonEncode($result));
 // 檢測用戶OpenID有效性
 function CheckOpenID($loginid, $uid = 0) {
 	if (DEBUG == FALSE) {
-		$result = StorageQueryOne('hh_techuser', '*',  array('loginid' => $loginid));
+		$result = StorageQueryOne('hh_techuser', '*',  array('loginid' => $loginid, 'zhuangtai' => 1));
 
 		if (is_array($result)) {
 			return $uid > 0 and $uid == Assign($result['id'], '0');
@@ -257,4 +258,24 @@ function SetTimes($openid, $uid) {
 	$fields = array('times_cx' => 'times_cx+1');
 	$filter = array('loginid' => $params['openid'], 'id' => $params['id']);
 	return StorageEdit('hh_techuser', $fields, $filter);
+}
+
+function RefreshMsg($uid) {
+	$messages = array(
+		'msg1' => "(SELECT COUNT(*) FROM hh_techforum WHERE pubuser='{$uid}' AND isnewmsg=1 AND type=1)",
+		'msg2' => "(SELECT COUNT(*) FROM hh_techforum WHERE pubuser='{$uid}' AND isnewmsg=1 AND type=2)",
+		'msg3' => "(SELECT COUNT(*) FROM hh_techqzhi  WHERE pubuser='{$uid}' AND isnewmsg=1)",
+		'msg4' => "(SELECT COUNT(*) FROM hh_techforum_list WHERE at='{$uid}' AND isnewat=1  AND type=1)",
+		'msg5' => "(SELECT COUNT(*) FROM hh_techforum_list WHERE at='{$uid}' AND isnewat=1  AND type=2)",
+		'msg6' => "(SELECT COUNT(*) FROM hh_techqzhi_list  WHERE at='{$uid}' AND isnewat=1)",
+		'msg7' => "(SELECT COUNT(*) FROM hh_zhaopin   WHERE  ofuser='{$uid}' AND isnewmsg=1)",
+		'msg8' => "(SELECT COUNT(*) FROM hh_zhaopin_list  WHERE  at='{$uid}' AND isnewat=1)",
+	);
+
+	foreach ($messages as $key => $sql) {
+		$fields = array(
+			$key => $sql,
+		);
+		StorageEditByID('hh_techuser', $fields, $uid);
+	}
 }

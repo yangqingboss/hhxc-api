@@ -10,3 +10,19 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+$result = array('code' => '101', 'number' => '0');
+
+$condition = array(
+	'schema' => 'hh_techuser',
+	'fields' => array(
+		'(msg1+msg2+msg3+msg4+msg5+msg6+msg7+msg8) AS msg',
+	),
+	'filter' => array(
+		'id' => Assign($params['uid'], 0),
+	),
+);
+$record = StorageFindOne($condition);
+if (is_array($record) and empty($record) == FALSE) {
+	$result['number'] = $record['msg'];
+}
+
