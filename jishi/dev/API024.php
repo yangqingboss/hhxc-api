@@ -10,3 +10,16 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
+	$result['msg'] = MESSAGE_WARNING;
+} else {
+	$data = array(
+		'ofuser'
+		'createdat'
+		'ofsymptom'
+		'offault'
+		'search
+	);
+	$id = StorageAdd('hh_techuser_cxsym', $data);
+}
+
