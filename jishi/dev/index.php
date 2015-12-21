@@ -20,7 +20,8 @@ define('ICON_DEFAULT',  'http://haohaoxiuche.com/css/icon_default.png');
 define('ICON_PATH',     'http://haohaoxiuche.com/api/userimg/');
 define('PIC_F_PATH',    join(array(dirname(API_ROOT), 'api', 'forumimg'), DIRECTORY_SEPARATOR));
 define('PIC_Q_PATH',    join(array(dirname(API_ROOT), 'api', 'qzhilistimg'), DIRECTORY_SEPARATOR));
-define('PIC_Z_PATH',    join(array(dirname(API_ROOT), 'api', 'qzhilistimg'), DIRECTORY_SEPARATOR));
+define('PIC_L_PATH',    join(array(dirname(API_ROOT), 'api', 'forumlistimg'), DIRECTORY_SEPARATOR));
+define('PIC_Z_PATH',    join(array(dirname(API_ROOT), 'api', 'zhaopinlistimg'), DIRECTORY_SEPARATOR));
 define('NICK_DEFAULT',  '汽修人');
 
 ## 預加載全局配置文件
