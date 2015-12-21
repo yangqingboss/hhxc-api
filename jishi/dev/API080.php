@@ -10,3 +10,71 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
+	$result['msg'] = MESSAGE_WARNING;
+} else {
+	$condition = array(
+		'schema' => 'hh_techforum_list',
+		'fields' => array(
+			'*',
+			'(SELECT nick FROM hh_techuser WHERE id=pubuser) AS h_nick',
+			'(SELECT headerimg FROM hh_techuser WHERE id=pubuser) AS h_headerimg',
+			'(SELECT grade FROM hh_techuser WHERE id=pubuser) AS h_grade',
+			'(SELECT COUNT(*) FROM hh_techforum_list_img WHERE listid=hh_techforum_list.id) AS h_medias',
+		),
+		'filter' => array(
+			'tid' => Assign($params['tid'], 0),
+			'no'  => array('GT', Assign($params['index'], 0)),
+		),
+	);
+
+	$recordset = StorageFind($condition);
+	if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
+		$result['msg'] = MESSAGE_EMPTY;
+	} else {
+		$result = array('code' => '101', 'data' => array());
+
+		foreach ($recordset as $index => $row) {
+			$buffer = array(
+				'uid'      => $row['pubuser'],
+				'userpic'  => $row['h_headerimg'],
+				'usernick' => $row['h_nick'],
+				'grade'    => $row['h_grade'],
+				'posttime' => $row['pubtime'],
+				'content'  => $row['content'],
+				'listid'   => $row['id'],
+				'index'    => $row['no'],
+				'medias'   => $row['h_medias'],
+				'mdata'    => array(),
+			);
+
+			$condition_sub = array(
+				'schema' => 'hh_techforum_list_img',
+				'fields' => array('id'),
+				'filter' => array(
+					'listid' => $row['id'],
+				),
+			);
+			$buf = StorageFind($condition_sub);
+			if (is_array($buf) and empty($buf) == FALSE) {
+				foreach ($buf as $index => $row_img) {
+					$buffer['mdata'][] = array(
+						'mid'   => $row_img['id'],
+						'type'  => '0',
+						'mname' => 'image' . ($index+1),
+						'mpic'  => $row_img['id'] . '_s.png',
+						'url'   => '',
+					);
+				}
+			}
+
+			$result['data'][] = $buffer;
+		}
+
+		$filter = array('tid' => Assign($params['tid'], 0), 'at' => Assign($params['uid'], 0));
+		StorageEdit('hh_techforum_list', array('isnew' => 0, 'isnewat' => 0), $filter);
+		StorageEditByID('hh_techforum', array('isnewmsg' => 0, 'isnewat' => 0), Assign($params['tid'], 0));
+		RefreshMsg(Assign($params['uid'], 0));
+	}
+}
+

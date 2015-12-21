@@ -10,3 +10,17 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+$condition = array(
+	'schema' => 'hh_techforum',
+	'fields' => array(
+		'*',
+		'(SELECT nick FROM hh_techuser WHERE id=hh_techqzhi.pubuser)      AS h_nick',
+		'(SELECT headerimg FROM hh_techuser WHERE id=hh_techqzhi.pubuser) AS h_headerimg',
+		'(SELECT grade FROM hh_techuser WHERE id=hh_techqzhi.pubuser)     AS h_grade',
+		'(SELECT COUNT(*) FROM hh_techforum_img WHERE qid=hh_techforum.id AS h_ct',
+	),
+	'filter' => array(
+		'tag'
+		'topsite' => array('GT', 0)
+	),
+);
