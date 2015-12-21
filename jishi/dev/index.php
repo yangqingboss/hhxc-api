@@ -18,6 +18,9 @@ define('PAGE_ANLI',     'http://www.haohaoxiuche.com/html_hhxc_anli.php?uid=%d&o
 define('PAGE_ZHENGSHI', 'http://www.haohaoxiuche.com/api_zhengshi.php?uid=%d&openid=%s&theid=');
 define('ICON_DEFAULT',  'http://haohaoxiuche.com/css/icon_default.png');
 define('ICON_PATH',     'http://haohaoxiuche.com/api/userimg/');
+define('PIC_F_PATH',    join(array(dirname(API_ROOT), 'api', 'forumimg'), DIRECTORY_SEPARATOR));
+define('PIC_Q_PATH',    join(array(dirname(API_ROOT), 'api', 'qzhilistimg'), DIRECTORY_SEPARATOR));
+define('PIC_Z_PATH',    join(array(dirname(API_ROOT), 'api', 'qzhilistimg'), DIRECTORY_SEPARATOR));
 define('NICK_DEFAULT',  '汽修人');
 
 ## 預加載全局配置文件
@@ -261,6 +264,8 @@ function SetTimes($openid, $uid) {
 }
 
 function RefreshMsg($uid) {
+	if(empty($uid)) return;
+
 	$messages = array(
 		'msg1' => "(SELECT COUNT(*) FROM hh_techforum WHERE pubuser='{$uid}' AND isnewmsg=1 AND type=1)",
 		'msg2' => "(SELECT COUNT(*) FROM hh_techforum WHERE pubuser='{$uid}' AND isnewmsg=1 AND type=2)",
@@ -279,3 +284,4 @@ function RefreshMsg($uid) {
 		StorageEditByID('hh_techuser', $fields, $uid);
 	}
 }
+
