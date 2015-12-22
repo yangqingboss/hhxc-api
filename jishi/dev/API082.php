@@ -31,8 +31,8 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			'fields' => array(
 				'*',
 				'(SELECT nick FROM hh_techuser WHERE id=pubuser) AS h_nick',
-				'(SELECT headerimg FROM hh_techuser WHERE id=pubuser) AS h_headerimg)',
-				'(SELECT grade FROM hh_techuser WHERE id=pubuser) AS h_grade)',
+				'(SELECT headerimg FROM hh_techuser WHERE id=pubuser) AS h_headerimg',
+				'(SELECT grade FROM hh_techuser WHERE id=pubuser) AS h_grade',
 				'(SELECT COUNT(*) FROM hh_techqzhi_list_img WHERE listid=hh_techqzhi_list.id) AS h_ct',
 			),
 			'filter' => array(

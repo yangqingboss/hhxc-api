@@ -29,7 +29,7 @@ require_once(API_ROOT . DIRECTORY_SEPARATOR . 'common.php');
 
 ## 獲取測試參數
 $apicode = substr(strval(Assign($argv[1], '0') + 1000), 1, 3);
-$samples = Assign($argv[2], '0');
+$samples = intval(Assign($argv[2], 0));
 $apifile = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'samples' . DIRECTORY_SEPARATOR . $apicode . '.php';
 
 ## 執行測試樣品
@@ -42,9 +42,10 @@ if (file_exists($apifile) == FALSE) {
 		die("Unit Test Error: '{$apicode}' Samples Not Array");
 	}
 
-	if ($samples !== '0') {
-		$GLOBALS['DATA'] = array(
-			($samples - 1) => Assign($GLOBALS['DATA'][$sample - 1], array()),
+	$GLOBALS['TEST_DATA'] = $GLOBALS['DATA'];
+	if ($samples > 0) {
+		$GLOBALS['TEST_DATA'] = array(
+			($samples - 1) => Assign($GLOBALS['DATA'][$samples - 1], array()),
 		);
 	}
 
@@ -52,7 +53,7 @@ if (file_exists($apifile) == FALSE) {
 	echo strtoupper(API_NAME) . ' API for ' . $apicode;
 	echo ' ------------------------------';
 
-	foreach ($GLOBALS['DATA'] as $number => $sample) {
+	foreach ($GLOBALS['TEST_DATA'] as $number => $sample) {
 		echo "\nUNIT TEST " . ($number + 1) . "th\n";
 		UnitTest($apicode, $sample);
 	}

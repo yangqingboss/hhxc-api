@@ -25,7 +25,7 @@ $condition = array(
 	'others' => 'ORDER BY id DESC LIMIT 10',
 );
 
-switch ($params['type']) 
+switch ($params['type']) {
 	case '2':
 		$condition['filter']['pubuser'] = Assign($params['uid'], 0);
 		break;
