@@ -10,4 +10,46 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+$condition = array(
+	'schema' => 'hh_dbver',
+	'fields' => array(
+		'COUNT(*)',
+		'ver',
+	),
+	'filter' => array(
+		'vername' => 'app_' . Assign($params['tag']),
+		'ver'     => array('GT', Assign($params['databasever'], 0)),
+	),
+);
+$recordset = StorageFind($condition);
+if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
+	$result['msg'] = MESSAGE_EMPTY;
+} else {
+	$result = array('code' => '101', 'data' => array(), 'messages' => 0);
+	
+	if (empty($recordset) == FALSE) {
+		$result['databasever'] = $recordset[0]['ver'];
+	}
+
+	$condition_sub = array(
+		'schema' => 'hh_app',
+		'fields' => array('id', 'title', 'url', 'img'),
+		'filter' => array(
+			'tag' => array('NEQ', $params['tag']),
+		),
+	);
+	$buf = StorageFind($condition_sub);
+	if (is_array($buf) and empty($buf) == FALSE) {
+		foreach ($buf as $index => $row) {
+			$result['data'][] = array(
+				'aid'      => $row['id'],
+				'aname'    => $row['title'],
+				'url'      => $row['url'],
+				'imageurl' => $row['img'],
+			);
+
+			$result['messages'] += 1;
+		}
+	}
+}
 
