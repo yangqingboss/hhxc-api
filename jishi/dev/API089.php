@@ -10,3 +10,27 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
+	$result['msg'] = MESSAGE_WARNING;
+} else {
+	$condition = array(
+		'schema' => 'hh_dbver',
+		'fields' => array('ver', 'remark'),
+		'filter' => array(
+			'vername' => 'vername_' . Assign($params['tag']),
+		),
+	);
+
+	$recordset = StorageFind($condition);
+	if (is_array($recordset) and empty($recordset) == FALSE) {
+		if ($recordset[0]['ver'] > Assign($params['version'], 0)) {
+			$result = array('code' => '101', 'data' => array());
+			
+			$result['data'][] = array(
+				'version' => $recordset[0]['ver'],
+				'url'     => $recordset[0]['url'],
+			);
+		}
+	}
+}
+
