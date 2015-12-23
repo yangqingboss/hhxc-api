@@ -10,3 +10,11 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+$data = array(
+	'username'
+	'password'
+	'createdat'
+	'deviceid'
+	'username_d' => Assign($params[
+	'fromcode'
+);

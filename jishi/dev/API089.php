@@ -22,7 +22,9 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	);
 
 	$recordset = StorageFind($condition);
-	if (is_array($recordset) and empty($recordset) == FALSE) {
+	if (is_array($recordset) or empty($recordset) == TRUE) {
+		$result['msg'] = MESSAGE_EMPTY;
+	} else {
 		if ($recordset[0]['ver'] > Assign($params['version'], 0)) {
 			$result = array('code' => '101', 'data' => array());
 			

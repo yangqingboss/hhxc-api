@@ -10,3 +10,23 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
+	$result['msg'] = MESSAGE_WARNING;
+} else {
+	$result = array('code' => '101', 'msg' => 'exclusive');
+
+	$record = StorageFindID('hh_techuser', Assign($params['uid'], 0));
+	$result['withcode'] = (is_array($record) and empty($record) == FALSE) ? $record['withcode'] : '';
+
+	$condition = array(
+		'schema' => 'hh_dbver',
+		'filter' => array(
+			'vername' => 'yaoqinwenan',
+		),
+	);
+	$buf = StorageFindOne($condition);
+	if (is_array($buf) and empty($buf) == FALSE) {
+		$result['information'] = str_replace('_code_', $result['withcode'], $result['remark']);
+	}
+}
+

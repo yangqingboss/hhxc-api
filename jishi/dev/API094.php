@@ -10,3 +10,10 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
+	$result['msg'] = MESSAGE_WARNING;
+} else {
+	$ret = Techuser_setScore(Assign($params['uid'], 0), 6);
+	$result = array('code' => '101', 'msg' => $ret);
+}
+
