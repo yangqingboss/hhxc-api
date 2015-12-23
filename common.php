@@ -11,6 +11,15 @@
 if (!defined('HHXC')) die('Permission denied');
 
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'SSDB.php');
+require_once(join(array(dirname(__FILE__), 'lib', 'JPush', 'autoload.php'), DIRECTORY_SEPARATOR));
+
+use JPush\Model as M;
+use JPush\JPushClient;
+use JPush\JPushLog;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use JPush\Exception\APIConnectionException;
+use JPush\Exception\APIRequestException;
 
 /**************************************** 全局參數 ****************************************/
 define('API_URL',             'http://www.haohaoxiuche.com/hhxc-api/%s/%s/index.php');
@@ -22,6 +31,8 @@ define('SMS_BRANDS',          '好好修车');
 define('SMS_ACTION_REGISTER', '您的注册验证码：');
 define('SMS_ACTION_BANDINGS', '您的手机绑定验证码：');
 define('SMS_ACTION_PASSWORD', '您的密码验证码：');
+define('JPUSH_APIKEY',        'c7c53eac61f02fc1724ddf22');
+define('JPUSH_SECRET',        '30116388aa07413da40cd4b7');
 define('MESSAGE_SUCCESS',     '提交成功！');
 define('MESSAGE_ERROR',       '提交失败！');
 define('MESSAGE_WARNING',     '验证失败！');
@@ -36,6 +47,7 @@ $GLOBALS['DB_SYMBOLS']  = array(
 );
 
 $mysql = NULL;
+$jpush = NULL;
 $ssdb  = NULL;
 $ssdb_prefix = '';
 
@@ -935,4 +947,34 @@ function MakeSmallIMG($srcImgPath,$targetImgPath,$targetW,$targetH) {
 	    	copy($srcImgPath,$targetImgPath);
 	    	ImageDestroy($srcImg);
 	}
+}
+
+function JPushInit() {
+	JPushLog::setLogHandlers(array(new StreamHandler('jpush.log', Logger::DEBUG)));
+	return new JPushClient(JPUSH_APIKEY, JPUSH_SECRET);
+}
+
+## 消息推送函數 针对特定用户推送
+function JPushUser($message, $user) {
+	if (empty($jpush) == TRUE) {
+		$jpush = JPushInit();
+	}
+
+	try {
+		if (is_array($user) == FALSE) $user = array($user);
+
+		$result = $jpush->push()
+			->setPlatform(M\Platform('android', 'ios'))
+			->setAudience(M\Audience(M\Tag($user)))
+			->setNotification(M\notification($message,
+				M\android($message),
+				M\ios($message)
+			))
+			->send();
+		return $result->msg_id;
+	} catch (APIRequestException $e) {
+	} catch (APIConnectionException $e) {
+	}
+
+	return FALSE;
 }
