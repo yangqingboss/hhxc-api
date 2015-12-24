@@ -26,6 +26,8 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 } else {
 	foreach ($recordset as $index => $row) {
 		$buffer = array(
+			'faultType' => $row['id'],
+			'faultName' => $row['
 		);
 
 		$result['data'][] = $buffer;
