@@ -526,7 +526,7 @@ function StorageWhere($filter, $default = array()) {
 			$buf = array(); $buf_sign = ' AND ';
 			foreach ($val as $buf_num => $buf_val) {
 				if (is_string($buf_val)) {
-					$buf_sign = strtoupper($buf_val);
+					$buf_sign = ' ' . strtoupper($buf_val) . ' ';
 					continue;
 				}
 

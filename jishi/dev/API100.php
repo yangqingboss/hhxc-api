@@ -18,9 +18,10 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	$condition = array(
 		'schema' => 'hh_techuser_dianzan',
 		'filter' => array(
-			'uid' => Assign($params['uid'], 0),
-			'tid' => Assign($params['tid'], 0),
-			'tag' => Assign($params['tag'], 0),
+			'uid'   => Assign($params['uid'], 0),
+			'tid'   => Assign($params['tid'], 0),
+			'tag'   => Assign($params['tag'], 0),
+			'touid' => 0,
 		),
 	);
 

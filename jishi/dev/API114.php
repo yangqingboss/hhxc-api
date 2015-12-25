@@ -13,5 +13,5 @@ if (!defined('HHXC')) die('Permission denied');
 $result = array(
 	'code' => '101',
 	'msg'  => '',
-	'data' => array('车身振动', '不跳挡', '动力不足');
+	'data' => array('车身振动', '不跳挡', '动力不足'),
 );
