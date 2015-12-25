@@ -42,6 +42,15 @@ default:
 	$nav_active['home'] = 'active';
 }
 
+if (empty($_GET) == FALSE) {
+	$from = isset($_REQUEST['from']) ? $_REQUEST['from'] : '0';
+	$ipaddress = $_SERVER["REMOTE_ADDR"];
+	$sql = "insert into `hh_site_from` (`fromud`, `ipadrress`, `createdat`) values ('{$from}', '{$ipaddress}', now())";
+	$mysqli = mysql_connect(DB_HOST, DB_USER, DB_PWD);
+	mysql_select_db('gocar', $mysqli);
+	mysql_query($sql, $mysqli);
+}
+
 header('Content-Type: text/html; charset=UTF-8');
 ?>
 <!DOCTYPE html>
