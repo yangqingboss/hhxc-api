@@ -17,6 +17,7 @@ $condition = array(
 	'fields' => '*',
 	'filter' => array(
 		'type' => 7,
+		'pid'  => 0,
 	),
 	'others' => 'ORDER BY id ASC',
 );
@@ -27,8 +28,25 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 	foreach ($recordset as $index => $row) {
 		$buffer = array(
 			'faultType' => $row['id'],
-			'faultName' => $row['
+			'faultName' => $row['title'],
+			'data'      => array(),
 		);
+
+		$condition_sub = array(
+			'schema' => 'car_symptom',
+			'fields' => '*',
+			'filter' => array(
+				'type' => 7,
+				'pid'  => $row['id'],
+			),
+			'others' => 'ORDER BY id ASC',
+		);
+		$buf = StorageFind($condition_sub);
+		if (is_array($buf) and empty($buf) == FALSE) {
+			foreach ($buf as $number => $row_item) {
+				$buffer['data'][] = $row_item['title'];
+			}
+		}
 
 		$result['data'][] = $buffer;
 	}
