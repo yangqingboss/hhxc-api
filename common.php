@@ -37,7 +37,7 @@ define('MESSAGE_SUCCESS',     '提交成功！');
 define('MESSAGE_ERROR',       '提交失败！');
 define('MESSAGE_WARNING',     '验证失败！');
 define('MESSAGE_EMPTY',       '无数据！');
-define('KEY_PHONE',           'phone_d'); ## 兼容舊版API所新添的未加密手機號碼
+define('KEY_PHONE',           'phoneinit'); ## 兼容舊版API所新添的未加密手機號碼
 define('IMAGE_ROOT',          dirname(API_ROOT) . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR . 'userimg');
 
 $GLOBALS['DB_KEYWORDS'] = array('NOW', 'SUM', 'DATE', 'COUNT', 'MIN', 'MAX', 'HOUR', 'MINUTE', 'MONTH', '(');
