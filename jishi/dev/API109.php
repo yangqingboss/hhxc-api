@@ -10,6 +10,14 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+$message = array(
+	'赶紧参加实名认证，赢得加倍经验值！',
+	'您的信息已经提交审核，结果在此发布，敬请关注。',
+	'实名认证通过，我们一起进步成长！',
+	'身份证信息有问题，请重新提交！',
+	'证书有问题，请重新提交！',
+);
+
 if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	$result['msg'] = MESSAGE_WARNING;
 } else {

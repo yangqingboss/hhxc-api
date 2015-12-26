@@ -38,7 +38,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	} else {
 		$data = array(
 			'uid'      => Assign($params['uid'], 0),
-			'tid'      => Assign($params['tid'], 0),
+			'tid'      => Assign($params['toplistid'], 0),
 			'tag'      => Assign($params['tag'], 0),
 			'type'     => Assign($params['type'], 0),
 			'touid'    => 1,

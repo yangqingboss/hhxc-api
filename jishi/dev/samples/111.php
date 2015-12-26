@@ -33,4 +33,10 @@ $GLOBALS['DATA'] = array(
 		'tag'      => 4,
 		'type'     => 0,
 	),
+	array(
+		'uid'      => 14,
+		'tolistid' => '10046',
+		'touid'    => 78,
+		'tag'      => 1,
+	),
 );
