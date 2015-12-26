@@ -13,7 +13,7 @@ if (!defined('HHXC')) die('Permission denied');
 if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	$result['msg'] = MESSAGE_WARNING;
 } else {
-	$tag = 2;
+	$tag = 1;
 	$pub = 'pubuser';
 	$schemas = array('hh_techforum', 'hh_techforum_list');
 

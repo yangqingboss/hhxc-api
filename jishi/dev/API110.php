@@ -10,3 +10,4 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+$result = array('code' => '101', 'msg' => MESSAGE_SUCCESS);

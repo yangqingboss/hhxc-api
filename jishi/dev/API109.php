@@ -10,3 +10,41 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
+	$result['msg'] = MESSAGE_WARNING;
+} else {
+	$condition = array(
+		'schema' => 'hh_identification',
+		'fields' => '*',
+		'filter' => array(
+			'uid' => Assign($params['uid'], 0),
+		),
+	);
+	$record = StorageFindOne($condition);
+	if (is_array($record) == FALSE or empty($record) == TRUE) {
+		$result['msg'] = MESSAGE_EMPTY;
+	} else {
+		$result = array('code' => '101', 'data' => array());
+
+		$images = 0;
+		if (empty($record['fileid']) == FALSE) {
+			$images += 1；
+		}
+		if (empty($record['filerz1']) == FALSE) {
+			$images += 1;
+		}
+		if (empty($record['filerz2']) == FALSE) {
+			$images += 1;
+		}
+
+		$result['data'][] = array(
+			'identification' => $record['identification'],
+			'name'           => $record['name'],
+			'states'         => $record['status'],
+			'images'         => $images,
+			'fileid'         => $record['fileid'],
+			'filerz1'        => $record['filerz1'],
+			'filerz2'        => $record['filerz2'],
+		);
+	}
+}
