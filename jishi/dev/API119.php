@@ -26,7 +26,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			'fields' => array(
 				'*',
 				"(SELECT isnewdz  FROM {$schema} WHERE id=hh_techuser_dianzan.tid) AS h_isnewdz",
-				"(SELECT lasttime FROM {$schema} WHERE id=hh_techuser_dianzan.tid) AS h_lasttime",
+				//"(SELECT lasttime FROM {$schema} WHERE id=hh_techuser_dianzan.tid) AS h_lasttime",
 			),
 			'filter' => array(
 				'tag'   => $tag,
