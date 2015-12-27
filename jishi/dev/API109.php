@@ -44,7 +44,8 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		if (empty($record['filerz2']) == FALSE) {
 			$images += 1;
 		}
-
+		
+		$result['msg'] = $message[$record['status'] - 1];
 		$result['data'][] = array(
 			'identification' => $record['identification'],
 			'name'           => $record['name'],

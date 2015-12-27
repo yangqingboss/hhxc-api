@@ -45,6 +45,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			'filerz1'        => $fileids['filerz1'],
 			'filerz2'        => $fileids['filerz2'],
 			'deviceid'       => Assign($params['deviceid']),
+			'states'         => 1,
 		);
 		$id = StorageAdd('hh_identification', $data);
 		if (empty($id) == FALSE) {

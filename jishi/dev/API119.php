@@ -13,26 +13,28 @@ if (!defined('HHXC')) die('Permission denied');
 if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	$result['msg'] = MESSAGE_WARNING;
 } else {
-	$tag = 2;
-	$pub = 'pubuser';
+	$tag     = 1;
+	$keys    = array(
+		array('pubuser', 'pubtime'), 
+		array('pubuser', 'pubtime'),
+	);
 	$schemas = array('hh_techforum', 'hh_techforum_list');
 
 	$result = array('code' => '101', 'data' => array());
 	foreach ($schemas as $index => $schema) {
-		$buffers = array();
-
+		## 獲取當前用戶被點贊的帖子
+		$sql_in = "SELECT id FROM {$schema} WHERE {$keys[$index][0]}='%d'";
 		$condition_main = array(
 			'schema' => 'hh_techuser_dianzan',
 			'fields' => array(
-				'*',
-				"(SELECT isnewdz  FROM {$schema} WHERE id=hh_techuser_dianzan.tid) AS h_isnewdz",
-				//"(SELECT lasttime FROM {$schema} WHERE id=hh_techuser_dianzan.tid) AS h_lasttime",
+				'DISTINCT tid',
 			),
 			'filter' => array(
+				'tid'   => array('IN', sprintf($sql_in, $params['uid'])),
 				'tag'   => $tag,
-				'tid'   => array('IN', "SELECT tid FROM {$schema} WHERE {$pub}='{$params['uid']}'"),
 				'type'  => 1,
 				'touid' => $index,
+				'uid'   => array('GT', 0),
 			),
 			'others' => 'ORDER BY tid DESC',
 		);
@@ -40,71 +42,77 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		if (is_array($recordset_main) == FALSE or empty($recordset_main) == TRUE) {
 			continue;
 		}
-	
-		foreach ($recordset_main as $number => $row_main) {
-			if (empty($buffers[$row_main['tid']]) == FALSE) {
-				continue;
-			}
 
-			$buffer = array(
+		foreach ($recordset_main as $number_main => $row_main) {
+			$buffer_main = array(
+				'tid'        => $row_main['tid'],
+				'pubtime'    => '0',
 				'praisetype' => empty($row_main['touid']) ? '1' : '2',
-				'newpraise'  => $row_main['h_isnewdz'],
-				'lasttime'   => $row_main['h_lasttime'],
+				'newpraise'  => '0',
 				'praisedata' => array(),
+				'hostdata'   => array(),
+				'repydata'   => array(),
 			);
 
-			## 獲取點贊人信息
-			foreach ($recordset_main as $number0 => $row_user) {
-				if ($row_user['tid'] != $row_main['tid']) {
-					continue;
-				}
+			## 新點贊狀態
+			$record_status = StorageFindID($schema, $row_main['tid']);
+			if (is_array($record_status) and empty($record_status) == FALSE) {
+				$buffer_main['newpraise'] = Assign($record_status['isnewdz'], '0');
+				$buffer_main['pubtime']   = $record_status[$keys[$index][1]];
+			}
 
-				$recordset_user = array(
-					'schema' => 'hh_techuser',
-					'fields' => array(
-						'*',
-					),
-					'filter' => array(
-						'id' => $row_user['uid'],
-					),
-				);
-				$record_user = StorageFindOne($recordset_user);
-				if (is_array($record_user) and empty($record_user) == FALSE) {
-					$buffer_user = array(
-						'uid'        => $record_user['id'], 
-						'userpic'    => $record_user['headerimg'],
-						'usernick'   => $record_user['nick'],
-						'grade'      => '',
-						'adopt'      => $record_user['adopt'],
-						'anonymous'  => $record_user['anonymous'],
-						'official'   => '',
-						'identified' => '',
-						'rank'       => 0,
-						'rankname'   => '',
-						'posttime'   => '',
+			## 獲取點贊者信息
+			$condition_main['fields'] = array('DISTINCT uid');
+			$condition_main['filter']['tid'] = $row_main['tid'];
+			$recordset_user = StorageFind($condition_main);
+			if (is_array($recordset_user) and empty($recordset_user) == FALSE) {
+				foreach ($recordset_user as $number_user => $row_user) {
+					$condition_user = array(
+						'schema' => 'hh_techuser',
+						'fields' => array(
+							'*',
+							'(SELECT title FROM hh_score WHERE dengji=grade) AS h_grade',
+						),
+						'filter' => array(
+							'id' => $row_user['uid'],
+						),
 					);
 
-					$buffer['praisedata'][] = $buffer_user;
+					$record_user = StorageFindOne($condition_user);
+					if (is_array($record_user) == FALSE or empty($record_user) == TRUE) {
+						continue;
+					}
+
+					$buffer_main['praisedata'][] = array(
+						'uid'        => $record_user['id'],
+						'userpic'    => $record_user['headerimg'],
+						'usernick'   => $record_user['nick'],
+						'grade'      => $record_user['h_grade'],
+						'adopt'      => '0',
+						'anonymous'  => '0',
+						'official'   => $record_user['type'],
+						'identified' => $record_user['identified'],
+						'rank'       => $record_user['rank'],
+						'rankname'   => $record_user['rankname'],
+						'posttime'   => '0',
+						'content'    => '0',
+						'listid'     => '0',
+						'index'      => '0',
+						'medias'     => '0',
+						'mdata'      => array(),
+					);
 				}
 			}
 
 			## 獲取樓主信息
-
-			## 獲取跟貼信息
-
-			$buffers[$row_main['tid']] = $buffer;
-
+			$result['data'][] = $buffer_main;
 		}
-
-		## 添加
 	}
 
-	if (count($result['data']) == 0) {
+	## 帖子信息排序
+	if (empty($result['data']) == TRUE) {
 		$result['msg'] = MESSAGE_EMPTY;
 	} else {
-		foreach ($buffers as $buffer) {
-			$result['data'][] = $buffer;
-		}
 	}
 }
 

@@ -10,7 +10,7 @@
 // @package hhxc
 $GLOBALS['DATA'] = array(
 	array(
-		'uid'     => 50,
+		'uid'     => 90,
 		'openid'  => '4063f795ff45e71ec0c811f3c8ff754c',
 	),
 );
