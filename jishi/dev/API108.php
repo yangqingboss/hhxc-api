@@ -23,14 +23,27 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	);
 	$record = StorageFindOne($condition);
 
+	## 處理上傳圖片
+	$fileids = array();
+	$keys = array('fileid', 'filerz1', 'filerz2');
+	foreach ($keys as $key) {
+		$tmpname  = "{$key}-{$params['uid']}"'.png';
+		
+		if ($_FILES[$key]['error'] <= 0) {
+			$savepath = PIC_I_PATH . DIRECTORY_SEPARATOR . $tmpname;
+			$fileids[$key] = ICON_PATH . $tmpname;
+			move_uploaded_file($_FILES[$key]['tmp_name'], $savepath);
+		}
+	}
+
 	if (is_array($record) == FALSE or empty($record) == TRUE) {
 		$data = array(
 			'uid'            => Assign($params['uid'], 0),
 			'name'           => Assign($params['name']),
 			'identification' => Assign($params['identification']),
-			'fileid'         => $fileid,
-			'filerz1'        => $filerz1,
-			'filerz2'        => $Filerz2,
+			'fileid'         => $fileids['fileid'],
+			'filerz1'        => $fileids['filerz1'],
+			'filerz2'        => $fileids['filerz2'],
 			'deviceid'       => Assign($params['deviceid']),
 		);
 		$id = StorageAdd('hh_identification', $data);
@@ -42,9 +55,9 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		$data = array(
 			'name'           => Assign($params['name']),
 			'identification' => Assign($params['identification']),
-			'fileid'         => $fileid,
-			'filerz1'        => $filerz1,
-			'filerz2'        => $Filerz2,
+			'fileid'         => $fileids['fileid'],
+			'filerz1'        => $fileids['filerz1'],,
+			'filerz2'        => $ $fileids['filerz2'],
 			'deviceid'       => Assign($params['deviceid']),
 		);
 		$num = StorageEdit('hh_identification', $data, array('uid' => Assign($params['uid'], 0)));
