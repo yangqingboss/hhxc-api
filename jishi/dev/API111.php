@@ -19,7 +19,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		'schema' => 'hh_techuser_dianzan',
 		'filter' => array(
 			'uid'   => Assign($params['uid'], 0),
-			'tid'   => Assign($params['tid'], 0),
+			'tid'   => Assign($params['tolistid'], 0),
 			'tag'   => Assign($params['tag'], 0),
 			'touid' => 1,
 		),
@@ -38,7 +38,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	} else {
 		$data = array(
 			'uid'      => Assign($params['uid'], 0),
-			'tid'      => Assign($params['toplistid'], 0),
+			'tid'      => Assign($params['tolistid'], 0),
 			'tag'      => Assign($params['tag'], 0),
 			'type'     => Assign($params['type'], 0),
 			'touid'    => 1,
@@ -50,6 +50,24 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			$message = empty($params['type']) ? '取消成功！' : '点赞成功！';
 			$result = array('code' => '101', 'msg' => $message);
 		}
+	}
+
+	## 更新點贊通知
+	$schema = '';
+	switch ($params['tag']) {
+	case '3':
+		$schema = 'hh_techqzhi_list';
+		break;
+	
+	case '4':
+		$schema = 'hh_zhaopin_list';
+		break;
+
+	default:
+		$schema = 'hh_techforum_list';
+	}
+	if (empty($schema) == FALSE) {
+		StorageEditByID($schema, array('isnewdz' => $params['type'] ? 1 : 0), Assign($params['tolistid'], 0));
 	}
 }
 

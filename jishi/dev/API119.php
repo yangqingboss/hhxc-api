@@ -179,7 +179,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			}
 
 			## 回帖信息
-			if ($buffer_main['praisetype'] == '1') {
+			if ($buffer_main['praisetype'] == '2') {
 				$condition_repy = array(
 					'schema' => array('hh_techuser', $schemas[1]),
 					'fields' => array(
@@ -251,6 +251,15 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	if (empty($result['data']) == TRUE) {
 		$result['msg'] = MESSAGE_EMPTY;
 	} else {
+		for ($number0 = 0; $number0 < count($result['data']) - 1; $number0++) {
+			for ($number1 = $number0 + 1; $number1 < count($result['data']); $number1++) {
+				if ($result['data'][$number0]['pubtime'] < $result['data'][$number1]['pubtime']) {
+					$buffer_tmp = $result['data'][$number0];
+					$result['data'][$number0] = $result['data'][$number1];
+					$result['data'][$number1] = $buffer_tmp;
+				}
+			}
+		}
 	}
 }
 
