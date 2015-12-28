@@ -74,7 +74,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 						'schema' => 'hh_techuser',
 						'fields' => array(
 							'*',
-							sprintf($sql, 'score', 'grade',    'grade'),
+							'grade AS h_grade',
 							sprintf($sql, 'rank',  'rankname', 'rankname'),
 						),
 						'filter' => array(
@@ -87,6 +87,26 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 						continue;
 					}
 
+					## 獲取點贊時間
+					$buffer_user_posttime = '0';
+					$condition_user_posttime = array(
+						'schema' => 'hh_techuser_dianzan',
+						'fields' => array('createdat'),
+						'filter' => array(
+							'tag'   => $tag,
+							'type'  => 1,
+							'touid' => $index,
+							'uid'   => Assign($record_user['id'], 0),
+							'tid'   => $row_main['tid'],
+						),
+					);
+					$record_user_posttime = StorageFindOne($condition_user_posttime);
+					if (is_array($record_user_posttime) and empty($record_user_posttime) == FALSE){
+						$buffer_user_posttime = $record_user_posttime['createdat'];
+					}
+
+
+					## 構建點贊人信息
 					$buffer_main['praisedata'][] = array(
 						'uid'        => Assign($record_user['id'], 0),
 						'userpic'    => Assign($record_user['headerimg']),
@@ -98,7 +118,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 						'identified' => Assign($record_user['identified']),
 						'rank'       => Assign($record_user['rank'], 0),
 						'rankname'   => Assign($record_user['h_rankname']),
-						'posttime'   => '',
+						'posttime'   => Assign($buffer_user_posttime),
 						'content'    => '',
 						'listid'     => '0',
 						'index'      => '0',
@@ -126,7 +146,8 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 					't1.id AS h_tid',
 					't0.type AS h_official',
 					"(SELECT COUNT(*) FROM {$schemas[1]} WHERE tid=t1.id) AS h_messages",
-					'(SELECT title FROM hh_score WHERE dengji=t0.grade) AS h_grade',
+					##'(SELECT title FROM hh_score WHERE dengji=t0.grade) AS h_grade',
+					't0.grade AS h_grade',
 					't1.title AS h_title',
 					't1.content AS h_content',
 					'(SELECT title FROM hh_rank WHERE dengji=t0.rankname) AS h_rankname',
@@ -228,7 +249,8 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 						't1.id AS h_tid',
 						't0.type AS h_official',
 						't1.content AS h_content',
-						'(SELECT title FROM hh_score WHERE dengji=t0.grade) AS h_grade',
+						#'(SELECT title FROM hh_score WHERE dengji=t0.grade) AS h_grade',
+						't0.grade AS h_grade',
 						'(SELECT title FROM hh_rank WHERE dengji=t0.rankname) AS h_rankname',
 					),
 					'filter' => array(

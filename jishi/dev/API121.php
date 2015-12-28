@@ -3,7 +3,7 @@
 // Use of this source that is governed by a Apache-style
 // license that can be found in the LICENSE file.
 //
-// 技術版API編號121 求職點贊
+// 技術版API編號121 被点赞信息之求職
 //
 // @authors hjboss <hongjiangproject@yahoo.com> 2015-12-18#
 // @version 1.0.0
@@ -19,6 +19,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		array('pubuser', 'pubtime'),
 	);
 	$schemas = array('hh_techqzhi', 'hh_techqzhi_list');
+	$hostimg = FALSE;
 
 	$result = array('code' => '101', 'data' => array());
 	foreach ($schemas as $index => $schema) {
@@ -64,14 +65,17 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			## 獲取點贊者信息
 			$condition_main['fields'] = array('DISTINCT uid');
 			$condition_main['filter']['tid'] = $row_main['tid'];
+			$condition_main['others'] = 'ORDER BY id DESC LIMIT 1';
 			$recordset_user = StorageFind($condition_main);
 			if (is_array($recordset_user) and empty($recordset_user) == FALSE) {
+				$sql = '(SELECT title FROM hh_%s WHERE dengji=%s) AS h_%s';
 				foreach ($recordset_user as $number_user => $row_user) {
 					$condition_user = array(
 						'schema' => 'hh_techuser',
 						'fields' => array(
 							'*',
-							'(SELECT title FROM hh_score WHERE dengji=grade) AS h_grade',
+							'grade AS h_grade',
+							sprintf($sql, 'rank',  'rankname', 'rankname'),
 						),
 						'filter' => array(
 							'id' => $row_user['uid'],
@@ -83,19 +87,39 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 						continue;
 					}
 
+					## 獲取點贊時間
+					$buffer_user_posttime = '0';
+					$condition_user_posttime = array(
+						'schema' => 'hh_techuser_dianzan',
+						'fields' => array('createdat'),
+						'filter' => array(
+							'tag'   => $tag,
+							'type'  => 1,
+							'touid' => $index,
+							'uid'   => Assign($record_user['id'], 0),
+							'tid'   => $row_main['tid'],
+						),
+					);
+					$record_user_posttime = StorageFindOne($condition_user_posttime);
+					if (is_array($record_user_posttime) and empty($record_user_posttime) == FALSE){
+						$buffer_user_posttime = $record_user_posttime['createdat'];
+					}
+
+
+					## 構建點贊人信息
 					$buffer_main['praisedata'][] = array(
-						'uid'        => $record_user['id'],
-						'userpic'    => $record_user['headerimg'],
-						'usernick'   => $record_user['nick'],
-						'grade'      => $record_user['h_grade'],
+						'uid'        => Assign($record_user['id'], 0),
+						'userpic'    => Assign($record_user['headerimg']),
+						'usernick'   => Assign($record_user['nick']),
+						'grade'      => Assign($record_user['h_grade']),
 						'adopt'      => '0',
 						'anonymous'  => '0',
-						'official'   => $record_user['type'],
-						'identified' => $record_user['identified'],
-						'rank'       => $record_user['rank'],
-						'rankname'   => $record_user['rankname'],
-						'posttime'   => '0',
-						'content'    => '0',
+						'official'   => Assign($record_user['type'], 0),
+						'identified' => Assign($record_user['identified']),
+						'rank'       => Assign($record_user['rank'], 0),
+						'rankname'   => Assign($record_user['h_rankname']),
+						'posttime'   => Assign($buffer_user_posttime),
+						'content'    => '',
 						'listid'     => '0',
 						'index'      => '0',
 						'medias'     => '0',
@@ -122,7 +146,11 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 					't1.id AS h_tid',
 					't0.type AS h_official',
 					"(SELECT COUNT(*) FROM {$schemas[1]} WHERE tid=t1.id) AS h_messages",
-					'(SELECT title FROM hh_score WHERE dengji=t0.grade) AS h_grade',
+					##'(SELECT title FROM hh_score WHERE dengji=t0.grade) AS h_grade',
+					't0.grade AS h_grade',
+					't1.title AS h_title',
+					't1.content AS h_content',
+					'(SELECT title FROM hh_rank WHERE dengji=t0.rankname) AS h_rankname',
 				),
 				'filter' => array(
 					't0.id' => "t1.{$keys[1][0]}",
@@ -132,23 +160,34 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			$record_host = StorageFindOne($condition_host);
 			if (is_array($record_host) and empty($record_host) == FALSE) {
 				$buffer_host = array(
-					'uid'        => Assign($record_host['h_uid'], 0),
+					'uid'        => Assign($record_host['uid'], 0),
 					'userpic'    => Assign($record_host['headerimg']),
 					'usernick'   => Assign($record_host['nick']),
 					'grade'      => Assign($record_host['h_grade'], 0),
+					'anonymous'  => Assign($record_host['anonymous'], 0),
+					'reward'     => Assign($record_host['reward'], 0),
+					'posttime'   => Assign($record_host[$keys[0][1]]),
 					'official'   => Assign($record_host['h_official'], 0),
 					'identified' => Assign($record_host['identified'], 0),
 					'rank'       => Assign($record_host['rank'], 0),
 					'rankname'   => Assign($record_host['h_rankname']),
-					'posttime'   => Assign($record_host[$keys[0][1]]),
+					'title'      => Assign($record_host['h_title']),
+					'context'    => Assign($record_host['h_content']),
+					'collect'    => 0,
+					'mypraise'   => 0,
+					'praises'    => 0,
+					'tid'        => Assign($record_host['h_tid'], 0),
+					'messages'   => Assign($record_host['h_messages'], 0),
+					'medias'     => 0,
+					'mdata'      => array(),
+
+					## 兼容字段
+					'level'      => Assign($record_host['level'], 0),
+					'experience' => Assign($record_host['experience'], 0),
+					'city'       => Assign($record_host['city']),
 					'job'        => Assign($record_host['job']),
 					'salary'     => Assign($record_host['salary']),
-					'headcount'  => Assign($record_host['headcount']),
-					'city'       => Assign($record_host['city']),
-					'messages'   => Assign($record_host['h_messages'], 0),
-					'collect'    => '0',
-					'mypraise'   => '0',
-					'praises'    => '0',
+					'headcount'  => Assign($record_host['headcount'], 0),
 				);
 
 				## 收藏狀態
@@ -173,7 +212,29 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 					'type'  => 1,
 					'touid' => $index,
 				);
-				$buffer['praises'] = StorageCount('hh_techuser_dianzan', $filter_host_total);
+				$buffer_host['praises'] = StorageCount('hh_techuser_dianzan', $filter_host_total);
+
+				## 獲取帖子圖片
+				if ($hostimg == TRUE) {
+					$condition_host_img = array(
+						'schema' => $schemas[0] . '_img',
+						'filter' => array(
+							'qid' => $record_host['h_tid'],
+						),
+					);
+					$buffer_host_img = StorageFind($condition_host_img);
+					if (is_array($buffer_host_img) and empty($buffer_host_img) == FALSE) {
+						foreach ($buffer_host_img as $number_img => $row_img) {
+							$buffer_host['mdata'][] = array(
+								'mid'   => $row_img['id'],
+								'type'  => '0',
+								'mname' => 'image' . ($number_repy + 1),
+								'mpic'  => "{$row_img['id']}_s.png",
+								'url'   => '',
+							);
+						}
+					}
+				}
 
 				$buffer_main['hostdata'][] = $buffer_host;
 			}
@@ -187,13 +248,16 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 						't0.id AS h_uid',
 						't1.id AS h_tid',
 						't0.type AS h_official',
-						'(SELECT title FROM hh_score WHERE dengji=t0.grade) AS h_grade',
+						't1.content AS h_content',
+						#'(SELECT title FROM hh_score WHERE dengji=t0.grade) AS h_grade',
+						't0.grade AS h_grade',
+						'(SELECT title FROM hh_rank WHERE dengji=t0.rankname) AS h_rankname',
 					),
 					'filter' => array(
 						't0.id'  => "t1.{$keys[1][0]}",
 						't1.tid' => $buffer_tid,
 					),
-					'others' => "ORDER BY t1.{$keys[1][1]} DESC",
+					'others' => "ORDER BY t1.{$keys[1][1]} DESC LIMIT 1",
 				);
 				$recordset_repy = StorageFind($condition_repy);
 				if (is_array($recordset_repy) and empty($recordset_repy) == FALSE) {
@@ -208,20 +272,23 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 							'official'   => Assign($row_repy['h_official'], 0),
 							'identified' => Assign($row_repy['identified'], 0),
 							'rank'       => Assign($row_repy['rank'], 0),
-							'rankname'   => Assign($row_repy['rankname'], 0),
+							'rankname'   => Assign($row_repy['h_rankname'], 0),
 							'posttime'   => Assign($row_repy[$keys[1][1]]),
-							'content'    => Assign($row_repy['content']),
+							'context'    => Assign($row_repy['h_content']),
 							'listid'     => $buffer_tid,
 							'index'      => Assign($row_repy['no'], 0),
 							'medias'     => '0',
 							'mdata'      => array(),
+
+							## 兼容字段
+							'content'    => Assign($row_repy['h_content']),
 						);
 
 						## 獲取圖片信息
 						$condition_repy_img = array(
 							'schema' => $schemas[1] . '_img',
 							'filter' => array(
-								'id' => $row_repy['h_tid'],
+								'listid' => $row_repy['h_tid'],
 							),
 						);
 						$buffer_repy_img = StorageFind($condition_repy_img);
