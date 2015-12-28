@@ -104,7 +104,145 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				}
 			}
 
+			## 樓主帖子ID
+			$buffer_tid = $row_main['tid'];
+			if ($buffer_main['praisetype'] == '2') {
+				$record_tid = StorageFindID($schema, $row_main['tid']);
+				if (is_array($record_tid) and empty($record_tid) == FALSE) {
+					$buffer_tid = $record_tid['tid'];
+				}
+			}
+
 			## 獲取樓主信息
+			$condition_host = array(
+				'schema' => array('hh_techuser', $schemas[0]),
+				'fields' => array(
+					'*',
+					't0.id AS h_uid',
+					't1.id AS h_tid',
+					't0.type AS h_official',
+					"(SELECT COUNT(*) FROM {$schemas[1]} WHERE tid=t1.id) AS h_messages",
+					'(SELECT title FROM hh_score WHERE dengji=t0.grade) AS h_grade',
+				),
+				'filter' => array(
+					't0.id' => "t1.{$keys[1][0]}",
+					't1.id' => $buffer_tid,
+				),
+			);
+			$record_host = StorageFindOne($condition_host);
+			if (is_array($record_host) and empty($record_host) == FALSE) {
+				$buffer_host = array(
+					'uid'        => Assign($record_host['h_uid'], 0),
+					'userpic'    => Assign($record_host['headerimg']),
+					'usernick'   => Assign($record_host['nick']),
+					'grade'      => Assign($record_host['h_grade'], 0),
+					'official'   => Assign($record_host['h_official'], 0),
+					'identified' => Assign($record_host['identified'], 0),
+					'rank'       => Assign($record_host['rank'], 0),
+					'rankname'   => Assign($record_host['h_rankname']),
+					'posttime'   => Assign($record_host[$keys[0][1]]),
+					'job'        => Assign($record_host['job']),
+					'salary'     => Assign($record_host['salary']),
+					'headcount'  => Assign($record_host['headcount']),
+					'city'       => Assign($record_host['city']),
+					'messages'   => Assign($record_host['h_messages'], 0),
+					'collect'    => '0',
+					'mypraise'   => '0',
+					'praises'    => '0',
+				);
+
+				## 收藏狀態
+				$filter_host_count = array(
+					'uid'   => $buffer_host['uid'],
+					'tid'   => $buffer_host['tid'],
+					'tag'   => $tag,
+					'type'  => 1,
+				);
+				if (StorageCount('hh_techuser_shoucang', $filter_host_count)) {
+					$buffer_host['collect'] = '1';
+				}
+
+				$filter_host_count['touid'] = $index;
+				if (StorageCount('hh_techuser_dianzan', $filter_host_count)) {
+					$buffer_host['mypraise'] = '1';
+				}
+				
+				$filter_host_total = array(
+					'tid'   => $buffer_host['tid'],
+					'tag'   => $tag,
+					'type'  => 1,
+					'touid' => $index,
+				);
+				$buffer['praises'] = StorageCount('hh_techuser_dianzan', $filter_host_total);
+
+				$buffer_main['hostdata'][] = $buffer_host;
+			}
+
+			## 回帖信息
+			if ($buffer_main['praisetype'] == '1') {
+				$condition_repy = array(
+					'schema' => array('hh_techuser', $schemas[1]),
+					'fields' => array(
+						'*',
+						't0.id AS h_uid',
+						't1.id AS h_tid',
+						't0.type AS h_official',
+						'(SELECT title FROM hh_score WHERE dengji=t0.grade) AS h_grade',
+					),
+					'filter' => array(
+						't0.id'  => "t1.{$keys[1][0]}",
+						't1.tid' => $buffer_tid,
+					),
+					'others' => "ORDER BY t1.{$keys[1][1]} DESC",
+				);
+				$recordset_repy = StorageFind($condition_repy);
+				if (is_array($recordset_repy) and empty($recordset_repy) == FALSE) {
+					foreach ($recordset_repy as $number_repy => $row_repy) {
+						$buffer_repy = array(
+							'uid'        => Assign($row_repy['h_uid'], 0),
+							'userpic'    => Assign($row_repy['headerimg']),
+							'usernick'   => Assign($row_repy['nick']),
+							'grade'      => Assign($row_repy['h_grade']),
+							'adopt'      => Assign($row_repy['adopt']),
+							'anonymous'  => Assign($row_repy['anonymous']),
+							'official'   => Assign($row_repy['h_official'], 0),
+							'identified' => Assign($row_repy['identified'], 0),
+							'rank'       => Assign($row_repy['rank'], 0),
+							'rankname'   => Assign($row_repy['rankname'], 0),
+							'posttime'   => Assign($row_repy[$keys[1][1]]),
+							'content'    => Assign($row_repy['content']),
+							'listid'     => $buffer_tid,
+							'index'      => Assign($row_repy['no'], 0),
+							'medias'     => '0',
+							'mdata'      => array(),
+						);
+
+						## 獲取圖片信息
+						$condition_repy_img = array(
+							'schema' => $schemas[1] . '_img',
+							'filter' => array(
+								'id' => $row_repy['h_tid'],
+							),
+						);
+						$buffer_repy_img = StorageFind($condition_repy_img);
+						if (is_array($buffer_repy_img) and empty($buffer_repy_img) == FALSE) {
+							foreach ($record_repy_img as $number_img => $row_img) {
+								$buffer_repy['mdata'][] = array(
+									'mid'   => $row_img['id'],
+									'type'  => '0',
+									'mname' => 'image' . ($number_repy + 1),
+									'mpic'  => "{$row_img['id']}_s.png",
+									'url'   => '',
+								);
+							}
+						}
+						$buffer_repy['medias'] = count($buffer_repy['mdata']);
+
+						$buffer_main['repydata'][] = $buffer_repy;
+					}
+				}
+			}
+
 			$result['data'][] = $buffer_main;
 		}
 	}
