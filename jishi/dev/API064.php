@@ -42,6 +42,7 @@ if (is_array($record) == FALSE or empty($record) == TRUE) {
 			'fields' => array(
 				'*',
 				'(SELECT title FROM hh_score WHERE dengji=grade) AS h_grade',
+				'(SELECT title FROM hh_rank WHERE dengji=rankname) AS h_rankname',
 			),
 			'filter' => array(
 				'id' => $record['id'],
@@ -63,13 +64,20 @@ if (is_array($record) == FALSE or empty($record) == TRUE) {
 				'experience' => $buf['experience'],
 				'percent'    => $buf['percent'],
 				'needscore'  => $buf['needscore'],
+
+				## 兼容字段
+				'official'   => Assign($buf['type'], 0),
+				'identified' => Assign($buf['identified'], 0),
+				'rank'       => Assign($buf['rank'], 0),
+				'rankname'   => Assign($buf['h_rankname']),
 			);
 
-			Techuser_setScore($record['id'], 1);
+			## 可兌換積分激活
+			Techuser_rankinit($record['id']);
+
+			## 更新登陸積分
+			Techuser_setScore($record['id'], 1); 
 		}
-
-		## 更新登陸積分
-
 	}
 }
 

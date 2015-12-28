@@ -24,6 +24,10 @@ $condition = array(
 		'(SELECT headerimg FROM hh_techuser WHERE id=hh_techforum.pubuser) AS h_headerimg',
 		'(SELECT grade FROM hh_techuser WHERE id=hh_techforum.pubuser)     AS h_grade',
 		'(SELECT COUNT(*) FROM hh_techforum_img WHERE qid=hh_techforum.id) AS h_img_total',
+		'(SELECT type FROM hh_techuser WHERE id=hh_techforum.pubuser)      AS h_official',
+		'(SELECT rank FROM hh_techuser WHERE id=hh_techforum.pubuser)      AS h_rank',
+		'(SELECT identified FROM hh_techuser WHERE id=hh_techforum.pubuser) AS h_identified',
+		'(SELECT title FROM hh_rank WHERE dengji=(SELECT rankname FROM hh_techuser WHERE id=hh_techforum.pubuser)) AS h_rankname',
 	),
 	'where' => array(
 		'topsite' => 0,
@@ -88,6 +92,13 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 			'collect'   => '0', // 收藏状态
 			'mypraise'  => '0', // 我的点赞状态
 			'praises'   => '0', // 贴的点赞数量
+
+			## 兼容字段
+			'official'   => Assign($row['h_official'], 0),
+			'identified' => Assign($row['h_identified'], 0),
+			'rank'       => Assign($row['h_rank'], 0),
+			'rankname'   => Assign($row['h_rankname']),
+
 		);
 
 		$filter_count = array(

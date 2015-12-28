@@ -17,6 +17,12 @@ $condition = array(
 		'(SELECT nick FROM hh_techuser WHERE id=hh_techqzhi.pubuser)      AS h_nick',
 		'(SELECT headerimg FROM hh_techuser WHERE id=hh_techqzhi.pubuser) AS h_headerimg',
 		'(SELECT grade FROM hh_techuser WHERE id=hh_techqzhi.pubuser)     AS h_grade',
+
+		'(SELECT type FROM hh_techuser WHERE id=hh_techqzhi.pubuser)      AS h_official',
+		'(SELECT rank FROM hh_techuser WHERE id=hh_techqzhi.pubuser)      AS h_rank',
+		'(SELECT identified FROM hh_techuser WHERE id=hh_techqzhi.pubuser) AS h_identified',
+		'(SELECT title FROM hh_rank WHERE dengji=(SELECT rankname FROM hh_techuser WHERE id=hh_techqzhi.pubuser)) AS h_rankname',
+
 	),
 	'filter' => array(
 		'topsite' => array('GT', 0),
@@ -62,6 +68,13 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 			'collect'    => '0', // 收藏状态
 			'mypraise'   => '0', // 我的点赞状态
 			'praises'    => '0', // 贴的点赞数量
+
+			## 兼容字段
+			'official'   => Assign($row['h_official'], 0),
+			'identified' => Assign($row['h_identified'], 0),
+			'rank'       => Assign($row['h_rank'], 0),
+			'rankname'   => Assign($row['h_rankname']),
+
 		);
 
 		$filter_count = array(

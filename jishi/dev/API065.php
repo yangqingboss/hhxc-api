@@ -18,6 +18,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		'fields' => array(
 			'*',
 			'(SELECT title FROM hh_score WHERE dengji=grade) AS h_grade',
+			'(SELECT title FROM hh_rank WHERE dengji=rankname) AS h_rankname',
 		),
 		'filter' => array(
 			'id' => Assign($params['uid'], 0),
@@ -32,6 +33,12 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			'score'     => $record['score'],
 			'percent'   => $record['percent'],
 			'needscore' => $record['needscore'],
+
+			## 兼容字段
+			'official'   => Assign($record['type'], 0),
+			'identified' => Assign($record['identified'], 0),
+			'rank'       => Assign($record['rank'], 0),
+			'rankname'   => Assign($record['h_rankname']),
 		);
 	}
 }

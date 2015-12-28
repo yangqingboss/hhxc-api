@@ -13,5 +13,9 @@ $GLOBALS['DATA'] = array(
 		'uid'         => 875,
 		'openid'      => '4063f795ff45e71ec0c811f3c8ff754c',
 	),
+	array(
+		'uid'         => 8301,
+		'openid'      => '4063f795ff45e71ec0c811f3c8ff754c',
+	),
 );
 

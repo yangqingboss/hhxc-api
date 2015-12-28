@@ -42,6 +42,12 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				't1.content AS h_context',
 				't2.grade   AS h_ograde',
 				'(SELECT grade FROM hh_techuser WHERE id=t0.pubuser)        AS h_grade',
+
+				'(SELECT type FROM hh_techuser WHERE id=t0.pubuser)      AS h_official',
+				'(SELECT rank FROM hh_techuser WHERE id=t0.pubuser)      AS h_rank',
+				'(SELECT identified FROM hh_techuser WHERE id=t0.pubuser) AS h_identified',
+				'(SELECT title FROM hh_rank WHERE dengji=(SELECT rankname FROM hh_techuser WHERE id=t0.pubuser)) AS h_rankname',
+
 			),
 			'filter' => array(
 				't0.id'      => array('LT', Assign($params['tid'], 0)),
@@ -71,6 +77,12 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'mlistid'   => 'atlist',
 				'mcontent'  => 'h_content',
 				'context'   => 'h_context',
+
+				## 兼容字段
+				'official'   => 'h_official',
+				'identified' => 'h_identified',
+				'rank'       => 'h_rank',
+				'rankname'   => 'h_rankname',
 			),
 		);
 		if (empty($params['tid'])) {
@@ -126,6 +138,12 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				't1.city',
 				't2.grade   AS h_ograde',
 				'(SELECT grade FROM hh_techuser WHERE id=t0.pubuser)       AS h_grade',
+
+				'(SELECT type FROM hh_techuser WHERE id=t0.pubuser)      AS h_official',
+				'(SELECT rank FROM hh_techuser WHERE id=t0.pubuser)      AS h_rank',
+				'(SELECT identified FROM hh_techuser WHERE id=t0.pubuser) AS h_identified',
+				'(SELECT title FROM hh_rank WHERE dengji=(SELECT rankname FROM hh_techuser WHERE id=t0.pubuser)) AS h_rankname',
+
 			),
 			'filter' => array(
 				't0.id'      => array('LT', Assign($params['tid'], 0)),
@@ -154,6 +172,13 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'rcontext'   => 'h_rcontext',
 				'mlistid'    => 'atlist',
 				'mcontent'   => 'h_content',
+
+				## 兼容字段
+				'official'   => 'h_official',
+				'identified' => 'h_identified',
+				'rank'       => 'h_rank',
+				'rankname'   => 'h_rankname',
+
 			),
 		);
 		if (empty($params['tid'])) {
@@ -209,6 +234,12 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				't2.grade   AS h_ograde',
 				'(SELECT grade FROM hh_techuser WHERE id=t0.pubuser)       AS h_grade',
 				't1.headcount',
+
+				'(SELECT type FROM hh_techuser WHERE id=t0.pubuser)      AS h_official',
+				'(SELECT rank FROM hh_techuser WHERE id=t0.pubuser)      AS h_rank',
+				'(SELECT identified FROM hh_techuser WHERE id=t0.pubuser) AS h_identified',
+				'(SELECT title FROM hh_rank WHERE dengji=(SELECT rankname FROM hh_techuser WHERE id=t0.pubuser)) AS h_rankname',
+
 			),
 			'filter' => array(
 				't0.id'      => array('LT', Assign($params['tid'], 0)),
@@ -238,6 +269,13 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'mlistid'   => 'atlist',
 				'headcount' => 'headcount',
 				'mcontent'  => 'h_content',
+
+				## 兼容字段
+				'official'   => 'h_official',
+				'identified' => 'h_identified',
+				'rank'       => 'h_rank',
+				'rankname'   => 'h_rankname',
+
 			),
 		);
 		if (empty($params['tid'])) {

@@ -177,11 +177,59 @@ function Techuser_setScore($id, $scoretype) {
 		'apicode'   => Assign($params['code'], 0),
 		'oldscore'  => $techuser['score'],
 	);
-	$score_log_key = $id . '_' . time();
+	$score_log_key = "score_{$id}_" . time();
 	KVStorageSet($score_log_key, $score_log);
 	//StorageAdd($schema_log, $log);
 
+	## 兼容可兌換積分
+	if (empty($techuser['rankinit']) == FALSE) {
+		$fields = array(
+			'rankscore' => 'rankscore+1',
+		);
+		StorageEditByID($schema, $fields, $techuser['id']);
+
+		## 添加可兌換積分積分
+		$rankscore_log = array(
+			'uid'       => $id,
+			'createdat' => date('Y-m-d H:i:s'),
+			'scoretype' => $scoretype,
+			'score'     => $score,
+			'apicode'   => Assign($params['code'], 0),
+			'oldscore'  => $techuser['rankscore'],
+		);
+		$rankscore_log_key = "rankscore_{$id}_" . time();
+		KVStorageSet($rankscore_log_key, $rankscore_log);
+	}
+
 	return $score;
+}
+
+## 可兌換節分初始化
+function Techuser_rankinit($uid) {
+	$schema = 'hh_techuser';
+	$record = StorageFindID($schema, $uid);
+	if (is_array($record) == FALSE or empty($record) == TRUE) {
+		return FALSE;
+	}
+
+	if (empty($record['rankinit']) == TRUE) {
+		$score = $record['score'];
+
+		## 按照法則將累計積分轉換成可兌換積分
+
+		## 可兌換積分激活
+		$fields = array(
+			'rankinit'  => 1,
+			'rankscore' => $score,
+		);
+		StorageEditByID($schema, $fields, $uid);
+	}
+
+	return TRUE;
+}
+
+## 設置技師用戶經驗並且記錄經驗日誌
+function Techuser_setRank($id, $ranktype) {
 }
 
 ## 記錄用戶搜索記錄

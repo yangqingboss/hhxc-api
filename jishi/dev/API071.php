@@ -13,11 +13,22 @@ if (!defined('HHXC')) die('Permission denied');
 if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	$result['msg'] = MESSAGE_WARNING;
 } else {
-	$result = array('code' => '101', 'data' => array());
-
 	$record = StorageFindID('hh_techuser', Assign($params['cuid'], 0));
-	if (is_array($record) and empty($record) == FALSE) {
+	if (is_array($record) == FALSE or empty($record) == TRUE) {
+		$result['msg'] = MESSAGE_EMPTY;
+	} else {
+		$result = array('code' => '101', 'data' => array());
 		$h_grade = ($record['grade']>50) ? 'V' . ($record['grade']-50) : 'L' . $record['grade'];
+		
+		## 獲取經驗名稱
+		$condition_main = array(
+			'schema' => 'hh_rank',
+			'fields' => '*',
+			'filter' => array(
+				'dengji' => $record['rankname'],
+			),
+		);
+		$h_rankname = StorageFindOne($condition_main);
 
 		$result['data'][] = array(
 			'image'      => $record['image'],
@@ -28,6 +39,12 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			'job'        => $record['job'],
 			'level'      => $record['level'],
 			'experience' => $record['experience'],
+
+			## 兼容字段
+			'official'   => Assign($record['type'], 0),
+			'identified' => Assign($record['identified'], 0),
+			'rank'       => Assign($record['rank'], 0),
+			'rankname'   => Assign($h_rankname),
 		);
 	}
 }

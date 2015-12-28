@@ -34,6 +34,12 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'(SELECT headerimg FROM hh_techuser WHERE id=pubuser) AS h_headerimg',
 				'(SELECT grade FROM hh_techuser WHERE id=pubuser) AS h_grade',
 				'(SELECT COUNT(*) FROM hh_techqzhi_list_img WHERE listid=hh_techqzhi_list.id) AS h_ct',
+
+				'(SELECT type FROM hh_techuser WHERE id=pubuser)      AS h_official',
+				'(SELECT rank FROM hh_techuser WHERE id=pubuser)      AS h_rank',
+				'(SELECT identified FROM hh_techuser WHERE id=pubuser) AS h_identified',
+				'(SELECT title FROM hh_rank WHERE dengji=(SELECT rankname FROM hh_techuser WHERE id=pubuser)) AS h_rankname',
+
 			),
 			'filter' => array(
 				'tid' => Assign($params['tid'], 0),
@@ -54,6 +60,13 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 					'listid'   => $row['id'],
 					'medias'   => $row['h_ct'],
 					'mdata'    => array(),
+
+					## 兼容字段
+					'official'   => Assign($row['h_official'], 0),
+					'identified' => Assign($row['h_identified'], 0),
+					'rank'       => Assign($row['h_rank'], 0),
+					'rankname'   => Assign($row['h_rankname']),
+
 				);
 
 				$condition_sub = array(
