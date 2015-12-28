@@ -148,8 +148,8 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 					"(SELECT COUNT(*) FROM {$schemas[1]} WHERE tid=t1.id) AS h_messages",
 					##'(SELECT title FROM hh_score WHERE dengji=t0.grade) AS h_grade',
 					't0.grade AS h_grade',
-					't1.title AS h_title',
-					't1.content AS h_content',
+					#'t1.title AS h_title',
+					#'t1.content AS h_content',
 					'(SELECT title FROM hh_rank WHERE dengji=t0.rankname) AS h_rankname',
 				),
 				'filter' => array(
@@ -160,7 +160,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			$record_host = StorageFindOne($condition_host);
 			if (is_array($record_host) and empty($record_host) == FALSE) {
 				$buffer_host = array(
-					'uid'        => Assign($record_host['uid'], 0),
+					'uid'        => Assign($record_host['h_uid'], 0),
 					'userpic'    => Assign($record_host['headerimg']),
 					'usernick'   => Assign($record_host['nick']),
 					'grade'      => Assign($record_host['h_grade'], 0),
