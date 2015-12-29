@@ -10,3 +10,10 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
+	$result['msg'] = MESSAGE_WARNING;
+} else {
+	$record = StorageFindID('hh_techuser', $params['uid']);
+	$scores = array(50, 100, 150, 200, 300, 500);
+	$result['data'] = $scores;
+}

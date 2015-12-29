@@ -19,6 +19,7 @@ define('PAGE_ZHENGSHI', 'http://www.haohaoxiuche.com/api_zhengshi.php?uid=%d&ope
 define('ICON_DEFAULT',  'http://haohaoxiuche.com/css/icon_default.png');
 define('ICON_PATH',     'http://haohaoxiuche.com/api/userimg/');
 define('PIC_I_PATH',    join(array(dirname(API_ROOT), 'api', 'userimg'), DIRECTORY_SEPARATOR));
+define('PIC_D_PATH',    join(array(dirname(API_ROOT), 'api', 'filerz'), DIRECTORY_SEPARATOR));
 define('PIC_F_PATH',    join(array(dirname(API_ROOT), 'api', 'forumimg'), DIRECTORY_SEPARATOR));
 define('PIC_Q_PATH',    join(array(dirname(API_ROOT), 'api', 'qzhilistimg'), DIRECTORY_SEPARATOR));
 define('PIC_L_PATH',    join(array(dirname(API_ROOT), 'api', 'forumlistimg'), DIRECTORY_SEPARATOR));
@@ -65,10 +66,16 @@ if (DEBUG == FALSE) {
 	StorageAdd('hh_api_log', $api_log);
 }
 
+## 兼容接口編號
+$apicodes = array(
+);
+
 ## 加載相對應API接口腳本
 $script = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'API' . substr(strval($params['code'] + 1000), 1, 3) . '.php';
 if (file_exists($script) == FALSE) {
 	die('Permission denied for the APIs');
+} else if (in_array($params['code'], $apicodes)) {
+	HTTPService();
 } else {
 	require_once($script);
 }
@@ -183,8 +190,9 @@ function Techuser_setScore($id, $scoretype) {
 
 	## 兼容可兌換積分
 	if (empty($techuser['rankinit']) == FALSE) {
+		$rank_score = Techuser_score2rank($score);
 		$fields = array(
-			'rankscore' => 'rankscore+1',
+			'rankscore' => 'rankscore+' . $rank_score,
 		);
 		StorageEditByID($schema, $fields, $techuser['id']);
 
@@ -193,7 +201,7 @@ function Techuser_setScore($id, $scoretype) {
 			'uid'       => $id,
 			'createdat' => date('Y-m-d H:i:s'),
 			'scoretype' => $scoretype,
-			'score'     => $score,
+			'score'     => $rank_score,
 			'apicode'   => Assign($params['code'], 0),
 			'oldscore'  => $techuser['rankscore'],
 		);
@@ -220,7 +228,7 @@ function Techuser_rankinit($uid) {
 		## 可兌換積分激活
 		$fields = array(
 			'rankinit'  => 1,
-			'rankscore' => $score,
+			'rankscore' => Techuser_score2rank($score),
 		);
 		StorageEditByID($schema, $fields, $uid);
 	}
@@ -230,6 +238,18 @@ function Techuser_rankinit($uid) {
 
 ## 設置技師用戶經驗並且記錄經驗日誌
 function Techuser_setRank($id, $ranktype) {
+}
+
+function Techuser_score2rank($score) {
+	return $score;
+}
+
+function Techuser_rank2score($rank) {
+	return $rank * 100;
+}
+
+function Techuser_viewRankScore($rankscore) {
+	return intval($rankscore / 100);
 }
 
 ## 記錄用戶搜索記錄
@@ -333,5 +353,14 @@ function RefreshMsg($uid) {
 		);
 		StorageEditByID('hh_techuser', $fields, $uid);
 	}
+}
+
+## 獲取第三方登陸頭像
+function get_threeimg($uid, $iconurl) {
+	$content = file_get_contents($iconurl);
+	$img = "{$uid}_" . time() . '.png';
+	$file = join(array(dirname(__FILE__), 'api', 'userimg', $img), DIRECTORY_SEPARATOR);
+	file_put_contents($file, $content);
+	return $img;
 }
 

@@ -30,5 +30,10 @@ $GLOBALS['DATA'] = array(
 		'tag'         => 4,
 		'deviceid'    => 'a8e8814b47e6a5ecd',
 	),
-
+	array(
+		'uid'         => 1667,
+		'index'       => 0,
+		'tid'         => 1993,
+		'tag'         => 1,
+	),
 );

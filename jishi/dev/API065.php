@@ -39,6 +39,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			'identified' => Assign($record['identified'], 0),
 			'rank'       => Assign($record['rank'], 0),
 			'rankname'   => Assign($record['h_rankname']),
+			'userreward' => Techuser_viewRankScore(Assign($record['rankscore'], 0)),
 		);
 	}
 }

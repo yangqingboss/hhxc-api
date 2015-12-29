@@ -20,6 +20,8 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		'content'   => Assign($params['content']),
 		'pubtime'   => 'NOW()',
 		'anonymous' => Assign($params['anonymous'], 0),
+		'reward'    => Assign($params['reward'], 0),
+		'rewarded'  => empty($params['reward']) ? 0 : Assign($params['reward'], 0),
 	);
 	
 	$id = StorageAdd('hh_techforum', $data);

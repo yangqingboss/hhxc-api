@@ -27,6 +27,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		'filter' => array(
 			'uid' => Assign($params['uid'], 0),
 		),
+		'charset' => TRUE, // 兼容老版數據
 	);
 	$record = StorageFindOne($condition);
 	if (is_array($record) == FALSE or empty($record) == TRUE) {
@@ -36,7 +37,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 
 		$images = 0;
 		if (empty($record['fileid']) == FALSE) {
-			$images += 1；
+			$images += 1;
 		}
 		if (empty($record['filerz1']) == FALSE) {
 			$images += 1;

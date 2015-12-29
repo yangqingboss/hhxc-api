@@ -10,3 +10,90 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
+	$result['msg'] = MESSAGE_WARNING;
+} else {
+	$result = array('code' => '101', 'data' => array());
+
+	$record = StorageFindID('hh_zhaopin', $params['tid']);
+	if (is_array($record) and empty($record) == FALSE) {
+		$buffer = array(
+			'contactinfo' => Assign($record['contactinfo']),
+			'boon'        => Assign($record['boon']),
+			'business'    => Assign($record['business']),
+			'scale'       => Assign($record['scale']),
+			'name'        => Assign($record['name']),
+			'location'    => Assign($record['location']),
+			'etc'         => Assign($record['etc']),
+			'replycount'  => Assign($record['replycount'], 0),
+			'messages'    => array(),
+		);
+
+		$condition = array(
+			'schema' => 'hh_zhaopin_list',
+			'fields' => array(
+				'*',
+				'(select nick from hh_techuser where id=pubuser) AS h_nick',
+				'(select headerimg from hh_techuser where id=pubuser) AS h_headerimg',
+				'(select grade from hh_techuser where id=pubuser) AS h_grade',
+				'(select count(*) from hh_zhaopin_list_img where listid=hh_zhaopin_list.id) AS h_ct',
+				
+				'(SELECT type FROM hh_techuser WHERE id=pubuser)       AS h_official',
+				'(SELECT rank FROM hh_techuser WHERE id=pubuser)       AS h_rank',
+				'(SELECT identified FROM hh_techuser WHERE id=pubuser) AS h_identified',
+				'(SELECT title FROM hh_rank WHERE dengji=(SELECT rankname FROM hh_techuser WHERE id=pubuser)) AS h_rankname',
+			),
+			'filter' => array(
+				'tid' => Assign($params['tid'], 0),
+				'no'  => array('GT', Assign($params['index'], 0)),
+			),
+		);
+		$recordset = StorageFind($condition);
+		if (is_array($recordset) and empty($recordset) == FALSE) {
+			foreach ($recordset as $number => $row) {
+				$buf = array(
+					'uid'      => Assign($row['pubuser'], 0),
+					'userpic'  => Assign($row['h_headerimg']),
+					'usernick' => Assign($row['h_nick']),
+					'grade'    => Assign($row['h_grade']),
+					'posttime' => Assign($row['pubtime']),
+					'content'  => Assign($row['content']),
+					'index'    => Assign($row['no'], 0),
+					'listid'   => Assign($row['id'], 0),
+					'medias'   => Assign($row['h_ct'], 0),
+					'mdata'    => array(),
+
+					## 兼容字段
+					'official'   => Assign($row['h_official'], 0),
+					'identified' => Assign($row['h_identified'], 0),
+					'rank'       => Assign($row['h_rank'], 0),
+					'rankname'   => Assign($row['h_rankname']),
+				);
+
+				$condition_img = array(
+					'schema' => 'hh_zhaopin_list_img',
+					'filter' => array(
+						'listid' => $row['id'],
+					),
+				);
+				$recordset_img = StorageFind($condition_img);
+				if (is_array($recordset_img) and empty($recordset_img) == FALSE) {
+					foreach ($recordset_img as $number_img => $row_img) {
+						$buf['mdata'][] = array(
+							'mid'   => $row_img['id'],
+							'type'  => 0,
+							'mname' => 'image' . ($number_img + 1),
+							'mpic'  => $row_img['id'] . '_s.png',
+							'url'   => '',
+						);
+					}
+				}
+
+				$buffer['messages'][] = $buf;
+			}
+		}
+
+		$result['data'][] = $buffer;
+	}
+}
+

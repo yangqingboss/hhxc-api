@@ -56,6 +56,10 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'identified' => Assign($row['h_identified'], 0),
 				'rank'       => Assign($row['h_rank'], 0),
 				'rankname'   => Assign($row['h_rankname']),
+
+				'adopt'      => Assign($row['adopt'], 0),
+				'mypraise'   => '0',
+				'praises'    => '0',
 			);
 
 			$condition_sub = array(
@@ -77,6 +81,26 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 					);
 				}
 			}
+
+			$filter = array(
+				'uid'   => Assign($params['uid'], 0),
+				'tag'   => 1,
+				'tid'   => $buffer['listid'],
+				'type'  => 1,
+				'touid' => 1,
+			);
+			if (StorageCount('hh_techuser_dianzan', $filter)) {
+				$buffer['mypraise'] = '1';
+			}
+
+			$filter = array(
+				'uid'   => Assign($params['uid'], 0),
+				'tag'   => 1,
+				'tid'   => $buffer['listid'],
+				'type'  => 1,
+				'touid' => 1,
+			);
+			$buffer['praises'] = StorageCount('hh_techuser_dianzan', $filter);
 
 			$result['data'][] = $buffer;
 		}

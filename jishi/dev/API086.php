@@ -83,6 +83,8 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'identified' => 'h_identified',
 				'rank'       => 'h_rank',
 				'rankname'   => 'h_rankname',
+				'reward'     => 'rewarded',
+
 			),
 		);
 		if (empty($params['tid'])) {
@@ -178,6 +180,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'identified' => 'h_identified',
 				'rank'       => 'h_rank',
 				'rankname'   => 'h_rankname',
+				'reward'     => 'rewarded',
 
 			),
 		);
@@ -275,6 +278,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'identified' => 'h_identified',
 				'rank'       => 'h_rank',
 				'rankname'   => 'h_rankname',
+				'reward'     => 'rewarded',
 
 			),
 		);
@@ -321,7 +325,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			}
 
 			foreach ($condition['column'] as $key => $val) {
-				$buffer[$key] = $row[$val];
+				$buffer[$key] = Assign($row[$val], 0);
 			}
 
 			$filter_count = array(

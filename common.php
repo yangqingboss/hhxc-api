@@ -146,6 +146,11 @@ function UnitTest($apicode, $request = array()) {
 	}
 }
 
+// 兼容發送網絡服務
+function HTTPService() {
+	
+}
+
 // 短信發送網絡服務
 function SMS($mobile, $message) {
 	$url = str_replace('{MOBILE}', $mobile, SMS_APIURL);
@@ -201,14 +206,15 @@ function StorageAdd($schema, $data = array(), $debug = FALSE) {
 	foreach ($data as $key => $val) {
 		if (is_null($val)) continue;
 
-		if (is_string($val)) {
-			$val =  Charset($val, CL_CHARSET, DB_CHARSET);
+		$buffer_val = $val;
+		if (is_string($val) and is_numeric($val) == FALSE) {
+			$buffer_val =  Charset($val, CL_CHARSET, DB_CHARSET);
 		}
 
 		$fields[] = "`{$key}`";
-		$values[] = StorageExpress($val);
+		$values[] = StorageExpress($buffer_val, FALSE);
 	}
-
+	
 	$sql = "INSERT INTO `{$schema}` (" . join($fields, ', ') . ') VALUES (' . join($values, ', ') . ')';
 	if ($debug) die($sql);
 	$res = mysqli_query($mysql, $sql);
@@ -577,7 +583,7 @@ function StorageWhereSimple($field, $args = array()) {
 	return '';
 }
 
-function StorageExpress($express) {
+function StorageExpress($express, $charset=TRUE) {
 	global $mysql;
 
 	foreach ($GLOBALS['DB_KEYWORDS'] as $word) {
@@ -592,7 +598,7 @@ function StorageExpress($express) {
 		}
 	}
 
-	$express = Charset($express, DB_CHARSET, CL_CHARSET);
+	if ($charset) $express = Charset($express, DB_CHARSET, CL_CHARSET);
 	return "'" . mysqli_real_escape_string($mysql, $express) . "'";
 }
 
@@ -782,7 +788,7 @@ function Charset($str, $from, $to) {
 	}
 
 	if ($to == 'LATIN1' or $to == 'GBK') {
-		return mb_convert_encoding($str, 'GBK', $from);
+		return iconv('utf-8', 'GBK//IGNORE', $str);
 	}
 
 	return mb_convert_encoding($str, $to, $from);

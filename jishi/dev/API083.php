@@ -80,11 +80,13 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 			'rank'       => Assign($row['h_rank'], 0),
 			'rankname'   => Assign($row['h_rankname']),
 
+			'reward'     => Assign($row['rewarded'], 0),
+
 		);
 
 		$filter_count = array(
-			'uid'  => $row['pubuser'],
-			'tid'  => $row['id'],
+			'uid'  => Assign($params['uid'], 0),
+			'tid'  => $buffer['tid'],
 			'tag'  => Assign($params['tag'], 0),
 			'type' => 1,
 		);
@@ -101,7 +103,7 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 		}
 
 		$filter_total = array(
-			'tid'  => $row['id'],
+			'tid'  => $buffer['tid'],
 			'tag'  => Assign($params['tag'], 0),
 			'type' => 1,
 		);

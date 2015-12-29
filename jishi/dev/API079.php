@@ -24,12 +24,13 @@ $condition = array(
 		'(SELECT headerimg FROM hh_techuser WHERE id=hh_techforum.pubuser) AS h_headerimg',
 		'(SELECT grade FROM hh_techuser WHERE id=hh_techforum.pubuser)     AS h_grade',
 		'(SELECT COUNT(*) FROM hh_techforum_img WHERE qid=hh_techforum.id) AS h_img_total',
+		
 		'(SELECT type FROM hh_techuser WHERE id=hh_techforum.pubuser)      AS h_official',
 		'(SELECT rank FROM hh_techuser WHERE id=hh_techforum.pubuser)      AS h_rank',
 		'(SELECT identified FROM hh_techuser WHERE id=hh_techforum.pubuser) AS h_identified',
 		'(SELECT title FROM hh_rank WHERE dengji=(SELECT rankname FROM hh_techuser WHERE id=hh_techforum.pubuser)) AS h_rankname',
 	),
-	'where' => array(
+	'filter' => array(
 		'topsite' => 0,
 		'type'    => Assign($params['tag'], 0),
 	),
@@ -99,13 +100,15 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 			'rank'       => Assign($row['h_rank'], 0),
 			'rankname'   => Assign($row['h_rankname']),
 
+			'reward'     => Assign($row['rewarded'], 0),
+
 		);
 
 		$filter_count = array(
-			'uid'  => Assign($params['uid'],  0), 
-			'tag'  => Assign($params['tag'],  0),
-			'tid'  => Assign($params['tid'],  0),
-			'type' => Assign($params['type'], 0),
+			'uid'  => Assign($params['uid'], 0),
+			'tag'  => Assign($params['tag'], 0),
+			'tid'  => $buffer['tid'],
+			'type' => 1,
 		);
 		if (StorageCount('hh_techuser_shoucang', $filter_count)) {
 			$buffer['collect'] = '1';
@@ -121,8 +124,8 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 
 		$filter_total = array(
 			'tag'  => Assign($params['tag'],  0),
-			'tid'  => Assign($params['tid'],  0),
-			'type' => Assign($params['type'], 0),
+			'tid'  => $buffer['tid'],
+			'type' => 1,
 		);
 		$buffer['praises'] = StorageCount('hh_techuser_dianzan', $filter_total);
 

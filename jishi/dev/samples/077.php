@@ -9,13 +9,22 @@
 // @version 1.0.0
 // @package hhxc
 $GLOBALS['DATA'] = array(
-	array(
+	/*array(
 		'uid'         => 875,
 		'openid'      => '4063f795ff45e71ec0c811f3c8ff754c',
 		'databasever' => 0,
 		'title'       => 'TEST-title',
 		'content'     => 'xxx-yyy-zzz',
 		'tag'         => 1,
+	),*/
+	array(
+		'uid'         => 1667,
+		'content'     => '測試數據插入是否新建成功',
+		'title'       => '這是',
+		'reward'      => 2,
+		'context'     => '測試數據插入是否新建成功',
+		'tag'         => 2,
+		'reward'      => 50,
 	),
 );
 

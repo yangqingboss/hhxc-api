@@ -10,6 +10,8 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+$rankings = array('10', '100', '1k', '5k', '1w', '2w', '3w', '4w', '5w', '6w', '10w');
+
 if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	$result['msg'] = MESSAGE_WARNING;
 } else {
@@ -22,14 +24,16 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		
 		## 獲取經驗名稱
 		$condition_main = array(
-			'schema' => 'hh_rank',
-			'fields' => '*',
+			'schema' => array('hh_rank'),
+			'fields' => array(
+				'*',
+				'(SELECT score FROM hh_rank WHERE id=t0.id+1) AS h_score',
+			),
 			'filter' => array(
 				'dengji' => $record['rankname'],
 			),
 		);
 		$h_rankname = StorageFindOne($condition_main);
-
 		$result['data'][] = array(
 			'image'      => $record['image'],
 			'nick'       => $record['nick'],
@@ -44,7 +48,9 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			'official'   => Assign($record['type'], 0),
 			'identified' => Assign($record['identified'], 0),
 			'rank'       => Assign($record['rank'], 0),
-			'rankname'   => Assign($h_rankname),
+			'rankname'   => Assign($h_rankname['title']),
+			'rankvalue'  => Assign($h_rankname['h_score']),
+			'ranking'    => $rankings[count($rankings) - 1],
 		);
 	}
 }

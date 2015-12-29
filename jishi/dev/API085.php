@@ -23,6 +23,11 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'*',
 				"(SELECT COUNT(*) FROM hh_techforum_img WHERE qid=hh_techforum.id) AS h_ct",
 				"(SELECT grade FROM hh_techuser WHERE id=pubuser) AS h_grade",
+
+				'(SELECT type FROM hh_techuser WHERE id=pubuser)      AS h_official',
+				'(SELECT rank FROM hh_techuser WHERE id=pubuser)      AS h_rank',
+				'(SELECT identified FROM hh_techuser WHERE id=pubuser) AS h_identified',
+				'(SELECT title FROM hh_rank WHERE dengji=(SELECT rankname FROM hh_techuser WHERE id=pubuser)) AS h_rankname',
 			),
 			'filter' => array(
 				'pubuser' => Assign($params['uid'], 0),
@@ -38,6 +43,14 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'newreply' => 'isnewmsg',
 				'grade'    => 'h_grade',
 				'medias'   => 'h_ct',
+
+				## 兼容字段
+				'official'   => 'h_official',
+				'identified' => 'h_identified',
+				'rank'       => 'h_rank',
+				'rankname'   => 'h_rankname',
+				'reward'     => 'rewarded',
+
 			),
 		);
 		$condition['filter']['id'] = array('LT', Assign($params['tid'], 0));
@@ -58,7 +71,15 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	} else if ($params['tag'] == '3') {
 		$condition = array(
 			'schema' => 'hh_techqzhi',
-			'fields' => '*',
+			'fields' => array(
+				'*',
+
+				'(SELECT type FROM hh_techuser WHERE id=pubuser)      AS h_official',
+				'(SELECT rank FROM hh_techuser WHERE id=pubuser)      AS h_rank',
+				'(SELECT identified FROM hh_techuser WHERE id=pubuser) AS h_identified',
+				'(SELECT title FROM hh_rank WHERE dengji=(SELECT rankname FROM hh_techuser WHERE id=pubuser)) AS h_rankname',
+
+			),
 			'filter' => array(
 				'pubuser' => Assign($params['uid'], 0),
 			),
@@ -71,6 +92,13 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'tid'        => 'id',
 				'messages'   => 'replycount',
 				'newreply'   => 'isnewmsg',
+
+				## 兼容字段
+				'official'   => 'h_official',
+				'identified' => 'h_identified',
+				'rank'       => 'h_rank',
+				'rankname'   => 'h_rankname',
+				'reward'     => 'rewarded',
 			),
 		);
 		$condition['filter']['id'] = array('LT', Assign($params['tid'], 0));
@@ -91,7 +119,15 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	} else if ($params['tag'] == '4') {
 		$condition = array(
 			'schema' => 'hh_zhaopin',
-			'fields' => '*',
+			'fields' => array(
+				'*',
+
+				'(SELECT type FROM hh_techuser WHERE id=ofuser)      AS h_official',
+				'(SELECT rank FROM hh_techuser WHERE id=ofuser)      AS h_rank',
+				'(SELECT identified FROM hh_techuser WHERE id=ofuser) AS h_identified',
+				'(SELECT title FROM hh_rank WHERE dengji=(SELECT rankname FROM hh_techuser WHERE id=ofuser)) AS h_rankname',
+
+			),
 			'filter' => array(
 				'ofuser' => Assign($params['uid'], 0),
 			),
@@ -106,6 +142,13 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'messages'  => 'replycount',
 				'newreply'  => 'isnewmsg',
 				'ischecked' => 'zhuangtai',
+
+				## 兼容字段
+				'official'   => 'h_official',
+				'identified' => 'h_identified',
+				'rank'       => 'h_rank',
+				'rankname'   => 'h_rankname',
+				'reward'     => 'rewarded',
 			),
 
 		);
@@ -142,7 +185,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			}
 
 			foreach ($condition['column'] as $key => $val) {
-				$buffer[$key] = $row[$val];
+				$buffer[$key] = Assign($row[$val], 0);
 			}
 
 			$filter_count = array(
