@@ -42,5 +42,11 @@ $GLOBALS['DATA'] = array(
 		'type' => 2,
 		'databaserver' => 28,
 	),
+	array(
+		'uid' => 967,
+		'tag' => 1,
+		'tid' => 0,
+		'type' => 1,
+	),
 
 );

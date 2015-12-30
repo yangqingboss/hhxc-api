@@ -15,6 +15,6 @@ $data = array(
 	'password'
 	'createdat'
 	'deviceid'
-	'username_d' => Assign($params[
+	'username_d' => Assign($params[''],
 	'fromcode'
 );

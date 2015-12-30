@@ -37,6 +37,10 @@ define('MESSAGE_SUCCESS',     '提交成功！');
 define('MESSAGE_ERROR',       '提交失败！');
 define('MESSAGE_WARNING',     '验证失败！');
 define('MESSAGE_EMPTY',       '无数据！');
+define('RANKSCORE_ASK',       '您提交<u>%s</u>問題悬赏<u>%s</u>经验值');
+define('RANKSCORE_ADOPT',     '您采纳<u>%s</u>回复，成功悬赏<u>%s</u>经验值');
+define('RANKSCORE_ADOPTED',   '您的回复<u>%s</u>被<u>%s</u>成功采纳，获取<u>%s</u>经验值');
+define('ASK_MESSAGE',         '当前可用积分是%s分，%s积分可以兑换1经验值');
 define('KEY_PHONE',           'phoneinit'); ## 兼容舊版API所新添的未加密手機號碼
 define('IMAGE_ROOT',          dirname(API_ROOT) . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR . 'userimg');
 
@@ -81,6 +85,16 @@ function json_unicode($object) {
 	}
 
 	return $object;
+}
+
+// 安全模式顯示手機號碼
+function SafePhone($phone) {
+	return substr($phone, 0, 3) . '****' . substr($phone, -3, 3);
+}
+
+// 安全模式获取用户名称
+function SafeUsername($user) {
+	return Assign($user['nick'], SafePhone($user['username_d']));
 }
 
 // 基於GET方式發送HTTP請求
@@ -144,11 +158,6 @@ function UnitTest($apicode, $request = array()) {
 	} else {
 		print_r($response);
 	}
-}
-
-// 兼容發送網絡服務
-function HTTPService() {
-	
 }
 
 // 短信發送網絡服務
@@ -295,7 +304,7 @@ function StorageEdit($schema, $fields, $filter, $debug = FALSE) {
 }
 
 // 基於給定ID值在給定的數據表更新特定的一條數據
-function StorageEditByID($schema, $fields, $id) {
+function StorageEditByID($schema, $fields, $id, $debug = FALSE) {
 	global $mysql;
 
 	if (is_array($fields) == FALSE) die('StorageEditByID Error: Field Not Array');
@@ -311,6 +320,7 @@ function StorageEditByID($schema, $fields, $id) {
 		}
 	}
 	$sql = "UPDATE `{$schema}` SET " . join($values, ',') . StorageWhere(array('id' => $id));
+	if ($debug) die($sql);
 	$res = mysqli_query($mysql, $sql);
 
 	if ($res) {

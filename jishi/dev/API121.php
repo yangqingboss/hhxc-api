@@ -37,7 +37,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'touid' => $index,
 				'uid'   => array('GT', 0),
 			),
-			'others' => 'ORDER BY tid DESC',
+			'others' => 'ORDER BY tid DESC LIMIT 20',
 		);
 		$recordset_main = StorageFind($condition_main);
 		if (is_array($recordset_main) == FALSE or empty($recordset_main) == TRUE) {
@@ -65,7 +65,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			## 獲取點贊者信息
 			$condition_main['fields'] = array('DISTINCT uid');
 			$condition_main['filter']['tid'] = $row_main['tid'];
-			$condition_main['others'] = 'ORDER BY id DESC LIMIT 1';
+			$condition_main['others'] = 'ORDER BY id DESC';
 			$recordset_user = StorageFind($condition_main);
 			if (is_array($recordset_user) and empty($recordset_user) == FALSE) {
 				$sql = '(SELECT title FROM hh_%s WHERE dengji=%s) AS h_%s';
@@ -257,7 +257,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 						't0.id'  => "t1.{$keys[1][0]}",
 						't1.tid' => $buffer_tid,
 					),
-					'others' => "ORDER BY t1.{$keys[1][1]} DESC LIMIT 1",
+					'others' => "ORDER BY t1.{$keys[1][1]} DESC",
 				);
 				$recordset_repy = StorageFind($condition_repy);
 				if (is_array($recordset_repy) and empty($recordset_repy) == FALSE) {

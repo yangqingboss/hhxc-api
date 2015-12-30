@@ -25,6 +25,8 @@ define('PIC_Q_PATH',    join(array(dirname(API_ROOT), 'api', 'qzhilistimg'), DIR
 define('PIC_L_PATH',    join(array(dirname(API_ROOT), 'api', 'forumlistimg'), DIRECTORY_SEPARATOR));
 define('PIC_Z_PATH',    join(array(dirname(API_ROOT), 'api', 'zhaopinlistimg'), DIRECTORY_SEPARATOR));
 define('NICK_DEFAULT',  '汽修人');
+define('RANK_S2RS',     1);
+define('RANK_RS2R',     10);
 
 ## 預加載全局配置文件
 if (API_VERSION != 'dev') {
@@ -45,6 +47,7 @@ mysqli_select_db($mysql, DB_NAME) or die('Permission denied for the database ' .
 mysqli_query($mysql, 'SET NAMES ' . DB_CHARSET);
 KVStorageConnect(SSDB_HOST, SSDB_PORT, SSDB_PWD, SSDB_NAME);
 
+## 加載
 ## 提交參數值和返回值
 $params = count($argv) >= 2 ? json_decode($argv[1], TRUE) : json_decode(Assign($_REQUEST['data'], '{}'), TRUE);
 $result = array(
@@ -68,6 +71,8 @@ if (DEBUG == FALSE) {
 
 ## 兼容接口編號
 $apicodes = array(
+	'24', '25', '26', '28', '29', '31', '32', '33', '35', '36', '37', '38', '40', '41', '42', '43',
+	'44', '45', '46', '47', '49', '50', '54', '55', '60', '94', '95', '96',
 );
 
 ## 加載相對應API接口腳本
@@ -75,7 +80,7 @@ $script = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'API' . substr(strval($param
 if (file_exists($script) == FALSE) {
 	die('Permission denied for the APIs');
 } else if (in_array($params['code'], $apicodes)) {
-	HTTPService();
+	die(HttpPost('http://www.haohaoxiuche.com/api_hhxc4.php', array('data' => JsonEncode($params))));
 } else {
 	require_once($script);
 }
@@ -240,16 +245,68 @@ function Techuser_rankinit($uid) {
 function Techuser_setRank($id, $ranktype) {
 }
 
+## 設置技師用戶經驗值並且記錄經驗日誌
+function Techuser_setRankByScore($uid, $score, $message) {
+	$schema = 'hh_techuser';
+	$user = StorageFindID($schema, $uid);
+
+	$fields = array(
+		'rank' => 'rank+' . $score,
+	);
+	StorageEditByID($schema, $fields, $uid);
+	Techuser_updateRankName($uid);
+
+	## 記錄日誌
+	$rank_log = array(
+		'uid'       => $uid,
+		'rank'      => $user['rank'],
+		'rankname'  => $user['rankname'],
+		'message'   => $message,
+		'score'     => $score,
+		'createdat' => time(),
+	);
+	$rank_log_key =  "rank_{$uid}_" . time();
+	KVStorageSet($rank_log_key, $rank_log);
+}
+
+function Techuser_updateRankName($uid) {
+}
+
 function Techuser_score2rank($score) {
-	return $score;
+	return intval(Assign($score, 0) / RANK_RS2R);
 }
 
 function Techuser_rank2score($rank) {
-	return $rank * 100;
+	return $rank * RANK_S2RS;
 }
 
 function Techuser_viewRankScore($rankscore) {
-	return intval($rankscore / 100);
+	return intval(Assign($rankscore, 0) / RANK_S2RS);
+}
+
+## 設置技師用戶可兌換積分並且記錄日誌
+function Techuser_setRankscore($uid, $score, $message) {
+	$schema = 'hh_techuser';
+
+	## 獲取原始狀態
+	$user = StorageFindID($schema, $uid);
+
+	## 更新狀態
+	$fields = array(
+		'rankscore' => 'rankscore' . ($score < 0 ? $score : '+' . $score),
+	);
+	StorageEditByID('hh_techuser', $fields, $uid);
+
+	## 添加日誌消息
+	$ask_log = array(
+		'uid'       => $uid,
+		'old'       => $user['rankscore'],
+		'score'     => $score,
+		'message'   => $message,
+		'createdat' => time(),
+	);
+	$ask_log_key = "ask_{$uid}_" . time();
+	KVStorageSet($ask_log_key, $ask_log);
 }
 
 ## 記錄用戶搜索記錄

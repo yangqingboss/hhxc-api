@@ -13,14 +13,8 @@ if (!defined('HHXC')) die('Permission denied');
 $condition = array(
 	'schema' => 'hh_techforum',
 	'fields' => array(
-		'pubuser',
+		'*',
 		'(SELECT nick FROM hh_techuser WHERE id=hh_techforum.pubuser) AS h_nick',
-		'pubtime',
-		'title',
-		'content',
-		'replycount',
-		'id',
-		'anonymous',
 		'(SELECT headerimg FROM hh_techuser WHERE id=hh_techforum.pubuser) AS h_headerimg',
 		'(SELECT grade FROM hh_techuser WHERE id=hh_techforum.pubuser)     AS h_grade',
 		'(SELECT COUNT(*) FROM hh_techforum_img WHERE qid=hh_techforum.id) AS h_img_total',

@@ -18,13 +18,21 @@ $GLOBALS['DATA'] = array(
 		'tag'         => 1,
 	),*/
 	array(
-		'uid'         => 1667,
-		'content'     => '測試數據插入是否新建成功',
-		'title'       => '這是',
-		'reward'      => 2,
-		'context'     => '測試數據插入是否新建成功',
-		'tag'         => 2,
+		'uid'         => 967,
+		'content'     => '测试积分',
+		'title'       => '第二次测试',
+		'context'     => '测试积分',
+		'tag'         => 1,
 		'reward'      => 50,
+	),
+	array(
+		'uid'         => 967,
+		'content'     => '测试积分',
+		'title'       => '第二次测试',
+		'context'     => '测试积分',
+		'tag'         => 2,
+		'reward'      => 0,
+
 	),
 );
 

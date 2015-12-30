@@ -83,23 +83,25 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			}
 
 			$filter = array(
-				'uid'   => Assign($params['uid'], 0),
+				//'uid'   => Assign($params['uid'], 0),
 				'tag'   => 1,
 				'tid'   => $buffer['listid'],
 				'type'  => 1,
 				'touid' => 1,
 			);
+			if (empty($params['uid']) == FALSE) $filter['uid'] = Assign($params['uid'], 0);
 			if (StorageCount('hh_techuser_dianzan', $filter)) {
 				$buffer['mypraise'] = '1';
 			}
 
 			$filter = array(
-				'uid'   => Assign($params['uid'], 0),
+				//'uid'   => Assign($params['uid'], 0),
 				'tag'   => 1,
 				'tid'   => $buffer['listid'],
 				'type'  => 1,
 				'touid' => 1,
 			);
+			//if (empty($params['uid']) == FALSE) $filter['uid'] = Assign($params['uid'], 0);
 			$buffer['praises'] = StorageCount('hh_techuser_dianzan', $filter);
 
 			$result['data'][] = $buffer;

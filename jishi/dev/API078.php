@@ -174,6 +174,11 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		RefreshMsg(Assign($params['touid'], 0));
 		RefreshMsg(Assign($buf['h_pubuser'], 0));
 
+		## 添加經驗值
+		if ($params['tag'] == '1') {
+			Techuser_setRank($params['uid'], 1);
+		}
+
 	}
 
 }

@@ -92,6 +92,8 @@ if (is_array($recordset) and empty($recordset) == FALSE) {
 
 	## 積累積分
 	if (CheckOpenID($params['openid'], $params['uid']) == TRUE) {
-		Techuser_setScore($params['uid'], 2);
+		if (empty($params['uid']) == FALSE) {
+			Techuser_setScore(Assign($params['uid'], 0), 2);
+		}
 	}
 }

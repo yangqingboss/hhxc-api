@@ -13,7 +13,18 @@ if (!defined('HHXC')) die('Permission denied');
 if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	$result['msg'] = MESSAGE_WARNING;
 } else {
-	$record = StorageFindID('hh_techuser', $params['uid']);
+	$result = array('code' => '101', 'data' => array());
+
+	$record = StorageFindID('hh_techuser', $params['uid']); $buffer = array();
 	$scores = array(50, 100, 150, 200, 300, 500);
-	$result['data'] = $scores;
+	foreach ($scores as $score) {
+		if ($score < Techuser_viewRankScore($record['rankscore'])) {
+			$buffer['datavalue'][] = $score;
+		}
+	}
+
+	$buffer['allreward'] = $record['rankscore'];
+	$buffer['changevalue'] = RANK_RS2R;
+	$result['data'][] = $buffer;
+	//$result['msg'] = sprintf(ASK_MESSAGE, $record['rankscore'], RANK_RS2R);
 }
