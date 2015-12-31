@@ -112,6 +112,7 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 			continue;
 		}
 
+		//$filter_count['touid'] = 0;
 		if (StorageCount('hh_techuser_dianzan', $filter_count)) {
 			$buffer['mypraise'] = '1';
 		}

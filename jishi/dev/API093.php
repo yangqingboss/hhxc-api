@@ -80,8 +80,8 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 
 		$filter_count = array(
 			'uid'  => Assign($params['uid'],  0), 
-			'tag'  => Assign($params['tag'],  0),
-			'tid'  => Assign($params['tid'],  0),
+			'tag'  => 4,
+			'tid'  => Assign($buffer['tid'],  0),
 			'type' => Assign($params['type'], 0),
 		);
 		if (StorageCount('hh_techuser_shoucang', $filter_count)) {
@@ -92,14 +92,16 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 			continue;
 		}
 
+		$filter_count['touid'] = 0;
 		if (StorageCount('hh_techuser_dianzan', $filter_count)) {
 			$buffer['mypraise'] = '1';
 		}
 
 		$filter_total = array(
-			'tag'  => Assign($params['tag'],  0),
-			'tid'  => Assign($params['tid'],  0),
+			'tag'  => 4,
+			'tid'  => Assign($buffer['tid'],  0),
 			'type' => Assign($params['type'], 0),
+			'touid' => 0,
 		);
 		$buffer['praises'] = StorageCount('hh_techuser_dianzan', $filter_total);
 

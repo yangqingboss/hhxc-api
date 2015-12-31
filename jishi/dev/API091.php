@@ -82,7 +82,7 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 
 		## 收藏和點贊統計
 		$filter = array(
-			'uid'  => $buffer['uid'],
+			'uid'  => $params['uid'],
 			'tid'  => $buffer['tid'],
 			'tag'  => 4,
 			'type' => 1,

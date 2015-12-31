@@ -28,13 +28,10 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			$fields[$key] = $params[$key];
 		}
 	}
-
+	if (empty($image_name) == FALSE) $fields['headerimg'] = $image_name;
 	if (empty($fields) == FALSE) {
 		$num = StorageEditByID('hh_techuser', $fields, $params['uid']);
-
-		if (empty($num) == FALSE) {
-			$result = array('code' => '101', 'image' => $image_name);
-		}
+		$result = array('code' => '101', 'image' => $image_name);
 	}
 }
 

@@ -56,9 +56,9 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 		if ($params['type'] == '2' and $row['pubuser'] != $params['uid']) {
 			continue;
 		}
-
+		
 		$buffer = array(
-			'uid'        => $row['id'],
+			'uid'        => $row['pubuser'],
 			'userpic'    => $row['h_headerimg'],
 			'usernick'   => $row['h_nick'],
 			'grade'      => $row['h_grade'],
@@ -66,7 +66,7 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 			'level'      => $row['level'],
 			'experience' => $row['experience'],
 			'city'       => $row['city'],
-			'tid'        => $row['tid'],
+			'tid'        => $row['id'],
 			'messages'   => $row['replycount'],	
 			'collect'    => '0', // 收藏状态
 			'mypraise'   => '0', // 我的点赞状态
@@ -81,7 +81,7 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 
 		$filter_count = array(
 			'uid'  => Assign($params['uid'], 0),
-			'tid'  => Assign($params['tid'], 0),
+			'tid'  => Assign($buffer['tid'], 0),
 			'tag'  => 3,
 			'type' => 1,
 		);
@@ -93,14 +93,16 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 			continue;
 		}
 
+		$filter_count['touid'] = 0;
 		if (StorageCount('hh_techuser_dianzan', $filter_count)) {
 			$buffer['mypraise'] = '1';
 		}
 
 		$filter_total = array(
-			'tid'  => Assign($params['tid'], 0),
+			'tid'  => Assign($buffer['tid'], 0),
 			'tag'  => 3,
 			'type' => 1,
+			'touid' => 0,
 		);
 		$buffer['praises'] = StorageCount('hh_techuser_dianzan', $filter_total);
 

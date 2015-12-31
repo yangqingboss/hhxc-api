@@ -79,7 +79,7 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 
 		$filter_count = array(
 			'uid'  => Assign($params['uid'], 0),
-			'tid'  => Assign($params['tid'], 0),
+			'tid'  => Assign($buffer['tid'], 0),
 			'tag'  => 3,
 			'type' => 1,
 		);
@@ -87,14 +87,16 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 			$buffer['collect'] = '1';
 		}
 
-		if ($params['type'] == '3' and $buffer['collect'] == '0') {
+		$filter_count['touid'] = 0;
+		if (StorageCount('hh_techuser_dianzan', $filter_count)) {
 			$buffer['mypraise'] = '1';
 		}
 
 		$filter_total = array(
-			'tid'  => Assign($params['tid'], 0),
+			'tid'  => Assign($buffer['tid'], 0),
 			'tag'  => 3,
 			'type' => 1,
+			'touid' => 0,
 		);
 		$buffer['praises'] = StorageCount('hh_techuser_dianzan', $filter_total);
 

@@ -281,7 +281,7 @@ function StorageEdit($schema, $fields, $filter, $debug = FALSE) {
 	$values = array();
 	foreach ($fields as $key => $val) {
 		if (is_string($val)) {
-			$val =  Charset($val, CL_CHARSET, DB_CHARSET);
+			//$val =  Charset($val, CL_CHARSET, DB_CHARSET);
 		}
 
 		if (strpos($val, $key) === 0) {
@@ -316,11 +316,11 @@ function StorageEditByID($schema, $fields, $id, $debug = FALSE) {
 		if (strpos($val, $key) === 0) {
 			$values[] = "`{$key}`={$val}";
 		} else {
+			//$values[] = "`{$key}`=" . StorageExpress($val);
 			$values[] = "`{$key}`=" . StorageExpress($val);
 		}
 	}
 	$sql = "UPDATE `{$schema}` SET " . join($values, ',') . StorageWhere(array('id' => $id));
-	if ($debug) die($sql);
 	$res = mysqli_query($mysql, $sql);
 
 	if ($res) {
@@ -608,7 +608,7 @@ function StorageExpress($express, $charset=TRUE) {
 		}
 	}
 
-	if ($charset) $express = Charset($express, DB_CHARSET, CL_CHARSET);
+	if ($charset) $express = Charset($express, CL_CHARSET, DB_CHARSET);
 	return "'" . mysqli_real_escape_string($mysql, $express) . "'";
 }
 

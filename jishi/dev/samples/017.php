@@ -19,5 +19,9 @@ $GLOBALS['DATA'] = array(
 		'level'      => '123',
 		'experience' => 2,
 	),
+	array(
+		'uid' => 72,
+		'nick' => '老为',
+	),
 );
 

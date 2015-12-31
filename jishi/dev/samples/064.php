@@ -25,4 +25,8 @@ $GLOBALS['DATA'] = array(
 		'phoneinit' => '18565898295',
 		'pwd'       => md5('boss198842'),
 	),
+	array(
+		'phoneinit' => '13711433519',
+		'pwd'       => md5('12345678'),
+	),
 );

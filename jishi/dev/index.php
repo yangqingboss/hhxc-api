@@ -47,7 +47,6 @@ mysqli_select_db($mysql, DB_NAME) or die('Permission denied for the database ' .
 mysqli_query($mysql, 'SET NAMES ' . DB_CHARSET);
 KVStorageConnect(SSDB_HOST, SSDB_PORT, SSDB_PWD, SSDB_NAME);
 
-## 加載
 ## 提交參數值和返回值
 $params = count($argv) >= 2 ? json_decode($argv[1], TRUE) : json_decode(Assign($_REQUEST['data'], '{}'), TRUE);
 $result = array(
@@ -71,7 +70,7 @@ if (DEBUG == FALSE) {
 
 ## 兼容接口編號
 $apicodes = array(
-	'24', '25', '26', '28', '29', '31', '32', '33', '35', '36', '37', '38', '40', '41', '42', '43',
+	'1',  '24', '25', '26', '28', '29', '31', '32', '33', '35', '36', '37', '38', '40', '41', '42', '43',
 	'44', '45', '46', '47', '49', '50', '54', '55', '60', '94', '95', '96',
 );
 

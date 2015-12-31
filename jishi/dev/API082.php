@@ -67,7 +67,38 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 					'rank'       => Assign($row['h_rank'], 0),
 					'rankname'   => Assign($row['h_rankname']),
 
+					'collect'   => '0', // 收藏状态
+					'mypraise'  => '0', // 我的点赞状态
+					'praises'   => '0', // 贴的点赞数量
+
 				);
+
+				$filter_count = array(
+					'uid'  => Assign($params['uid'], 0),
+					'tag'  => 3,
+					'tid'  => $msg['listid'],
+					'type' => 1,
+				);
+				if (StorageCount('hh_techuser_shoucang', $filter_count)) {
+					$msg['collect'] = '1';
+				}
+
+				if ($params['type'] == '3' and $msg['collect'] == '0') {
+					continue;
+				}
+
+				//$filter_count['touid'] = 0;
+				if (StorageCount('hh_techuser_dianzan', $filter_count)) {
+					$msg['mypraise'] = '1';
+				}
+
+				$filter_total = array(
+					'tag'  => 3,
+					'tid'  => $msg['listid'],
+					'type' => 1,
+				);
+				$msg['praises'] = StorageCount('hh_techuser_dianzan', $filter_total);
+
 
 				$condition_sub = array(
 					'schema' => 'hh_techqzhi_list_img',

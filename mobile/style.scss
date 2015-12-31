@@ -200,6 +200,47 @@ footer {
 	}
 }
 
+.h-huodong hr {
+	margin-top:4em;
+	margin-bottom:2em;
+}
+
+.h-huodong img {
+	display:inline-block;
+	width:100%;
+}
+
+.h-huodong .h-title {
+	font-size:20px;
+	display:inline-block;
+	position:absolute;
+	margin-top:-1.875em;
+	left:50%;
+	margin-left:-8.5em;
+	background-color:#ffffff;
+	padding:0 0.5em;
+}
+.h-huodong ol {
+	padding-left:20px;
+}
+.h-huodong li {
+	color:#323232;
+	line-height:2em;
+}
+.h-bottom h1 {
+	display:block;
+	width:100%;
+	background:rgba(0, 0, 0, 0.6);
+	color:#ffffff;
+	font-size:20px;
+	text-align:center;
+	line-height:1.75em;
+	padding:0.5em 0;
+	position:absolute;
+	left:0;
+	margin-top:-90px;
+}
+
 @media screen and (max-width: 768px) {
 	.h-picture .row {
 		margin-left: 0;
