@@ -11,11 +11,11 @@
 $GLOBALS['DATA'] = array(
 	array(
 		'phone' => '18565898295',
-		'opt'   => 1,
+		'opt'   => 2,
 	),
 	array(
 		'phone' => '13574309878',
-		'opt'   => 1,
+		'opt'   => 2,
 	),
 );
 
