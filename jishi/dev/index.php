@@ -27,6 +27,7 @@ define('PIC_Z_PATH',    join(array(dirname(API_ROOT), 'api', 'zhaopinlistimg'), 
 define('NICK_DEFAULT',  '汽修人');
 define('RANK_S2RS',     1);
 define('RANK_RS2R',     10);
+define('PRAISE_NUMBER', 1);
 
 ## 預加載全局配置文件
 if (API_VERSION != 'dev') {
@@ -403,8 +404,8 @@ function RefreshMsg($uid) {
 		'msg8'  => "(SELECT COUNT(*) FROM hh_zhaopin_list   WHERE at='{$uid}' AND isnewat=1)",
 		'msg9'  => "(SELECT COUNT(*) FROM hh_techforum_list WHERE at='{$uid}' AND isnewdz=1 AND type=1)",
 		'msg10' => "(SELECT COUNT(*) FROM hh_techforum_list WHERE at='{$uid}' AND isnewdz=1 AND type=2)",
-		'msg11' => "(SELECT COUNT(*) FROM hh_techqzhi       WHERE at='{$uid}' AND isnewdz=1)",
-		'msg12' => "(SELECT COUNT(*) FROM hh_zhaopin_list   WHERE ofuser='{$uid}' AND isnewdz=1)",
+		'msg11' => "(SELECT COUNT(*) FROM hh_techqzhi_list  WHERE at='{$uid}' AND isnewdz=1)",
+		'msg12' => "(SELECT COUNT(*) FROM hh_zhaopin_list   WHERE at='{$uid}' AND isnewdz=1)",
 	);
 
 	

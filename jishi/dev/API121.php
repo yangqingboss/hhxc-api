@@ -65,7 +65,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			## 獲取點贊者信息
 			$condition_main['fields'] = array('DISTINCT uid');
 			$condition_main['filter']['tid'] = $row_main['tid'];
-			$condition_main['others'] = 'ORDER BY id DESC';
+			$condition_main['others'] = 'ORDER BY id DESC LIMIT ' . PRAISE_NUMBER;
 			$recordset_user = StorageFind($condition_main);
 			if (is_array($recordset_user) and empty($recordset_user) == FALSE) {
 				$sql = '(SELECT title FROM hh_%s WHERE dengji=%s) AS h_%s';
@@ -130,7 +130,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 
 			## 樓主帖子ID
 			$buffer_tid = $row_main['tid'];
-			if ($buffer_main['praisetype'] == '2') {
+			if ($index) {
 				$record_tid = StorageFindID($schema, $row_main['tid']);
 				if (is_array($record_tid) and empty($record_tid) == FALSE) {
 					$buffer_tid = $record_tid['tid'];
