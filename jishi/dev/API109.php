@@ -27,7 +27,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		'filter' => array(
 			'uid' => Assign($params['uid'], 0),
 		),
-		'charset' => TRUE, // 兼容老版數據
+		//'charset' => TRUE, // 兼容老版數據
 	);
 	$record = StorageFindOne($condition);
 	if (is_array($record) == FALSE or empty($record) == TRUE) {

@@ -10,6 +10,7 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+header('Access-Control-Allow-Origin:*');
 $result = array('code' => '101', 'data' => array());
 
 $condition = array(

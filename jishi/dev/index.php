@@ -14,8 +14,8 @@ define('API_VERSION', basename(dirname(__FILE__)));
 define('API_NAME',    str_replace(API_ROOT . DIRECTORY_SEPARATOR, '', dirname(dirname(__FILE__))));
 
 ## 頁面URL設置
-define('PAGE_ANLI',     'http://www.haohaoxiuche.com/html_hhxc_anli.php?uid=%d&openid=%s&debug=%d&resultid=');
-define('PAGE_ZHENGSHI', 'http://www.haohaoxiuche.com/api_zhengshi.php?uid=%d&openid=%s&theid=');
+define('PAGE_ANLI',     'http://haohaoxiuche.com/hhxc-api/jishi/dev/www/anli.php?uid=%d&openid=%s&debug=%d&resultid=');
+define('PAGE_ZHENGSHI', 'http://haohaoxiuche.com/api_zhengshi.php?uid=%d&openid=%s&theid=');
 define('ICON_DEFAULT',  'http://haohaoxiuche.com/css/icon_default.png');
 define('ICON_PATH',     'http://haohaoxiuche.com/api/userimg/');
 define('PIC_I_PATH',    join(array(dirname(API_ROOT), 'api', 'userimg'), DIRECTORY_SEPARATOR));
@@ -393,16 +393,21 @@ function RefreshMsg($uid) {
 	if(empty($uid)) return;
 
 	$messages = array(
-		'msg1' => "(SELECT COUNT(*) FROM hh_techforum WHERE pubuser='{$uid}' AND isnewmsg=1 AND type=1)",
-		'msg2' => "(SELECT COUNT(*) FROM hh_techforum WHERE pubuser='{$uid}' AND isnewmsg=1 AND type=2)",
-		'msg3' => "(SELECT COUNT(*) FROM hh_techqzhi  WHERE pubuser='{$uid}' AND isnewmsg=1)",
-		'msg4' => "(SELECT COUNT(*) FROM hh_techforum_list WHERE at='{$uid}' AND isnewat=1  AND type=1)",
-		'msg5' => "(SELECT COUNT(*) FROM hh_techforum_list WHERE at='{$uid}' AND isnewat=1  AND type=2)",
-		'msg6' => "(SELECT COUNT(*) FROM hh_techqzhi_list  WHERE at='{$uid}' AND isnewat=1)",
-		'msg7' => "(SELECT COUNT(*) FROM hh_zhaopin   WHERE  ofuser='{$uid}' AND isnewmsg=1)",
-		'msg8' => "(SELECT COUNT(*) FROM hh_zhaopin_list  WHERE  at='{$uid}' AND isnewat=1)",
+		'msg1'  => "(SELECT COUNT(*) FROM hh_techforum WHERE pubuser='{$uid}' AND isnewmsg=1 AND type=1)",
+		'msg2'  => "(SELECT COUNT(*) FROM hh_techforum WHERE pubuser='{$uid}' AND isnewmsg=1 AND type=2)",
+		'msg3'  => "(SELECT COUNT(*) FROM hh_techqzhi  WHERE pubuser='{$uid}' AND isnewmsg=1)",
+		'msg4'  => "(SELECT COUNT(*) FROM hh_techforum_list WHERE at='{$uid}' AND isnewat=1  AND type=1)",
+		'msg5'  => "(SELECT COUNT(*) FROM hh_techforum_list WHERE at='{$uid}' AND isnewat=1  AND type=2)",
+		'msg6'  => "(SELECT COUNT(*) FROM hh_techqzhi_list  WHERE at='{$uid}' AND isnewat=1)",
+		'msg7'  => "(SELECT COUNT(*) FROM hh_zhaopin        WHERE ofuser='{$uid}' AND isnewmsg=1)",
+		'msg8'  => "(SELECT COUNT(*) FROM hh_zhaopin_list   WHERE at='{$uid}' AND isnewat=1)",
+		'msg9'  => "(SELECT COUNT(*) FROM hh_techforum_list WHERE at='{$uid}' AND isnewdz=1 AND type=1)",
+		'msg10' => "(SELECT COUNT(*) FROM hh_techforum_list WHERE at='{$uid}' AND isnewdz=1 AND type=2)",
+		'msg11' => "(SELECT COUNT(*) FROM hh_techqzhi       WHERE at='{$uid}' AND isnewdz=1)",
+		'msg12' => "(SELECT COUNT(*) FROM hh_zhaopin_list   WHERE ofuser='{$uid}' AND isnewdz=1)",
 	);
 
+	
 	foreach ($messages as $key => $sql) {
 		$fields = array(
 			$key => $sql,

@@ -12,7 +12,7 @@ if (!defined('HHXC')) die('Permission denied');
 
 if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	$result['msg'] = MESSAGE_WARNING;
-} else if ($params['reward'] <= 1) {
+} else if ($params['reward'] == 1) {
 	$result['msg'] = '该回复已经被采纳！';
 } else {
 	$info_tid   = StorageFindID('hh_techforum_list', Assign($params['tolistid'], 0));

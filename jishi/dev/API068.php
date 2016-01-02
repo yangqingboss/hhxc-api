@@ -17,15 +17,22 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE and empty($params['u
 
 	if (is_array($record) and empty($record) == FALSE) {
 		$result = array(
-			'code'    => '101',
-			'number1' => $record['msg1'],
-			'number2' => $record['msg2'],
-			'number3' => $record['msg3'],
-			'number4' => $record['msg4'],
-			'number5' => $record['msg5'],
-			'number6' => $record['msg6'],
-			'number7' => $record['msg7'],
-			'number8' => $record['msg8'],
+			'code'     => '101',
+			'number1'  => Assign($record['msg1'],  0),
+			'number2'  => Assign($record['msg2'],  0),
+			'number3'  => Assign($record['msg3'],  0),
+			'number4'  => Assign($record['msg4'],  0),
+			'number5'  => Assign($record['msg5'],  0),
+			'number6'  => Assign($record['msg6'],  0),
+			'number7'  => Assign($record['msg7'],  0),
+			'number8'  => Assign($record['msg8'],  0),
+			'number9'  => Assign($record['msg9'],  0),
+			'number10' => Assign($record['msg10'], 0),
+			'number11' => Assign($record['msg11'], 0),
+			'number12' => Assign($record['msg12'], 0),
+			'number13' => Assign($record['msg13'], 0),
+			'number14' => Assign($record['msg14'], 0),
+
 		);
 	}
 }

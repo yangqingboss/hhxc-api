@@ -10,7 +10,6 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
-define('URL_MOBILE', 'http://www.haohaoxiuche.com/hhxc-api/mobile');
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">

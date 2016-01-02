@@ -69,5 +69,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	if (empty($schema) == FALSE) {
 		StorageEditByID($schema, array('isnewdz' => $params['type'] ? 1 : 0), Assign($params['tolistid'], 0));
 	}
+
+	RefreshMsg(Assign($params['uid'], 0));
 }
 

@@ -1,0 +1,82 @@
+html,
+body {
+  font-size: 16px;
+}
+body {
+  padding: 0.75rem;
+}
+.g-content {
+  width: 100%;
+  overflow: hidden;
+  color: #323232;
+}
+.g-content img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+}
+.g-link {
+  color: #808080;
+  display: block;
+  text-align: center;
+  padding: 1.25rem 0 1.75rem 0;
+  border-bottom: 1px #b3b3b3 solid;
+}
+.g-link a {
+  padding-left: 0.625em;
+  color: #004eff;
+}
+.g-link a:hover {
+  text-decoration: none;
+}
+.g-pinlun ul,
+.g-pinlun li {
+  padding: 0;
+  list-style: none;
+}
+.g-pinlun h4 {
+  color: #808080;
+  padding: 0 1rem;
+  display: block;
+  max-width: 108px !important;
+  margin: -10px auto 0 -54px !important;
+  position: absolute;
+  text-align: center;
+  left: 50%;
+  background-color: #ffffff !important;
+}
+.g-pinlun #g-message,
+.g-pinlun #g-empty {
+  display: block;
+  text-align: center;
+  color: #808080;
+  line-height: 3em;
+}
+.g-pinlun .g-pinlun-header {
+  padding-top: 1rem;
+}
+.g-pinlun .g-pinlun-header img {
+  width: 2.25rem;
+  height: 2.25rem;
+  -webkit-border-radius: 2.25rem;
+  -moz-border-radius: 2.25rem;
+  border-radius: 2.25rem;
+  float: left;
+  margin-right: 0.625rem;
+}
+.g-pinlun .g-pinlun-header h5 {
+  color: #323232;
+  font-size: 1.125rem;
+  vertical-align: top;
+  display: block;
+  margin: 0;
+}
+.g-pinlun .g-pinlun-header small {
+  color: #808080;
+  display: block;
+}
+.g-pinlun .g-pinlun-body {
+  color: #666666;
+  border-bottom: 1px #b3b3b3 solid;
+  padding-bottom: 1rem;
+}

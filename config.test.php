@@ -11,9 +11,9 @@
 if (!defined('HHXC')) die('Permission denied');
 
 define('DEBUG',      TRUE);
-define('DB_HOST',    '127.0.0.1');
+define('DB_HOST',    '120.24.163.194');
 define('DB_NAME',    'gocar');
-define('DB_USER',    'root');
+define('DB_USER',    'admin');
 define('DB_PWD',     'goodluck123@');
 define('DB_CHARSET', 'LATIN1');
 define('CL_CHARSET', 'UTF-8');
