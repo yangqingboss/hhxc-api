@@ -35,7 +35,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		);
 		$h_rankname = StorageFindOne($condition_main);
 		$result['data'][] = array(
-			'image'      => $record['image'],
+			'image'      => $record['headerimg'],
 			'nick'       => $record['nick'],
 			'grade'      => $h_grade,
 			'city'       => $record['city'],

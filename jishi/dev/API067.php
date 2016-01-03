@@ -20,7 +20,7 @@ $condition = array(
 );
 
 $recordset = StorageFind($condition);
-if (is_array($recordset) and empty($recordset) == FALSE) {
+if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 	$result['msg'] = MESSAGE_EMPTY;
 } else {
 	$result = array('code' => '101', 'data' => array());
@@ -31,7 +31,7 @@ if (is_array($recordset) and empty($recordset) == FALSE) {
 		}
 
 		$result['data'][] = array(
-			'id'       => $row['id'],
+			'nid'       => $row['id'],
 			'title'    => $row['title'],
 			'posttime' => $row['createdat'],
 			'message'  => $row['content'],

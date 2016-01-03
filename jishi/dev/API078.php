@@ -10,6 +10,9 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+$message_no = '10' . ($params['touid'] == '0' ? '1' : '2') . "0{$params['tag']}";
+var_dump(JPushMessage($PUSH_MESSAGES[$message_no], $params, 'hh_techforum'));
+die;
 if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	$result['msg'] = MESSAGE_WARNING;
 } else {
@@ -179,6 +182,9 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			Techuser_setRank($params['uid'], 1);
 		}
 
+		## 推送消息
+		$message_no = '10' . ($params['touid'] == '0' ? '1' : '2') . "0{$params['tag']}";
+		JPushMessage($PUSH_MESSAGES[$message_no], $params);
 	}
 
 }

@@ -98,6 +98,11 @@ function SafeUsername($user) {
 	return Assign($user['nick'], SafePhone($user['username_d']));
 }
 
+## 安全模式獲取標題文本
+function SafeTitle($title, $length = 20) {
+	return mb_strlen($title) > $length ? mb_substr($title, 0, $length) . '...' : $title;
+}
+
 // 基於GET方式發送HTTP請求
 function HttpGet($url) {
 	$ch = curl_init();
@@ -995,3 +1000,15 @@ function JPushUser($message, $user) {
 
 	return FALSE;
 }
+
+## 基於消息模板針對特定用戶推送消息
+function JPushMessageByUser($config = array()) {
+	$message = sprintf(
+		Assign($config['message']),
+		SafeUsername(Assign($config['who'])),
+		SafeTitle(Assign($config['title']))
+	);
+
+	return JPushUser($message, Assign($config['user']['username_d']));
+}
+

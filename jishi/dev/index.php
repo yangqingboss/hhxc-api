@@ -29,6 +29,22 @@ define('RANK_S2RS',     1);
 define('RANK_RS2R',     10);
 define('PRAISE_NUMBER', 1);
 
+## 推送消息
+$PUSH_MESSAGES = array(
+	'10101' => '%s回复我的问答"%s"',
+	'10102' => '%s回复我的生活"%s"',
+	'10103' => '%s回复我的求职"%s"',
+	'10104' => '%s回复我的招聘"%s"',
+	'10201' => '%s@我的问答"%s"',
+	'10202' => '%s@我的生活"%s"',
+	'10203' => '%s@我的求职"%s"',
+	'10204' => '%s@我的招聘"%s"',
+	'10301' => '%s点赞我的问答"%s"',
+	'10302' => '%s点赞我的生活"%s"',
+	'10303' => '%s点赞我的求职"%s"',
+	'10304' => '%s点赞我的招聘"%s"',
+);
+
 ## 預加載全局配置文件
 if (API_VERSION != 'dev') {
 	require_once(API_ROOT . DIRECTORY_SEPARATOR . 'config.production.php');
@@ -426,3 +442,35 @@ function get_threeimg($uid, $iconurl) {
 	return $img;
 }
 
+## 推送消息
+function JPushMessage($message, $params, $schema) {
+	$jpush = array('message' => $message);
+
+	## 獲取跟帖者信息
+	$buffer_uid = StorageFindID('hh_techuser', Assign($params['uid'], 0));
+	if (is_array($buffer_uid) and empty($buffer_uid) == FALSE) {
+		$jpush['who'] = $buffer_uid;
+	}
+
+	## 獲取發帖者信息
+	if ($params['touid'] == '0') {
+		$buffer_tid = StorageFindID($schema, Assign($params['tid'], 0));
+		if (is_array($buffer_tid) and empty($buffer_tid) == FALSE) {
+			$jpush['title'] = $buffer_tid['title'];
+
+			$key_pubuser = $params['tag'] == 4 ? 'ofuser' : 'pubuser';
+			$buffer_user = StorageFindID('hh_techuser', $buffer_tid[$key_pubuser]);
+			if (is_array($buffer_user) and empty($buffer_user) == FALSE) {
+				$jpush['user'] = $buffer_user;
+			}
+		}
+	} else {
+		$buffer_tolistid = StorageFindID($schema . '_list', Assign($params['tolistid'], 0));
+		if (is_array($buffer_tolistid) and empty($buffer_tolistid) == FALSE) {
+			$jpush['title'] = $buffer_tolistid['title'];
+			$jpush['user'] = StorageFindID('hh_techuser', Assign($params['touid'], 0));
+		}
+	}
+
+	return JPushMessageByUser($jpush);
+}
