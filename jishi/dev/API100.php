@@ -50,4 +50,18 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			$result = array('code' => '101', 'msg' => $message);
 		}
 	}
+
+	## 推送消息
+	$schema = 'hh_techforum';
+	switch ($params['tag']) {
+	case '3':
+		$schema = 'hh_techqzhi';
+		break;
+
+	case '4':
+		$schema = 'hh_zhaopin';
+		break;
+	}
+	$params['touid'] = '0';
+	JPushMessage("1030{$params['tag']}", $params, $schema);
 }

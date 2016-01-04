@@ -10,6 +10,16 @@
 // @package hhxc
 $GLOBALS['DATA'] = array(
 	array(
+		'uid'         => 72,
+		'openid'      => '4063f795ff45e71ec0c811f3c8ff754c',
+		'tid'         => 3448,
+		'content'     => '喝酒',
+		'anonymous'   => 0,
+		'touid'       => 0,
+		'tolistid'    => 0,
+		'tag'         => 2,
+	),
+	array(
 		'uid'         => 875,
 		'openid'      => '4063f795ff45e71ec0c811f3c8ff754c',
 		'tid'         => 1,
@@ -57,6 +67,6 @@ $GLOBALS['DATA'] = array(
 		'anonymous'   => 1,
 		'touid'       => 967,
 		'tolistid'    => 3,
-		'tag'         => 1,
+		'tag'         => 4,
 	),
 );

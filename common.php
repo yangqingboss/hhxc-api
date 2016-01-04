@@ -327,6 +327,7 @@ function StorageEditByID($schema, $fields, $id, $debug = FALSE) {
 		}
 	}
 	$sql = "UPDATE `{$schema}` SET " . join($values, ',') . StorageWhere(array('id' => $id));
+	if ($debug) die($sql);
 	$res = mysqli_query($mysql, $sql);
 
 	if ($res) {
@@ -782,8 +783,10 @@ function KVStorageScan($key_start, $key_end, $limit = 128, $order = TRUE) {
 			$keys = $ssdb->hlist($ssdb_prefix . $key_start, $ssdb_prefix . $key_end, $limit);
 		}
 
-		foreach ($keys as $key) {
-			$recordset[] = $ssdb->hgetall($key);
+		if (is_array($keys)) {
+			foreach ($keys as $key) {
+				$recordset[] = $ssdb->hgetall($key);
+			}
 		}
 
 		return $recordset;
@@ -977,7 +980,7 @@ function JPushInit() {
 }
 
 ## 消息推送函數 针对特定用户推送
-function JPushUser($message, $user) {
+function JPushUser($message, $user, $params = array()) {
 	if (empty($jpush) == TRUE) {
 		$jpush = JPushInit();
 	}
@@ -986,12 +989,13 @@ function JPushUser($message, $user) {
 		if (is_array($user) == FALSE) $user = array($user);
 
 		$result = $jpush->push()
-			->setPlatform(M\Platform('android', 'ios'))
-			->setAudience(M\Audience(M\Tag($user)))
-			->setNotification(M\notification($message,
+			->setPlatform(M\Platform('android'))
+			->setAudience(M\Audience(M\Tag($user), M\Alias($user)))
+			/*->setNotification(M\notification($message,
 				M\android($message),
 				M\ios($message)
-			))
+			))*/
+			->setMessage(M\message($message, 'Push Title', Assign($params['type']), array()))
 			->send();
 		return $result->msg_id;
 	} catch (APIRequestException $e) {
@@ -1009,6 +1013,57 @@ function JPushMessageByUser($config = array()) {
 		SafeTitle(Assign($config['title']))
 	);
 
-	return JPushUser($message, Assign($config['user']['username_d']));
+	return JPushUser($message, Assign($config['user']['username_d']), Assign($config['params'], array()));
 }
 
+function getfirstchar($s0){   
+    $fchar = ord($s0{0});
+    if($fchar >= ord("A") and $fchar <= ord("z") )return strtoupper($s0{0});
+    $s1 = iconv("UTF-8","gb2312", $s0);
+    $s2 = iconv("gb2312","UTF-8", $s1);
+    if($s2 == $s0){$s = $s1;}else{$s = $s0;}
+    $asc = ord($s{0}) * 256 + ord($s{1}) - 65536;
+    if($asc >= -20319 and $asc <= -20284) return "A";
+    if($asc >= -20283 and $asc <= -19776) return "B";
+    if($asc >= -19775 and $asc <= -19219) return "C";
+    if($asc >= -19218 and $asc <= -18711) return "D";
+    if($asc >= -18710 and $asc <= -18527) return "E";
+    if($asc >= -18526 and $asc <= -18240) return "F";
+    if($asc >= -18239 and $asc <= -17923) return "G";
+    if($asc >= -17922 and $asc <= -17418) return "I";
+    if($asc >= -17417 and $asc <= -16475) return "J";
+    if($asc >= -16474 and $asc <= -16213) return "K";
+    if($asc >= -16212 and $asc <= -15641) return "L";
+    if($asc >= -15640 and $asc <= -15166) return "M";
+    if($asc >= -15165 and $asc <= -14923) return "N";
+    if($asc >= -14922 and $asc <= -14915) return "O";
+    if($asc >= -14914 and $asc <= -14631) return "P";
+    if($asc >= -14630 and $asc <= -14150) return "Q";
+    if($asc >= -14149 and $asc <= -14091) return "R";
+    if($asc >= -14090 and $asc <= -13319) return "S";
+    if($asc >= -13318 and $asc <= -12839) return "T";
+    if($asc >= -12838 and $asc <= -12557) return "W";
+    if($asc >= -12556 and $asc <= -11848) return "X";
+    if($asc >= -11847 and $asc <= -11056) return "Y";
+    if($asc >= -11055 and $asc <= -10247) return "Z";
+    return null;
+}
+ 
+ 
+function pinyin1($zh){
+    $ret = "";
+    $s1 = iconv("UTF-8","gb2312", $zh);
+    $s2 = iconv("gb2312","UTF-8", $s1);
+    if($s2 == $zh){$zh = $s1;}
+    for($i = 0; $i < strlen($zh); $i++){
+        $s1 = substr($zh,$i,1);
+        $p = ord($s1);
+        if($p > 160){
+            $s2 = substr($zh,$i++,2);
+            $ret .= getfirstchar($s2);
+        }else{
+            $ret .= $s1;
+        }
+    }
+    return $ret;
+}

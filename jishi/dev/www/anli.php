@@ -147,7 +147,6 @@ h-home {
 		</div>
 	</div>
 </nav>
-<?php endif;?>
 <h1 class="h-anli-title"><?php echo $anli['title'];?></h1>
 <div class="h-anli-info">
 	<div class="h-info-left">来源：<?php echo $anli['h_fromurl'];?></div>
@@ -157,6 +156,7 @@ h-home {
 	</div>
 	<div style="clear:both;"></div>
 </div>
+<?php endif; ?>
 <div class="g-app g-content" id="g-content" data-id="<?php echo $anli['id'];?>" data-url="<?php echo URL_API;?>">
 	<p><?php echo $anli['maintext'];?></p>
 </div>

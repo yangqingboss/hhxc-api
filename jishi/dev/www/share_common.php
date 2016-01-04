@@ -9,7 +9,8 @@
 // @version 1.0.0
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
-
+require_once('common.php');
+header('Content-Type: text/html;charset=utf-8');
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">

@@ -88,7 +88,7 @@ if (DEBUG == FALSE) {
 ## 兼容接口編號
 $apicodes = array(
 	'1',  '24', '25', '26', '28', '29', '31', '32', '33', '35', '36', '37', '38', '40', '41', '42', '43',
-	'44', '45', '46', '47', '49', '50', '54', '55', '60', '94', '95', '96',
+	'44', '45', '46', '47', '49', '50', '54', '55', '60', '62', '94', '95', '96',
 );
 
 ## 加載相對應API接口腳本
@@ -443,8 +443,9 @@ function get_threeimg($uid, $iconurl) {
 }
 
 ## 推送消息
-function JPushMessage($message, $params, $schema) {
-	$jpush = array('message' => $message);
+function JPushMessage($meessageno, $params, $schema) {
+	global $PUSH_MESSAGES;
+	$jpush = array('message' => $PUSH_MESSAGES[$meessageno]);
 
 	## 獲取跟帖者信息
 	$buffer_uid = StorageFindID('hh_techuser', Assign($params['uid'], 0));
@@ -472,5 +473,6 @@ function JPushMessage($message, $params, $schema) {
 		}
 	}
 
+	$jpush['params'] = array('type' => $meessageno);
 	return JPushMessageByUser($jpush);
 }

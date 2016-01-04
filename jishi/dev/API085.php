@@ -183,7 +183,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			if ($params['type'] == '2' and $row['pubuser'] != $params['uid']) {
 				continue;
 			}
-
+			
 			foreach ($condition['column'] as $key => $val) {
 				$buffer[$key] = Assign($row[$val], 0);
 			}

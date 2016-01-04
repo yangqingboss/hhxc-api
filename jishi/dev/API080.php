@@ -84,7 +84,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 
 			$filter = array(
 				//'uid'   => Assign($params['uid'], 0),
-				'tag'   => 1,
+				'tag'   => $params['tag'],
 				'tid'   => $buffer['listid'],
 				'type'  => 1,
 				'touid' => 1,
@@ -96,7 +96,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 
 			$filter = array(
 				//'uid'   => Assign($params['uid'], 0),
-				'tag'   => 1,
+				'tag'   => $params['tag'],
 				'tid'   => $buffer['listid'],
 				'type'  => 1,
 				'touid' => 1,
@@ -108,8 +108,10 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		}
 
 		$filter = array('tid' => Assign($params['tid'], 0), 'at' => Assign($params['uid'], 0));
-		StorageEdit('hh_techforum_list', array('isnew' => 0, 'isnewat' => 0), $filter);
-		StorageEditByID('hh_techforum', array('isnewmsg' => 0, 'isnewat' => 0), Assign($params['tid'], 0));
+		if ($params['uid'] == $buffer['uid']) {
+			StorageEdit('hh_techforum_list', array('isnew' => 0, 'isnewat' => 0), $filter);
+			StorageEditByID('hh_techforum', array('isnewmsg' => 0, 'isnewat' => 0), $params['tid']);
+		}
 		RefreshMsg(Assign($params['uid'], 0));
 	}
 }

@@ -44,11 +44,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			for ($index = 0; $index < 6; $index++) {
 				$field = 'image' . strval($index + 1);
 
-				if (empty($_FILES[$field])) {
-					continue;
-				}
-
-				if ($_FILES[$field]['error'] <= 0) {
+				if ($_FILES[$field]['error'] <= 0 and empty($_FILES[$field]['tmp_name']) == FALSE) {
 					$buf_data = array(
 						'qid'       => $id,
 						'createdat' => 'NOW()',

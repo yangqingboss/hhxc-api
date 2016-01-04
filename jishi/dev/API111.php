@@ -67,9 +67,22 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		$schema = 'hh_techforum_list';
 	}
 	if (empty($schema) == FALSE) {
-		StorageEditByID($schema, array('isnewdz' => $params['type'] ? 1 : 0), Assign($params['tolistid'], 0));
+		StorageEditByID($schema, array('isnewdz' => $params['type'] ? 1 : 1), Assign($params['tolistid'], 0));
 	}
 
 	RefreshMsg(Assign($params['uid'], 0));
+
+	## 推送消息
+	$schema = 'hh_techforum';
+	switch ($params['tag']) {
+	case '3':
+		$schema = 'hh_techqzhi';
+		break;
+
+	case '4':
+		$schema = 'hh_zhaopin';
+		break;
+	}
+	JPushMessage("1030{$params['tag']}", $params, $schema);
 }
 

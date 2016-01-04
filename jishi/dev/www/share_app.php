@@ -8,8 +8,6 @@
 // @authors hjboss <hongjiangproject@yahoo.com> 2015-01-02#
 // @version 1.0.0
 // @package hhxc
-if (!defined('HHXC')) die('Permission denied');
-
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">

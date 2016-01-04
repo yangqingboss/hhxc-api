@@ -10,9 +10,10 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
-$message_no = '10' . ($params['touid'] == '0' ? '1' : '2') . "0{$params['tag']}";
-var_dump(JPushMessage($PUSH_MESSAGES[$message_no], $params, 'hh_techforum'));
-die;
+//$message_no = '10' . ($params['touid'] == '0' ? '1' : '2') . "0{$params['tag']}";
+//var_dump(JPushMessage($message_no, $params, 'hh_techforum'));
+//die;
+
 if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	$result['msg'] = MESSAGE_WARNING;
 } else {
@@ -75,20 +76,16 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	} else {
 		for ($index = 0; $index < 6; $index++) {
 			$field = 'image' . strval($index + 1);
-
-			if (empty($_FILES[$field])) {
-				continue;
-			}
-
-			if ($_FILES[$field]['error'] <= 0) {
+			
+			if ($_FILES[$field]['error'] <= 0  and empty($_FILES[$field]['tmp_name']) == FALSE) {
 				
 				$buf_data = array(
-					'qid'       => $id,
+					'listid'       => $id,
 					'createdat' => 'NOW()',
 					'filename'  => $_FILES[$field]['name'],
 					'size'      => $_FILES[$field]['size'],
 				);
-				$buf_id = StorageAdd("{$schema}_img", $buf_data);
+				$buf_id = StorageAdd("{$schema}_list_img", $buf_data);
 
 				$upload_path = '';
 				switch ($params['tag']) {
@@ -122,7 +119,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			$fields = array(
 				'maxno'      => 'maxno+1',
 				'replycount' => "(SELECT COUNT(*) FROM {$schema}_list WHERE tid='{$params['tid']}')",
-				'isnewmsg'   => ($record[$column] == $params['uid']) ? 0 : 1,
+				'isnewmsg'   => ($record[$column] == $params['uid']) ? 1 : 1,
 				'isnewat'    => empty($params['touid']) ? 0 : 1,
 			);
 			break;
@@ -132,7 +129,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			$fields = array(
 				'maxno'      => 'maxno+1',
 				'replycount' => "(SELECT COUNT(*) FROM {$schema}_list WHERE tid='{$params['tid']}')",
-				'isnewmsg'   => ($record[$column] == $params['uid']) ? 0 : 1,
+				'isnewmsg'   => ($record[$column] == $params['uid']) ? 1 : 1,
 				'isnewat'    => empty($params['touid']) ? 0 : 1,
 			);
 			break;
@@ -142,7 +139,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			$fields = array(
 				'maxno'      => 'maxno+1',
 				'replycount' => "(SELECT COUNT(*) FROM {$schema}_list WHERE tid='{$params['tid']}')",
-				'isnewmsg'   => ($record[$column] == $params['uid']) ? 0 : 1,
+				'isnewmsg'   => ($record[$column] == $params['uid']) ? 1 : 1,
 				'isnewat'    => empty($params['touid']) ? 0 : 1,
 			);
 		}
@@ -184,7 +181,8 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 
 		## 推送消息
 		$message_no = '10' . ($params['touid'] == '0' ? '1' : '2') . "0{$params['tag']}";
-		JPushMessage($PUSH_MESSAGES[$message_no], $params);
+		JPushMessage($message_no, $params, $schema);
+
 	}
 
 }

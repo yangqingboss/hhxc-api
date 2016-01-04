@@ -19,7 +19,7 @@ $condition = array(
 		'type' => 7,
 		'pid'  => 0,
 	),
-	'others' => 'ORDER BY id ASC',
+	'others' => 'ORDER BY sort ASC',
 );
 $recordset = StorageFind($condition);
 if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {

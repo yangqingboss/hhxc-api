@@ -61,6 +61,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		$num = StorageEdit('hh_identification', $data, array('uid' => Assign($params['uid'], 0)));
 	}
 
-	$result = array('code' => '101', 'msg' => MESSAGE_SUCCESS);
+	$result = array('code' => '101', 'msg' => MESSAGE_SUCCESS, 'fields' => $fields);
+
 }
 
