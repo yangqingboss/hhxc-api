@@ -11,7 +11,7 @@
 if (!defined('HHXC')) die('Permission denied');
 
 $condition = array(
-	'schema' => 'car_wordcate_list',
+	'schema' => 'car_indexword',
 	'fields' => array('*'),
 	'filter' => array(
 		'cateid' => Assign($params['faultType'], 0),

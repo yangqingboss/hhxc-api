@@ -87,16 +87,24 @@ h-home {
 .h-info-right {
 	float: right;
 }
+.h-header .container-fluid, .h-bottom .container-fluid {
+	padding-left: 0.25em;
+	padding-right: 0.25em;
+}
 .navbar-brand {
 	font-weight: bold;
-	padding-left: 2.5em;
 	color:#ffffff !important;
-	background:url('<?php echo URL_MOBILE;?>/images/logo.png') no-repeat left center !important;
+	padding-left: 0.25em;
+}
+.h-brand-logo {
+	padding-top: 4px;
+	padding-left: 0;
+	padding-right: 0;
 }
 .h-icon-button {
 	line-height: 48px;
 	position:absolute;
-	right: 1em;
+	right: 0.25em;
 	display: block !important;
 }
 .h-header {
@@ -116,7 +124,6 @@ h-home {
 	background-color: #eeeeee !important;
 }
 .h-bottom .navbar-brand {
-	background:url('<?php echo URL_MOBILE;?>/images/logo-bottom.png') no-repeat left center !important;
 	color: #353535 !important;
 	font-size: 18px;
 	line-height: 1.25em;
@@ -124,11 +131,12 @@ h-home {
 }
 .h-bottom .navbar-brand span {
 	display: block;
-	padding-left: 8px;
+	font-size: 14px;
+	padding-left: 0.25em;
 	margin-top: -0.5em;
 } 
 .h-bottom .navbar-brand .h-em {
-	font-size: 14px;
+	font-size: 12px;
 	color: #b3b3b3;
 	margin-top: -0.125em;
 }
@@ -139,9 +147,12 @@ h-home {
 <nav class="navbar navbar-default container-fluid h-header">
 	<div class="container-fluid">
 		<div class="navbar-header">
+			<a class="navbar-brand h-brand-logo" href="#">
+				<img src="<?php echo URL_MOBILE;?>/images/logo-bottom.png" height="42" />
+			</a>
 			<a class="navbar-brand" href="#">有修车难题，找好好修车！</a>
 			<a href="<?php echo URL_MOBILE;?>/index.php/home" class="h-icon-button">
-				<img src="<?php echo URL_MOBILE;?>/images/top_buttom.png" height="36" />
+				<img src="<?php echo URL_MOBILE;?>/images/top_buttom.png" height="42" />
 			</a>
 			<!--<div style="clear:both"></div>-->
 		</div>
@@ -162,7 +173,7 @@ h-home {
 </div>
 <small class="g-app g-link">本文由好好修车转码以便移动设备阅读<a class="g-button" data-id="0">查看原文</a></small>
 <div class="g-app g-pinlun">
-	<h4>最新评论<?php echo $_REQUEST['resultid'];?></h4>
+	<h4>最新评论</h4>
 	<em id="g-message">正在加载！！！</em>
 	<em id="g-empty" style="display:none">暂无评论！！！</em>
 	<ul id="g-list"></ul>
@@ -171,12 +182,15 @@ h-home {
 <nav class="navbar navbar-default container-fluid h-bottom">
 	<div class="container-fluid">
 		<div class="navbar-header">
+			<a class="navbar-brand h-brand-logo" href="#">
+				<img src="<?php echo URL_MOBILE;?>/images/logo.png" height="42" />
+			</a>
 			<a class="navbar-brand" href="#">
-				<span>百度能查到的汽修案例我们都有</span>
+				<span class="h-bottom-title">百度能查到的汽修案例我们都有</span>
 				<span class="h-em">还更快速更精确更专业</span>
 			</a>
 			<a href="<?php echo $url_download;?>" class="h-icon-button">
-				<img src="<?php echo URL_MOBILE;?>/images/download.png" height="42" />
+				<img src="<?php echo URL_MOBILE;?>/images/download.png" height="32" />
 			</a>
 			<!--<div style="clear:both"></div>-->
 		</div>
