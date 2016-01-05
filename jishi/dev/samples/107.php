@@ -12,7 +12,7 @@ $GLOBALS['DATA'] = array(
 	array(
 		'uid'         => 875,
 		'openid'      => '4063f795ff45e71ec0c811f3c8ff754c',
-		'cid'         => 228745
+		'cid'         => 16703
 	),
 );
 

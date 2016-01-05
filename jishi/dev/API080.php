@@ -41,6 +41,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		foreach ($recordset as $index => $row) {
 			$buffer = array(
 				'uid'      => $row['pubuser'],
+				'tid'      => $row['tid'],
 				'userpic'  => $row['h_headerimg'],
 				'usernick' => $row['h_nick'],
 				'grade'    => $row['h_grade'],
@@ -108,11 +109,18 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		}
 
 		$filter = array('tid' => Assign($params['tid'], 0), 'at' => Assign($params['uid'], 0));
-		if ($params['uid'] == $buffer['uid']) {
-			StorageEdit('hh_techforum_list', array('isnew' => 0, 'isnewat' => 0), $filter);
-			StorageEditByID('hh_techforum', array('isnewmsg' => 0, 'isnewat' => 0), $params['tid']);
+		$buffer_host = StorageFindID('hh_techforum', Assign($params['tid'], 0));
+		if (is_array($buffer_host) and empty($buffer_host) == FALSE) {
+			if ($params['uid'] == $buffer_host['pubuser']) {
+				$schema = 'hh_techforum';
+				StorageEdit($schema . '_list', array('isnew' => 0, 'isnewat' => 0), $filter);
+				StorageEditByID($schema, array('isnewmsg' => 0, 'isnewat' => 0), $params['tid']);
+			}
+
+			RefreshMsg(Assign($params['uid'], 0));
+			RefreshMsg(Assign($buffer_host['pubuser'], 0));
+
 		}
-		RefreshMsg(Assign($params['uid'], 0));
 	}
 }
 

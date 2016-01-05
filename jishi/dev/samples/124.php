@@ -13,4 +13,8 @@ $GLOBALS['DATA'] = array(
 		'databasever' => 0,
 		'codetype'    => 'U30',
 	),
+	array(
+		'databasever' => 0,
+		'codetype'    => 'P32',
+	),
 );

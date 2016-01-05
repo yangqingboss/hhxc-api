@@ -45,7 +45,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			),
 			'filter' => array(
 				'tid' => Assign($params['tid'], 0),
-				'no'  => array('GT', Assign($params['index'], 0)),
+				'no'  => array('EGT', Assign($params['index'], 0)),
 			),
 		);
 		$recordset = StorageFind($condition);
@@ -88,7 +88,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 					continue;
 				}
 
-				//$filter_count['touid'] = 0;
+				$filter_count['touid'] = 0;
 				if (StorageCount('hh_techuser_dianzan', $filter_count)) {
 					$buf['mypraise'] = '1';
 				}
@@ -97,6 +97,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 					'tag'  => 3,
 					'tid'  => $buf['listid'],
 					'type' => 1,
+					'touid' => 1,
 				);
 				$buf['praises'] = StorageCount('hh_techuser_dianzan', $filter_total);
 

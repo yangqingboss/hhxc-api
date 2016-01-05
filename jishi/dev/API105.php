@@ -20,7 +20,8 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		'cid'       => Assign($params['cid'], 0),
 		'tag'       => 1,
 		'createdat' => date('Y-m-d H:i:s'),
-		'content'   => Assign($params['content']),
+		'content'   => Assign($params['context']),
+		'version'   => 1,
 	);
 	$id = StorageAdd('hh_anli_thread', $data);
 	if (empty($id) == TRUE) {

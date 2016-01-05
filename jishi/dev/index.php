@@ -101,6 +101,7 @@ if (file_exists($script) == FALSE) {
 	require_once($script);
 }
 
+header('Content-Type: text/html;charset=utf-8');
 mysqli_close($mysql);
 die(JsonEncode($result));
 

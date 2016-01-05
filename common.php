@@ -995,7 +995,7 @@ function JPushUser($message, $user, $params = array()) {
 				M\android($message),
 				M\ios($message)
 			))*/
-			->setMessage(M\message($message, 'Push Title', Assign($params['type']), array()))
+			->setMessage(M\message($message, $message, Assign($params['type']), array()))
 			->send();
 		return $result->msg_id;
 	} catch (APIRequestException $e) {

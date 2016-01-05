@@ -35,7 +35,7 @@ if (empty($params['tid']) == TRUE) {
 }
 switch ($params['type']) {
 case '2':
-	$condition['filter']['ofuser'] = Assign($param['uid'], 0);
+	$condition['filter']['ofuser'] = Assign($params['uid'], 0);
 	break;
 
 case '3':

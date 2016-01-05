@@ -25,13 +25,17 @@ $recordset = StorageFind($condition);
 if (is_array($recordset) and empty($recordset) == FALSE) {
 	foreach ($recordset as $index => $row) {
 		$record = StorageFindID('hh_techuser', $row['uid']);
-		
+		$content = $row['content'];
+		if (empty($row['version']) == FALSE) {
+			$content = Charset($content,  DB_CHARSET, CL_CHARSET);
+		}
+
 		$result['data'][] = array(
 			'uid'     => Assign($row['uid'], 0),
 			'nick'    => Assign($record['nick'], NICK_DEFAULT),
 			'image'   => empty($record['headerimg']) ? ICON_DEFAULT : ICON_PATH . $record['headerimg'],
 			'potimes' => $row['createdat'],
-			'context' => $row['content'],
+			'context' => $content,
 			'cid'     => $row['cid'],
 		);
 	}

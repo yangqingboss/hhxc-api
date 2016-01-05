@@ -13,13 +13,13 @@ if (!defined('HHXC')) die('Permission denied');
 $schema = 'odbfault-ANDROID_';
 $buffer = KVStorageScan($schema . Assign($params['databasever'], 0), $schema . time(), 1, TRUE);
 if (empty($buffer) == FALSE) {
-	$result = Assign(unserialize($buffer[0]['cache']));
+	//$result = Assign(unserialize($buffer[0]['cache']));
 }
 
 if (empty($result['data']) == TRUE) {
 	$condition = array(
 		'schema' => 'car_odbfault',
-		'fields' => array('obdcode'),
+		'fields' => array('obdcode', 'vwcode'),
 	);
 
 	$recordset = StorageFind($condition);
@@ -29,11 +29,32 @@ if (empty($result['data']) == TRUE) {
 
 		foreach ($recordset as $index => $row) {
 			$first = strtoupper(substr(Assign($row['obdcode']), 0, 1));
+			$dcode = strtoupper(substr(Assign($row['vwcode']), 0, 1));
 			
 			if (empty($first)) {
 				continue;
 			}
 
+			## 處理大眾故障碼
+			if (strlen($dcode) > 0) {
+				if (in_array($dcode, $firstlist) == FALSE) {
+					$firstlist[] = $dcode;
+	
+					$buffer[$dcode] = array(
+						'index'    => $dcode,
+						'codetype' => array(
+							strtoupper(substr($row['vwcode'], 0, 3)),
+						),
+					);
+				} else {
+					$info = strtoupper(substr($row['vwcode'], 0, 3));
+					if (in_array($info, $buffer[$dcode]['codetype']) == FALSE) {
+						$buffer[$dcode]['codetype'][] = $info;
+					}
+				}
+			}
+
+			## 處理普通故障碼
 			if (in_array($first, $firstlist) == FALSE) {
 				$firstlist[] = $first;
 
@@ -52,13 +73,24 @@ if (empty($result['data']) == TRUE) {
 				$buffer[$first]['codetype'][] = $info;
 			}
 		}
+
+		foreach ($buffer as $key => $item) {
+			sort($buffer[$key]['codetype']);
+		}
 		
 		sort($firstlist);
+		foreach ($firstlist as $number => $item) {
+			if (is_numeric($item)) {
+				unset($firstlist[$number]);
+				$firstlist[] = $item;
+			}
+		}
+		
 		foreach ($firstlist as $index => $alpha) {
 			$result['data'][] = $buffer[$alpha];
 		}
 
-		KVStorageSet($schema . $result['databasever'], array('cache' => serialize($result)));
+		//KVStorageSet($schema . $result['databasever'], array('cache' => serialize($result)));
 	}
 }
 

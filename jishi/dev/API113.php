@@ -36,6 +36,7 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 			'fields' => array('id'),
 			'filter' => array(
 				'pid' => $row['id'],
+				'zhuangtai' => 1,
 			),
 		);
 		$condition_sub = array(
@@ -43,6 +44,7 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 			'fields' => array('id', 'keyword1'),
 			'filter' => array(
 				'pid' => array('IN', SQLSub($condition_pid)),
+				'zhuangtai' => 1,
 			),
 		);
 		$buf = StorageFind($condition_sub);

@@ -11,12 +11,14 @@
 if (!defined('HHXC')) die('Permission denied');
 
 $condition = array(
-	'schema' => 'hh_sys_msg',
+	'schema' => 'hh_todaytop',
+	'fields' => array('*'),
 	'filter' => array(
 		'zhuangtai' => 1,
-		'id'        => array('GT', Assign($params['databasever'], 0)),
+		'type'      => 2,
 	),
-	'others' => 'ORDER BY id DESC LIMIT 5',
+	'others' => 'ORDER BY site DESC LIMIT 5',
+
 );
 
 $recordset = StorageFind($condition);
@@ -35,6 +37,7 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 			'title'    => $row['title'],
 			'posttime' => $row['createdat'],
 			'message'  => $row['content'],
+			'url'      => $row['url'] . '&m=mobile',
 		);
 	}
 }

@@ -162,7 +162,7 @@ h-home {
 </div>
 <small class="g-app g-link">本文由好好修车转码以便移动设备阅读<a class="g-button" data-id="0">查看原文</a></small>
 <div class="g-app g-pinlun">
-	<h4>最新评论</h4>
+	<h4>最新评论<?php echo $_REQUEST['resultid'];?></h4>
 	<em id="g-message">正在加载！！！</em>
 	<em id="g-empty" style="display:none">暂无评论！！！</em>
 	<ul id="g-list"></ul>

@@ -35,5 +35,10 @@ $GLOBALS['DATA'] = array(
 		'index'       => 0,
 		'tid'         => 125,
 	),
+	array(
+		'uid'         => 967,
+		'index'       => 0,
+		'tid'         => 159,
+	)
 
 );

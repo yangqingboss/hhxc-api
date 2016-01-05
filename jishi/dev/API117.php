@@ -10,23 +10,26 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
-$result = array(
-	'code' => '101',
-	'msg'  => '',
-	'data' => array(
-		array(
-			'keywordType' => '1',
-			'keywordName' => '手动变速器',
-			'data'        => array(
-				'柴油机运转无力，加速不良', 
-				'换挡时发动机熄火',
-				'空调冷气不足，能制冷但不够冷',
-				'空调制冷间断，不连续，时有时无',
-				'空调系统有噪音',
-				'水面经常有油渍',
-				'发动机水温过高，超过红线',
-			),
-		),
+$condition = array(
+	'schema' => 'car_wordcate_list',
+	'fields' => array('*'),
+	'filter' => array(
+		'cateid' => Assign($params['faultType'], 0),
+		'grade'  => array('GT', 0),
 	),
 );
+$recordset = StorageFind($condition);
+if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
+	$result['msg'] = MESSAGE_EMPTY;
+} else {
+	$result = array('code' => '101', 'data' => array());
+
+	foreach ($recordset as $number => $row) {
+		$result['data'][] = array(
+			'keywordType' => Assign($row['keyid'], 0),
+			'keywordName' => Assign($row['curword']),
+			'data'        => array(),
+		);
+	}
+}
 
