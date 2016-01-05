@@ -74,15 +74,55 @@ header('Content-Type: text/html;charset=utf-8');
 	<tr><td>LV49</td><td>24000</td><td>60</td></tr>
 	<tr><td>LV50</td><td>24500</td><td>60</td></tr>
 	<tr><td>VIP1</td><td>25000</td><td>100</td></tr>
-	<tr><td>VIP2</td><td>30000</td><td>200</td></tr>
-	<tr><td>VIP3</td><td>35000</td><td>300</td></tr>
-	<tr><td>VIP4</td><td>40000</td><td>400</td></tr>
-	<tr><td>VIP5</td><td>45000</td><td>500</td></tr>
-	<tr><td>VIP6</td><td>50000</td><td>600</td></tr>
-	<tr><td>VIP7</td><td>55000</td><td>700</td></tr>
-	<tr><td>VIP8</td><td>60000</td><td>800</td></tr>
-	<tr><td>VIP9</td><td>65000</td><td>900</td></tr>
-	<tr><td>VIP10</td><td>70000</td><td>1000</td></tr>
+	<tr><td>VIP2</td><td>30000</td><td>150</td></tr>
+	<tr><td>VIP3</td><td>35000</td><td>200</td></tr>
+	<tr><td>VIP4</td><td>40000</td><td>250</td></tr>
+	<tr><td>VIP5</td><td>45000</td><td>300</td></tr>
+	<tr><td>VIP6</td><td>50000</td><td>350</td></tr>
+	<tr><td>VIP7</td><td>55000</td><td>400</td></tr>
+	<tr><td>VIP8</td><td>60000</td><td>450</td></tr>
+	<tr><td>VIP9</td><td>65000</td><td>500</td></tr>
+	<tr><td>VIP10</td><td>70000</td><td>550</td></tr>
+	<tr><td>VIP11</td><td>80000</td><td>600</td></tr>
+	<tr><td>VIP12</td><td>90000</td><td>700</td></tr>
+	<tr><td>VIP13</td><td>100000</td><td>800</td></tr>
+	<tr><td>VIP14</td><td>110000</td><td>900</td></tr>
+	<tr><td>VIP15</td><td>120000</td><td>1000</td></tr>
+	<tr><td>VIP16</td><td>140000</td><td>1100</td></tr>
+	<tr><td>VIP17</td><td>160000</td><td>1200</td></tr>
+	<tr><td>VIP18</td><td>180000</td><td>1300</td></tr>
+	<tr><td>VIP19</td><td>200000</td><td>1400</td></tr>
+	<tr><td>VIP20</td><td>220000</td><td>1500</td></tr>
+	<tr><td>VIP21</td><td>250000</td><td>1650</td></tr>
+	<tr><td>VIP22</td><td>280000</td><td>1800</td></tr>
+	<tr><td>VIP23</td><td>310000</td><td>1950</td></tr>
+	<tr><td>VIP24</td><td>340000</td><td>2000</td></tr>
+	<tr><td>VIP25</td><td>370000</td><td>2000</td></tr>
+	<tr><td>VIP26</td><td>410000</td><td>2000</td></tr>
+	<tr><td>VIP27</td><td>450000</td><td>2000</td></tr>
+	<tr><td>VIP28</td><td>490000</td><td>2000</td></tr>
+	<tr><td>VIP29</td><td>530000</td><td>2000</td></tr>
+	<tr><td>VIP30</td><td>570000</td><td>2000</td></tr>
+	<tr><td>VIP31</td><td>620000</td><td>2000</td></tr>
+	<tr><td>VIP32</td><td>670000</td><td>2000</td></tr>
+	<tr><td>VIP33</td><td>720000</td><td>2000</td></tr>
+	<tr><td>VIP34</td><td>770000</td><td>2000</td></tr>
+	<tr><td>VIP35</td><td>820000</td><td>2000</td></tr>
+	<tr><td>VIP36</td><td>880000</td><td>2000</td></tr>
+	<tr><td>VIP37</td><td>940000</td><td>2000</td></tr>
+	<tr><td>VIP38</td><td>1000000</td><td>2000</td></tr>
+	<tr><td>VIP39</td><td>1060000</td><td>2000</td></tr>
+	<tr><td>VIP40</td><td>1120000</td><td>2000</td></tr>
+	<tr><td>VIP41</td><td>1190000</td><td>2000</td></tr>
+	<tr><td>VIP42</td><td>1260000</td><td>2000</td></tr>
+	<tr><td>VIP43</td><td>1330000</td><td>2000</td></tr>
+	<tr><td>VIP44</td><td>1400000</td><td>2000</td></tr>
+	<tr><td>VIP45</td><td>1470000</td><td>2000</td></tr>
+	<tr><td>VIP46</td><td>1550000</td><td>2000</td></tr>
+	<tr><td>VIP47</td><td>1630000</td><td>2000</td></tr>
+	<tr><td>VIP48</td><td>1710000</td><td>2000</td></tr>
+	<tr><td>VIP49</td><td>1790000</td><td>2000</td></tr>
+	<tr><td>VIP50</td><td>1870000</td><td>2000</td></tr>
 </table>
 <h2>相关说明</h2>
 <p class="color:#ff3300">

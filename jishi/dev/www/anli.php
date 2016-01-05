@@ -115,30 +115,18 @@ h-home {
 	padding-right: 1em;
 	margin: -0.75em;
 }
-.h-bottom {
-	position: fixed;
-	bottom: 0;
-	display: bold;
-	width: 100%;
-	margin: -0.75em -0.75em 0 -0.75em;
-	background-color: #eeeeee !important;
-}
-.h-bottom .navbar-brand {
-	color: #353535 !important;
-	font-size: 18px;
-	line-height: 1.25em;
-	margin-bottom: 0.125em;
-}
-.h-bottom .navbar-brand span {
-	display: block;
-	font-size: 14px;
-	padding-left: 0.25em;
-	margin-top: -0.5em;
-} 
-.h-bottom .navbar-brand .h-em {
-	font-size: 12px;
-	color: #b3b3b3;
-	margin-top: -0.125em;
+.h-bottom h1 {
+	display:block;
+	width:100%;
+	background:rgba(0, 0, 0, 0.6);
+	color:#ffffff;
+	font-size:20px;
+	text-align:center;
+	line-height:1.75em;
+	padding:0.5em 0;
+	position:absolute;
+	left:0;
+	margin-top:-90px
 }
 </style>
 </head>
