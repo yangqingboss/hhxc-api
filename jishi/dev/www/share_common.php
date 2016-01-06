@@ -29,10 +29,21 @@ if (!defined('HHXC')) die('Permission denied');
 	font-size:20px;
 }
 .h-share-content h4 img {
-	//vertical-align: text-bottom;
+	vertical-align: text-bottom;
 }
 .h-share-content .h-inner {
 	line-height: 1.75em;
+}
+.h-share-content .h-table th {
+	text-align: right;
+	width: 3em;
+	vertical-align: text-top;
+}
+.h-share-content .h-table th.h-long {
+	width: 5.5em;
+}
+.h-share-content .h-table td {
+	text-align: left;
 }
 .h-header .container-fluid, .h-bottom .container-fluid {
 	padding-left: 0.25em;
