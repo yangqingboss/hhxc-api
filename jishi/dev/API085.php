@@ -176,6 +176,12 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		$result = array('code' => '101', 'data' => array());
 
 		foreach ($recordset as $index => $row) {
+			$buffer = array(
+				'collect'  => '0',
+				'mypraise' => '0',
+				'praises'  => '0',
+			);
+
 			if ($index == 0) {
 				$result['databasever'] = $row['id'];
 			}
@@ -202,6 +208,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				continue;
 			}
 
+			$filter_count['touid'] = 0;
 			if (StorageCount('hh_techuser_dianzan', $filter_count)) {
 				$buffer['mypraise'] = '1';
 			}
@@ -210,6 +217,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'tid'  => Assign($params['tid'], 0),
 				'tag'  => Assign($params['tag'], 0),
 				'type' => '1',
+				'touid' => 0,
 			);
 			$buffer['praises'] = StorageCount('hh_techuser_dianzan', $filter_total);
 

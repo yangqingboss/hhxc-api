@@ -102,6 +102,7 @@ if (file_exists($script) == FALSE) {
 }
 
 header('Content-Type: text/html;charset=utf-8');
+header('Access-Control-Allow-Origin:*');
 mysqli_close($mysql);
 die(JsonEncode($result));
 
@@ -250,7 +251,7 @@ function Techuser_rankinit($uid) {
 		## 可兌換積分激活
 		$fields = array(
 			'rankinit'  => 1,
-			'rankscore' => Techuser_score2rank($score),
+			'rankscore' => $score,
 		);
 		StorageEditByID($schema, $fields, $uid);
 	}
@@ -419,10 +420,20 @@ function RefreshMsg($uid) {
 		'msg6'  => "(SELECT COUNT(*) FROM hh_techqzhi_list  WHERE at='{$uid}' AND isnewat=1)",
 		'msg7'  => "(SELECT COUNT(*) FROM hh_zhaopin        WHERE ofuser='{$uid}' AND isnewmsg=1)",
 		'msg8'  => "(SELECT COUNT(*) FROM hh_zhaopin_list   WHERE at='{$uid}' AND isnewat=1)",
-		'msg9'  => "(SELECT COUNT(*) FROM hh_techforum_list WHERE at='{$uid}' AND isnewdz=1 AND type=1)",
-		'msg10' => "(SELECT COUNT(*) FROM hh_techforum_list WHERE at='{$uid}' AND isnewdz=1 AND type=2)",
-		'msg11' => "(SELECT COUNT(*) FROM hh_techqzhi_list  WHERE at='{$uid}' AND isnewdz=1)",
-		'msg12' => "(SELECT COUNT(*) FROM hh_zhaopin_list   WHERE at='{$uid}' AND isnewdz=1)",
+
+		## 點贊通知統計
+		'msg9_0'  => RefreshMsgByDianzan($uid, 1, 0),
+		'msg9_1'  => RefreshMsgByDianzan($uid, 1, 1),
+		'msg10_0' => RefreshMsgByDianzan($uid, 2, 0),
+		'msg10_1' => RefreshMsgByDianzan($uid, 2, 1),
+		'msg11_0' => RefreshMsgByDianzan($uid, 3, 0),
+		'msg11_1' => RefreshMsgByDianzan($uid, 3, 1),
+		'msg12_0' => RefreshMsgByDianzan($uid, 4, 0),
+		'msg12_1' => RefreshMsgByDianzan($uid, 4, 1),
+		'msg9'    => "msg9_0+msg9_1",
+		'msg10'   => "msg10_0+msg10_1",
+		'msg11'   => "msg11_0+msg11_1",
+		'msg12'   => "msg12_0+msg12_1",
 	);
 
 	
@@ -432,6 +443,43 @@ function RefreshMsg($uid) {
 		);
 		StorageEditByID('hh_techuser', $fields, $uid);
 	}
+}
+
+function RefreshMsgByDianzan($uid, $tag, $touid) {
+	$schemas = array(
+		'1' => 'hh_techforum', 
+		'2' => 'hh_techforum', 
+		'3' => 'hh_techqzhi',
+		'4' => 'hh_zhaopin',
+	);
+	$subsql = "(SELECT tid FROM hh_techuser_dianzan WHERE uid='%s' AND tag='%s' AND touid='%s' AND type='1')";
+	$schema_name = $schemas[$tag];
+	if ($touid) {
+		$schema_name .= '_list';
+	}
+
+	$sql = "(SELECT COUNT(*) FROM {$schema_name} WHERE id IN %s AND isnewdz='1')";
+	return sprintf($sql, sprintf($subsql, $uid, $tag, $touid));
+}
+
+function RefreshMsgByCDZ($uid, $tag, $touid, $debug = FALSE) {
+	$schemas = array(
+		'1' => 'hh_techforum', 
+		'2' => 'hh_techforum', 
+		'3' => 'hh_techqzhi',
+		'4' => 'hh_zhaopin',
+	);
+	$subsql = "SELECT tid FROM hh_techuser_dianzan WHERE uid='%s' AND tag='%s' AND touid='%s' AND type='1'";
+	$schema_name = $schemas[$tag];
+	if ($touid) {
+		$schema_name .= '_list';
+	}
+
+	$fields = array('isnewdz' => 0);
+	$filter = array(
+		'id' => array('IN', sprintf($subsql, $uid, $tag, $touid)),
+	);
+	StorageEdit($schema_name, $fields, $filter, $debug);
 }
 
 ## 獲取第三方登陸頭像

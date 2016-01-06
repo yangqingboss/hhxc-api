@@ -10,6 +10,38 @@
 // @package hhxc
 $GLOBALS['DATA'] = array(
 	array(
+		'uid'      => 967,
+		'openid'   => '4063f795ff45e71ec0c811f3c8ff754c',
+		'deviceid' => '147f11a50ef8f4e2',
+		'tid'      => 3661,
+		'tag'      => 2,
+		'type'     => 1,
+	),
+	array(
+		'uid'      => 8301,
+		'openid'   => '4063f795ff45e71ec0c811f3c8ff754c',
+		'deviceid' => '147f11a50ef8f4e2',
+		'tid'      => 3661,
+		'tag'      => 2,
+		'type'     => 1,
+	),
+	array(
+		'uid'      => 90,
+		'openid'   => '4063f795ff45e71ec0c811f3c8ff754c',
+		'deviceid' => '147f11a50ef8f4e2',
+		'tid'      => 3661,
+		'tag'      => 2,
+		'type'     => 1,
+	),
+	array(
+		'uid'      => 32,
+		'openid'   => '4063f795ff45e71ec0c811f3c8ff754c',
+		'deviceid' => '147f11a50ef8f4e2',
+		'tid'      => 3661,
+		'tag'      => 2,
+		'type'     => 1,
+	),
+	array(
 		'uid'      => 875,
 		'openid'   => '4063f795ff45e71ec0c811f3c8ff754c',
 		'deviceid' => '147f11a50ef8f4e2',

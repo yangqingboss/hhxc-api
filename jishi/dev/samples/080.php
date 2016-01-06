@@ -12,6 +12,13 @@ $GLOBALS['DATA'] = array(
 	array(
 		'uid'         => 967,
 		'openid'      => '5622c82b715edfbd6dce666ccf7c9ca1',
+		'tid'         => 3661,
+		'tag'         => 2,
+		'deviceid'    => 'a8e8814b47e6a5ecd',
+	),
+	array(
+		'uid'         => 967,
+		'openid'      => '5622c82b715edfbd6dce666ccf7c9ca1',
 		'tid'         => 3522,
 		'tag'         => 1,
 		'deviceid'    => 'a8e8814b47e6a5ecd',

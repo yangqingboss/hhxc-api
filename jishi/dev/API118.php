@@ -15,7 +15,6 @@ $condition = array(
 	'fields' => array('title', 'url'),
 	'filter' => array(
 		'zhuangtai' => 1,
-		'type'      => 1,
 	),
 	'others' => 'ORDER BY site DESC',
 );

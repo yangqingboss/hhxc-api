@@ -8,6 +8,8 @@
 // @authors hjboss <hongjiangproject@yahoo.com> 2015-01-02#
 // @version 1.0.0
 // @package hhxc
+define('HHXC', TRUE);
+require_once('common.php');
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -18,47 +20,148 @@
 <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo URL_MOBILE;?>/style.css" />
 <style type="text/css">
-.h-share-content {background-color:#e6e6e6;color:#323232;min-height:15em;padding:1em 2em}
+.h-share-content {background-color:#e6e6e6;color:#323232;min-height:15em;padding:1em 2em;}
+.h-header .container-fluid, .h-bottom .container-fluid {
+	padding-left: 0.25em;
+	padding-right: 0.25em;
+}
+.navbar-brand {
+	font-weight: bold;
+	color:#ffffff !important;
+	padding-left: 0.25em;
+}
+.h-brand-logo {
+	padding-top: 4px;
+	padding-left: 0.5em;
+	padding-right: 0;
+}
+.h-icon-button {
+	line-height: 48px;
+	position:absolute;
+	right: 0.25em;
+	display: block !important;
+}
 .h-header {
 	background:#d01109;
 	border: 0;
 	border-radius: 0;
 	padding-left: 1em;
 	padding-right: 1em;
+	//margin: -0.75em;
 }
-.navbar-brand {
-	font-weight: bold;
-	padding-left: 2.5em;
-	color:#ffffff !important;
-	background:url('<?php echo URL_MOBILE;?>/images/logo.png') no-repeat left center !important;
+.h-bottom {
+	display: bold;
+	width: 100%;
+	margin: -0.75em -0.75em 0 -0.75em;
+	background-color: #eeeeee !important;
 }
-.h-icon-button {
-	line-height: 48px;
-	position:absolute;
-	right: 1em;
-	display: block !important;
+.h-bottom .navbar-brand {
+	color: #353535 !important;
+	font-size: 18px;
+	line-height: 1.25em;
+	margin-bottom: 0.125em;
 }
-@media screen and (max-width: 768px) {
+.h-bottom .navbar-brand span {
+	display: block;
+	font-size: 14px;
+	padding-left: 0.25em;
+	margin-top: -0.5em;
+} 
+.h-bottom .navbar-brand .h-em {
+	font-size: 12px;
+	color: #b3b3b3;
+	margin-top: -0.125em;
+}
+.h-top-common {
+	background-color: #e6e6e6;
+	margin-bottom: 1em;
+	padding: 1em 0.5em;
+}
+.h-top-common .h-left {
+	float: left;
+}
+.h-top-common .h-right {
+	float: right;
+}
+.h-top-common .h-clear {
+	clear: both;
+}
+.h-top-common .h-left, .h-top-common .h-right {
+	width: 49%;
+	text-align: center;
+}
+.h-top-common .h-text {
+	margin-top: 0.5em;
+}
+.h-top-common .h-text strong {
+	color: #d01109;
+}
+.h-top-one {
+	background: #e6e6e6 url('<?php echo URL_MOBILE;?>/images/pk.png') center no-repeat;
+	height: 85px;
+}
+.h-top-one .h-left, .h-top-one .h-right {
+	line-height: 60px;
+	font-size: 24px;
+	width: 35%;
+}
+.h-top-one strong {
+	font-size: 30px;
+}
+@media screen and (max-width: 767px) {
 	.h-huodong h1 {font-size:14px;font-weight:bold; line-height: 2.5em}
 	.h-header {padding-left:0.75em; padding-right:0.75em}
 	.navbar-brand {font-size:16px;}
+	.h-top-common img {height: 108px}
 }
 </style>
 </head>
 <nav class="navbar navbar-default container-fluid h-header">
 	<div class="container-fluid">
 		<div class="navbar-header">
+			<a class="navbar-brand h-brand-logo" href="#">
+				<img src="<?php echo URL_MOBILE;?>/images/logo-bottom.png" height="42" />
+			</a>
 			<a class="navbar-brand" href="#">有修车难题，找好好修车！</a>
 			<a href="<?php echo URL_MOBILE;?>/index.php/home" class="h-icon-button">
-				<img src="<?php echo URL_MOBILE;?>/images/top_buttom.png" height="36" />
+				<img src="<?php echo URL_MOBILE;?>/images/top_buttom.png" height="42" />
 			</a>
 			<!--<div style="clear:both"></div>-->
 		</div>
 	</div>
 </nav>
-<div class="h-content">
+<div class="h-content" style="padding-bottom:0">
+	<div class="h-top-common h-top-one">
+		<div class="h-left"><strong>老</strong>汽修人</div>
+		<div class="h-right"><strong>新</strong>汽修人</div>
+		<div class="h-clear"></div>
+	</div>
+	<div class="h-top-common">
+		<div class="h-left"><img src="<?php echo URL_MOBILE;?>/images/11.png" height="200" /></div>
+		<div class="h-right"><img src="<?php echo URL_MOBILE;?>/images/12.png" height="200" /></div>
+		<div class="h-clear"></div>
+		<div class="h-text">
+上网找？慢！<strong>来好好修车找汽修案例</strong>，百度上有的，我们都有，还更专业更准确更快速！
+		</div>
+	</div>
+	<div class="h-top-common">
+		<div class="h-left"><img src="<?php echo URL_MOBILE;?>/images/21.png" height="200" /></div>
+		<div class="h-right"><img src="<?php echo URL_MOBILE;?>/images/22.png" height="200" /></div>
+		<div class="h-clear"></div>
+		<div class="h-text">
+跟着老师傅学？难！<strong>来好好修车学故障分析</strong>，二十年百万技师修车经验，毫无保留 免费传授！
+		</div>
+	</div>
+	<div class="h-top-common">
+		<div class="h-left"><img src="<?php echo URL_MOBILE;?>/images/31.png" height="200" /></div>
+		<div class="h-right"><img src="<?php echo URL_MOBILE;?>/images/32.png" height="200" /></div>
+		<div class="h-clear"></div>
+		<div class="h-text">
+QQ群里问？乱！<strong>来好好修车汽修人论坛</strong>，三百万维修技师专业专属线上聚集地，汽修人的朋友圈！
+		</div>
+	</div>
 </div>
-<div class="container-fluid h-picture h-download">
+<div class="container-fluid h-picture h-download" style="padding-top: 0 !important">
 	<div class="row">
 		<div class="col-xs-6 col-sm-6" style="text-align:right">
 			<a href="https://appsto.re/hk/pzy-9.i">

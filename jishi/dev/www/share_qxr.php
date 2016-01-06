@@ -27,7 +27,7 @@ $condition = array(
 
 ## 查看分享內容
 $record = StorageFindOne($condition);
-
+var_dump($_REQUEST);
 $headerimg = <<<EOD
 <img src="http://www.haohaoxiuche.com/api/userimg/{$record['h_headerimg']}" height="24" />
 {$record['h_nick']}
@@ -35,6 +35,14 @@ EOD;
 
 switch ($_REQUEST['tag']) {
 case '3':
+	var_dump($record);
+	$title = '我的简历如下：';
+	$content = <<<EOD
+昵称：{$record['h_nick']}<br />
+职称：
+EOD;
+	break;
+
 case '4':
 default:
 	$title     = Assign($record['title'], 0);

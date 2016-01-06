@@ -17,8 +17,8 @@ if (!defined('HHXC')) die('Permission denied');
 if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	$result['msg'] = MESSAGE_WARNING;
 } else {
-	$is_newat = ($params['touid'] > 0 and $params['touid'] != $params['uid']) ? 1 : 0;
-
+	$is_newat = $params['touid'] === '0' ? 0 : 1;
+	
 	## 添加更貼信息
 	$schema = ''; $data = array();
 	switch ($params['tag']) {
@@ -119,8 +119,8 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			$fields = array(
 				'maxno'      => 'maxno+1',
 				'replycount' => "(SELECT COUNT(*) FROM {$schema}_list WHERE tid='{$params['tid']}')",
-				'isnewmsg'   => ($record[$column] == $params['uid']) ? 1 : 1,
-				'isnewat'    => empty($params['touid']) ? 0 : 1,
+				'isnewmsg'   => ($record[$column] != $params['uid'] and  $params['touid'] === '0') ? 1 : 0,
+				'isnewat'    => $params['touid'] === '0' ? 0 : 1,
 			);
 			break;
 
@@ -129,8 +129,8 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			$fields = array(
 				'maxno'      => 'maxno+1',
 				'replycount' => "(SELECT COUNT(*) FROM {$schema}_list WHERE tid='{$params['tid']}')",
-				'isnewmsg'   => ($record[$column] == $params['uid']) ? 1 : 1,
-				'isnewat'    => empty($params['touid']) ? 0 : 1,
+				'isnewmsg'   => ($record[$column] != $params['uid'] and  $params['touid'] === '0') ? 1 : 0,
+				'isnewat'    => $params['touid'] === '0' ? 0 : 1,
 			);
 			break;
 
@@ -139,8 +139,8 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			$fields = array(
 				'maxno'      => 'maxno+1',
 				'replycount' => "(SELECT COUNT(*) FROM {$schema}_list WHERE tid='{$params['tid']}')",
-				'isnewmsg'   => ($record[$column] == $params['uid']) ? 1 : 1,
-				'isnewat'    => empty($params['touid']) ? 0 : 1,
+				'isnewmsg'   => ($record[$column] != $params['uid'] and  $params['touid'] === '0') ? 1 : 0,
+				'isnewat'    => $params['touid'] === '0' ? 0 : 1,
 			);
 		}
 		StorageEditByID($schema, $fields, Assign($params['tid'], 0));
@@ -149,17 +149,17 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 
 		## 獲取更貼人信息
 		$condition = array(
-			'schema' => "{$schema}_list",
-			'fields' => array(
-				'pubtime', 
-				'no',
-				'id',
-				"(SELECT {$column} FROM {$schema} WHERE id={$schema}_list.id) AS h_pubuser",
-			),
+			'schema' => array("{$schema}_list"),
+			'fields' => array('*'),
 			'filter' => array(
-				'id' => $id,
+				't0.id' => $id,
 			),
 		);
+		if ($params['touid'] !== '0') {
+			$condition['fields'][] = "at AS h_pubuser";
+		} else {
+			$condition['fields'][] = "(SELECT {$column} FROM {$schema} WHERE id=t0.tid) AS h_pubuser";
+		}
 		$buf = StorageFindOne($condition);
 		if (is_array($buf) and empty($buf) == FALSE) {
 			$result['data'][] = array(

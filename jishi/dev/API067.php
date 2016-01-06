@@ -11,11 +11,10 @@
 if (!defined('HHXC')) die('Permission denied');
 
 $condition = array(
-	'schema' => 'hh_todaytop',
+	'schema' => 'hh_message',
 	'fields' => array('*'),
 	'filter' => array(
 		'zhuangtai' => 1,
-		'type'      => 2,
 	),
 	'others' => 'ORDER BY site DESC LIMIT 5',
 

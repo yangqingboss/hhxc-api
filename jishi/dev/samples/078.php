@@ -9,6 +9,52 @@
 // @version 1.0.0
 // @package hhxc
 $GLOBALS['DATA'] = array(
+	## 作為樓主回帖自己
+	array(
+		'uid'         => 967,
+		'openid'      => '4063f795ff45e71ec0c811f3c8ff754c',
+		'tid'         => 3661,
+		'content'     => '天氣真好',
+		'anonymous'   => 0,
+		'touid'       => 0,
+		'tolistid'    => 0,
+		'tag'         => 2,
+	),
+	## 跟帖者回復樓主
+	array(
+		'uid'         => 8301,
+		'openid'      => '4063f795ff45e71ec0c811f3c8ff754c',
+		'tid'         => 3661,
+		'content'     => '天氣也真好',
+		'anonymous'   => 0,
+		'touid'       => 0,
+		'tolistid'    => 0,
+		'tag'         => 2,
+	),
+	## 跟帖者回復樓主
+	array(
+		'uid'         => 90,
+		'openid'      => '4063f795ff45e71ec0c811f3c8ff754c',
+		'tid'         => 3661,
+		'content'     => '天氣真很好',
+		'anonymous'   => 0,
+		'touid'       => 0,
+		'tolistid'    => 0,
+		'tag'         => 2,
+	),
+	## at跟帖者
+	array(
+		'uid'         => 90,
+		'openid'      => '4063f795ff45e71ec0c811f3c8ff754c',
+		'tid'         => 3661,
+		'content'     => '@at天氣真很好',
+		'anonymous'   => 0,
+		'touid'       => 8301,
+		'tolistid'    => 18944,
+		'tag'         => 2,
+	),
+
+
 	array(
 		'uid'         => 72,
 		'openid'      => '4063f795ff45e71ec0c811f3c8ff754c',

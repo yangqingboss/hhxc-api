@@ -42,6 +42,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			'tag'      => Assign($params['tag'], 0),
 			'type'     => Assign($params['type'], 0),
 			'deviceid' => Assign($params['deviceid']),
+			'touid' => 0,
 		);
 
 		$id = StorageAdd('hh_techuser_dianzan', $data);
@@ -49,6 +50,23 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			$message = empty($params['type']) ? '取消成功！' : '点赞成功！';
 			$result = array('code' => '101', 'msg' => $message);
 		}
+	}
+
+	## 更新點贊通知
+	$schemas = array(
+		'1' => 'hh_techforum', 
+		'2' => 'hh_techforum', 
+		'3' => 'hh_techqzhi',
+		'4' => 'hh_zhaopin',
+	);
+	$info = StorageFindID($schemas[$params['tag']], Assign($params['tid'], 0));
+	$pubuser = $params['tag'] == '4' ? 'ofuser' : 'pubuser';
+	if (empty($schemas[$params['tag']]) == FALSE and $info[$pubuser] != $params['uid']) {
+		$isnewdz = array('isnewdz' => $params['type'] === '1' ? 1 : 0);
+		StorageEditByID($schemas[$params['tag']], $isnewdz, Assign($params['tid'], 0));
+
+		## 被點贊的樓主更新通知
+		RefreshMsg(Assign($info[$pubuser], 0));
 	}
 
 	## 推送消息

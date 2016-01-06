@@ -11,6 +11,13 @@
 $GLOBALS['DATA'] = array(
 	array(
 		'uid'         => 709,
+		'openid'      => '',
+		'tid'         => 0,
+		'tag'         => 2,
+		'deviceid'    => '',
+	),
+	array(
+		'uid'         => 709,
 		'openid'      => '5622c82b715edfbd6dce666ccf7c9ca1',
 		'tid'         => 0,
 		'tag'         => 2,

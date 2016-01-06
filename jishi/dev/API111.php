@@ -53,24 +53,19 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	}
 
 	## 更新點贊通知
-	$schema = '';
-	switch ($params['tag']) {
-	case '3':
-		$schema = 'hh_techqzhi_list';
-		break;
-	
-	case '4':
-		$schema = 'hh_zhaopin_list';
-		break;
+	$schemas = array(
+		'1' => 'hh_techforum_list', 
+		'2' => 'hh_techforum_list', 
+		'3' => 'hh_techqzhi_list',
+		'4' => 'hh_zhaopin_list',
+	);
+	if (empty($schemas[$params['tag']]) == FALSE) {
+		$isnewdz = array('isnewdz' => $params['type'] === '1' ? 1 : 0);
+		StorageEditByID($schemas[$params['tag']], $isnewdz, Assign($params['tolistid'], 0));
 
-	default:
-		$schema = 'hh_techforum_list';
+		## 被點贊的跟帖者更新通知
+		RefreshMsg(Assign($params['touid'], 0));
 	}
-	if (empty($schema) == FALSE) {
-		StorageEditByID($schema, array('isnewdz' => $params['type'] ? 1 : 1), Assign($params['tolistid'], 0));
-	}
-
-	RefreshMsg(Assign($params['uid'], 0));
 
 	## 推送消息
 	$schema = 'hh_techforum';

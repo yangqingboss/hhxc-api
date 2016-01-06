@@ -34,4 +34,5 @@ $mysql = mysqli_connect(DB_HOST, DB_USER, DB_PWD) or die('Could not connect ' . 
 mysqli_select_db($mysql, DB_NAME) or die('Permission denied for the database ' . DB_NAME);
 mysqli_query($mysql, 'SET NAMES ' . DB_CHARSET);
 
+header('Content-Type: text/html;charset=utf-8');
 

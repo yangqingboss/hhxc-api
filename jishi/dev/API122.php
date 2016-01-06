@@ -148,12 +148,12 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 					"(SELECT COUNT(*) FROM {$schemas[1]} WHERE tid=t1.id) AS h_messages",
 					##'(SELECT title FROM hh_score WHERE dengji=t0.grade) AS h_grade',
 					't0.grade AS h_grade',
-					't1.title AS h_title',
-					't1.content AS h_content',
+					//'t1.title AS h_title',
+					//'t1.content AS h_content',
 					'(SELECT title FROM hh_rank WHERE dengji=t0.rankname) AS h_rankname',
 				),
 				'filter' => array(
-					't0.id' => "t1.{$keys[1][0]}",
+					't0.id' => "t1.{$keys[0][0]}",
 					't1.id' => $buffer_tid,
 				),
 			);
