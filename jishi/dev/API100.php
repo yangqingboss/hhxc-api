@@ -42,7 +42,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			'tag'      => Assign($params['tag'], 0),
 			'type'     => Assign($params['type'], 0),
 			'deviceid' => Assign($params['deviceid']),
-			'touid' => 0,
+			'touid'    => 0,
 		);
 
 		$id = StorageAdd('hh_techuser_dianzan', $data);

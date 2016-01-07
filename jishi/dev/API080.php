@@ -117,15 +117,15 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				StorageEditByID($schema, array('isnewmsg' => 0, 'isnewat' => 0), $params['tid']);
 
 			}
-
-			## 取消點贊狀態
-			RefreshMsgByCDZ($params['uid'], $params['tag'], 0);
-			RefreshMsgByCDZ($params['uid'], $params['tag'], 1);
-
-			RefreshMsg(Assign($params['uid'], 0));
-			RefreshMsg(Assign($buffer_host['pubuser'], 0));
-
 		}
+
+		## 取消點贊狀態
+		RefreshMsgByCDZ($params['uid'], $params['tag'], 0);
+		RefreshMsgByCDZ($params['uid'], $params['tag'], 1);
+
+		RefreshMsg(Assign($params['uid'], 0));
+		RefreshMsg(Assign($buffer_host['pubuser'], 0));
+
 	}
 }
 

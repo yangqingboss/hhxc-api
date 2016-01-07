@@ -31,13 +31,13 @@ define('PRAISE_NUMBER', 1);
 
 ## 推送消息
 $PUSH_MESSAGES = array(
-	'10101' => '%s回复我的问答"%s"',
-	'10102' => '%s回复我的生活"%s"',
-	'10103' => '%s回复我的求职"%s"',
-	'10104' => '%s回复我的招聘"%s"',
-	'10201' => '%s@我的问答"%s"',
-	'10202' => '%s@我的生活"%s"',
-	'10203' => '%s@我的求职"%s"',
+	'10101' => '%s回复我的问答%s',
+	'10102' => '%s回复我的生活%s',
+	'10103' => '%s回复我的求职%s',
+	'10104' => '%s回复我的招聘%s',
+	'10201' => '%s@我的问答%s',
+	'10202' => '%s@我的生活%s',
+	'10203' => '%s@我的求职%s',
 	'10204' => '%s@我的招聘"%s"',
 	'10301' => '%s点赞我的问答%s',
 	'10302' => '%s点赞我的生活%s',
@@ -212,8 +212,8 @@ function Techuser_setScore($id, $scoretype) {
 	//StorageAdd($schema_log, $log);
 
 	## 兼容可兌換積分
-	if (empty($techuser['rankinit']) == FALSE) {
-		$rank_score = Techuser_score2rank($score);
+	if ($techuser['rankinit'] == '1') {
+		$rank_score = $score;
 		$fields = array(
 			'rankscore' => 'rankscore+' . $rank_score,
 		);
@@ -469,24 +469,23 @@ function RefreshMsgByCDZ($uid, $tag, $touid, $debug = FALSE) {
 		'3' => 'hh_techqzhi',
 		'4' => 'hh_zhaopin',
 	);
-	$subsql = "SELECT tid FROM hh_techuser_dianzan WHERE uid='%s' AND tag='%s' AND touid='%s' AND type='1'";
-	$schema_name = $schemas[$tag];
-	if ($touid) {
-		$schema_name .= '_list';
-	}
+	$subsql = "SELECT tid FROM hh_techuser_dianzan WHERE uid=%s AND tag=%s AND touid=%s";
+	$schema_name = $touid ? $schemas[$tag] . '_list' : $schemas[$tag];
 
 	$fields = array('isnewdz' => 0);
 	$filter = array(
 		'id' => array('IN', sprintf($subsql, $uid, $tag, $touid)),
 	);
-	StorageEdit($schema_name, $fields, $filter, $debug);
+	if ($touid) {
+		$pubuser = $tag == 4 ? 'ofuser' : 'pubuser';
+		$filter = array(
+			$pubuser => $uid,
+		);
+		if ($tag == 1 or $tag == 2) {
+			$filter['type'] = $tag;
+		}
 
-	## 
-	$pubuser = $tag == 4 ? 'ofuser' : 'pubuser';
-	$filter = array(
-		'type'   => $tag,
-		$pubuser => $uid,
-	);
+	}
 	StorageEdit($schema_name, $fields, $filter, $debug);
 }
 

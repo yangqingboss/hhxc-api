@@ -1018,7 +1018,7 @@ function JPushMessageByUser($config = array()) {
 }
 
 ## 基於廣播模式推送特定消息
-function JPushMessageByAll($message) {
+function JPushMessageByAll($message, $type) {
 	if (empty($jpush) == TRUE) {
 		$jpush = JPushInit();
 	}
@@ -1027,7 +1027,8 @@ function JPushMessageByAll($message) {
 		$result = $jpush->push()
 			->setPlatform(M\all)
 			->setAudience(M\all)
-			->setNotification(M\notification($message))
+			##->setNotification(M\notification($message))
+			->setMessage(M\message($message, $message, $type, array('message' => $message)))
 			->send();
 		return $result->msg_id;
 	} catch (APIConnectionException $e) {

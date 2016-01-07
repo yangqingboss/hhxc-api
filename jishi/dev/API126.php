@@ -42,9 +42,25 @@ case '2':
 	$message = StorageFindID('hh_message', Assign($params['tid'], 0));
 	if (is_array($message) and empty($message) == FALSE) {
 		if ($message['zhuangtai'] == '1') {
-			$mid = JPushMessageByAll($message['title']);
+			$mid = JPushMessageByAll($message['title'], '10601');
 
 			$result = array('code' => '101', 'message' => $mid);
 		}
 	}
+	break;
+
+## 兼容舊版設置積分
+case '3':
+	$return = Techuser_setScore($params['uid'], $params['score']);
+	$result = array('code' => '101', 'return' => $return};
+	break;
+
+## 清除積分限制
+case '4':
+	$fields = array();
+	for ($index = 1; $index <= 13; $index++) {
+		$fields["s{$index}_day"] = 0;
+		$fields["s{$index}_sum"} = 0;
+	}
+	StorageEditByID('hh_techuser', $fields, $params['uid']);
 }
