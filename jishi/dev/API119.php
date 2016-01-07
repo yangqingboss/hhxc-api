@@ -13,6 +13,11 @@ if (!defined('HHXC')) die('Permission denied');
 if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	$result['msg'] = MESSAGE_WARNING;
 } else {
+	if ($params['tid'] > 0) {
+		$result = array('code' => '101', 'data' => array());
+		die(JsonEncode($result));
+	}
+
 	$tag     = 1;
 	$keys    = array(
 		array('pubuser', 'pubtime'), 

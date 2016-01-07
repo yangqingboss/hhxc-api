@@ -125,6 +125,25 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		}
 
 		$result['data'][] = $buffer;
+
+		$schema = 'hh_zhaopin';
+		$filter = array('tid' => Assign($params['tid'], 0), 'at' => Assign($params['uid'], 0));
+		$buffer_host = StorageFindID($schema, Assign($params['tid'], 0));
+		if (is_array($buffer_host) and empty($buffer_host) == FALSE) {
+			if ($params['uid'] == $buffer_host['ofuser']) {
+				StorageEdit($schema . '_list', array('isnew' => 0, 'isnewat' => 0), $filter);
+				StorageEditByID($schema, array('isnewmsg' => 0, 'isnewat' => 0), $params['tid']);
+
+			}
+
+			## 取消點贊狀態
+			RefreshMsgByCDZ($params['uid'], 4, 0);
+			RefreshMsgByCDZ($params['uid'], 4, 1);
+
+			RefreshMsg(Assign($params['uid'], 0));
+			RefreshMsg(Assign($buffer_host['ofuser'], 0));
+
+		}
 	}
 }
 

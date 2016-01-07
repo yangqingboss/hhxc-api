@@ -35,4 +35,16 @@ case '1':
 
 		$result = array('code' => '101', 'msg' => MESSAGE_SUCCESS);
 	}
+	break;
+
+## 系統通知推送
+case '2':
+	$message = StorageFindID('hh_message', Assign($params['tid'], 0));
+	if (is_array($message) and empty($message) == FALSE) {
+		if ($message['zhuangtai'] == '1') {
+			$mid = JPushMessageByAll($message['title']);
+
+			$result = array('code' => '101', 'message' => $mid);
+		}
+	}
 }

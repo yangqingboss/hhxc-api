@@ -39,10 +39,10 @@ $PUSH_MESSAGES = array(
 	'10202' => '%s@我的生活"%s"',
 	'10203' => '%s@我的求职"%s"',
 	'10204' => '%s@我的招聘"%s"',
-	'10301' => '%s点赞我的问答"%s"',
-	'10302' => '%s点赞我的生活"%s"',
-	'10303' => '%s点赞我的求职"%s"',
-	'10304' => '%s点赞我的招聘"%s"',
+	'10301' => '%s点赞我的问答%s',
+	'10302' => '%s点赞我的生活%s',
+	'10303' => '%s点赞我的求职%s',
+	'10304' => '%s点赞我的招聘%s',
 );
 
 ## 預加載全局配置文件
@@ -480,6 +480,14 @@ function RefreshMsgByCDZ($uid, $tag, $touid, $debug = FALSE) {
 		'id' => array('IN', sprintf($subsql, $uid, $tag, $touid)),
 	);
 	StorageEdit($schema_name, $fields, $filter, $debug);
+
+	## 
+	$pubuser = $tag == 4 ? 'ofuser' : 'pubuser';
+	$filter = array(
+		'type'   => $tag,
+		$pubuser => $uid,
+	);
+	StorageEdit($schema_name, $fields, $filter, $debug);
 }
 
 ## 獲取第三方登陸頭像
@@ -503,7 +511,7 @@ function JPushMessage($meessageno, $params, $schema) {
 	}
 
 	## 獲取發帖者信息
-	if ($params['touid'] == '0') {
+	if (empty($params['touid'])) {
 		$buffer_tid = StorageFindID($schema, Assign($params['tid'], 0));
 		if (is_array($buffer_tid) and empty($buffer_tid) == FALSE) {
 			$jpush['title'] = $buffer_tid['title'];

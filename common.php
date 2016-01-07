@@ -995,7 +995,7 @@ function JPushUser($message, $user, $params = array()) {
 				M\android($message),
 				M\ios($message)
 			))*/
-			->setMessage(M\message($message, $message, Assign($params['type']), array()))
+			->setMessage(M\message($message, $message, $params['type'], array('message' => $message)))
 			->send();
 		return $result->msg_id;
 	} catch (APIRequestException $e) {
@@ -1007,13 +1007,33 @@ function JPushUser($message, $user, $params = array()) {
 
 ## 基於消息模板針對特定用戶推送消息
 function JPushMessageByUser($config = array()) {
+	$username = SafeUsername(Assign($config['who']));
 	$message = sprintf(
 		Assign($config['message']),
-		SafeUsername(Assign($config['who'])),
+		mb_strlen($username) > 4 ? '有人' : $username,
 		SafeTitle(Assign($config['title']))
 	);
 
 	return JPushUser($message, Assign($config['user']['username_d']), Assign($config['params'], array()));
+}
+
+## 基於廣播模式推送特定消息
+function JPushMessageByAll($message) {
+	if (empty($jpush) == TRUE) {
+		$jpush = JPushInit();
+	}
+
+	try {
+		$result = $jpush->push()
+			->setPlatform(M\all)
+			->setAudience(M\all)
+			->setNotification(M\notification($message))
+			->send();
+		return $result->msg_id;
+	} catch (APIConnectionException $e) {
+	}
+
+	return FALSE;
 }
 
 function getfirstchar($s0){   

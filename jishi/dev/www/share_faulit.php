@@ -9,4 +9,22 @@
 // @version 1.0.0
 // @package hhxc
 define('HHXC', TRUE);
+require_once('common.php');
+
+$condition = array(
+	'schema' => 'hh_techuser_cxsym',
+	'fields' => array(
+		'*',
+		'(select title from car_symptom where id=ofsymptom) as pheno',
+		'(select title from car_fault where id=offault) as h_title',
+		'(select baike from car_parts where id=(select ofpart from car_fault where id=hh_techuser_cxsym.offault)) as h_baike',
+		'(select title from car_parts where id=(select ofpart from car_fault where id=hh_techuser_cxsym.offault))',
+	),
+	'filter' => array(
+		'id' => $_REQUEST['id'],
+	),
+);
+$cxsym = StorageFindOne($condition);
+$title = $cxsym['h_title'];
+$content = $cxsym['h_baike'];
 include_once('share_common.php');
