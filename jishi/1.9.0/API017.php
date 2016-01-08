@@ -16,7 +16,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	$fields = array(); $image_name = '';
 
 	## 上傳用戶頭像
-	if (empty($_FILES['image']['error']) == TRUE) {
+	if ($_FILES['image']['error'] <= 0 and empty($_FILES['image']['tmp_name']) == FALSE) {
 		$image_name = Assign($params['uid'], 0) . '_' . time() . '.png';
 		move_uploaded_file($_FILES['image']['tmp_name'], IMAGE_ROOT . DIRECTORY_SEPARATOR . $image_name);
 	}

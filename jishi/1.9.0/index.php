@@ -109,7 +109,7 @@ die(JsonEncode($result));
 /**************************************** 公共函數 ****************************************/
 // 檢測用戶OpenID有效性
 function CheckOpenID($loginid, $uid = 0) {
-	if (DEBUG == FALSE) {
+	if (DEBUG == FALSE and FALSE) {
 		$result = StorageQueryOne('hh_techuser', '*',  array('loginid' => $loginid, 'zhuangtai' => 1));
 
 		if (is_array($result)) {

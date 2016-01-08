@@ -51,7 +51,11 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 		if (is_array($buf) and empty($buf) == FALSE) {
 			foreach ($buf as $number => $row_car) {
 				$e = str_replace($row['keyword1'], '', $row_car['keyword1']);
-				$buffer['data'][] = empty($e) ? $row_car['keyword1'] : $e;
+				$buffer_word = empty($e) ? $row_car['keyword1'] : $e;
+
+				if (in_array($buffer_word, $buffer['data']) == FALSE) {
+					$buffer['data'][] = $buffer_word;
+				}
 			}
 		}
 
