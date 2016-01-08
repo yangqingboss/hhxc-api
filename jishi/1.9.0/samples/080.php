@@ -15,6 +15,11 @@ $GLOBALS['DATA'] = array(
 		'tag'         => 1,
 	),
 	array(
+		'uid'         => 81,
+		'tid'         => 3825,
+		'tag'         => 1,
+	),
+	array(
 		'uid'         => 709,
 		'openid'      => '5622c82b715edfbd6dce666ccf7c9ca1',
 		'tid'         => 3816,
