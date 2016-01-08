@@ -31,18 +31,18 @@ define('PRAISE_NUMBER', 1);
 
 ## 推送消息
 $PUSH_MESSAGES = array(
-	'10101' => '%s回复我的问答%s',
-	'10102' => '%s回复我的生活%s',
-	'10103' => '%s回复我的求职%s',
-	'10104' => '%s回复我的招聘%s',
-	'10201' => '%s@我的问答%s',
-	'10202' => '%s@我的生活%s',
-	'10203' => '%s@我的求职%s',
-	'10204' => '%s@我的招聘"%s"',
-	'10301' => '%s点赞我的问答%s',
-	'10302' => '%s点赞我的生活%s',
-	'10303' => '%s点赞我的求职%s',
-	'10304' => '%s点赞我的招聘%s',
+	'10101' => '汽修人-问答 有人回复我',
+	'10102' => '汽修人-生活 有人回复我',
+	'10103' => '汽修人-求职 有人回复我',
+	'10104' => '汽修人-招聘 有人回复我',
+	'10201' => '汽修人-问答 有人@我',
+	'10202' => '汽修人-生活 有人@我',
+	'10203' => '汽修人-求职 有人@我',
+	'10204' => '汽修人-招聘 有人@我',
+	'10301' => '汽修人-问答 有人点赞我',
+	'10302' => '汽修人-生活 有人点赞我',
+	'10303' => '汽修人-求职 有人点赞我',
+	'10304' => '汽修人-招聘 有人点赞我',
 );
 
 ## 預加載全局配置文件
@@ -458,7 +458,13 @@ function RefreshMsgByDianzan($uid, $tag, $touid) {
 		$schema_name .= '_list';
 	}
 
-	$sql = "(SELECT COUNT(*) FROM {$schema_name} WHERE id IN %s AND isnewdz='1')";
+	$pubuser = ($touid == 0 and $tag == 4) ? 'ofuser' : 'pubuser';
+	$buf_type = ($tag == 1 or $tag == 2) ? " AND type={$tag}" : '';
+	$sql = "(SELECT COUNT(*) FROM {$schema_name} WHERE (id IN %s OR {$pubuser}={$uid}) AND isnewdz='1' {$buf_type})";
+	if ($touid) {
+		$sql_type = ($tag == 1 or $tag == 2) ? " AND type={$tag}" : '';
+		$sql = "(SELECT COUNT(*) FROM {$schema_name} WHERE pubuser={$uid} AND isnewdz=1 {$sql_type})";
+	}
 	return sprintf($sql, sprintf($subsql, $uid, $tag, $touid));
 }
 
@@ -469,22 +475,28 @@ function RefreshMsgByCDZ($uid, $tag, $touid, $debug = FALSE) {
 		'3' => 'hh_techqzhi',
 		'4' => 'hh_zhaopin',
 	);
-	$subsql = "SELECT tid FROM hh_techuser_dianzan WHERE uid=%s AND tag=%s AND touid=%s";
-	$schema_name = $touid ? $schemas[$tag] . '_list' : $schemas[$tag];
-
-	$fields = array('isnewdz' => 0);
-	$filter = array(
-		'id' => array('IN', sprintf($subsql, $uid, $tag, $touid)),
-	);
+	$schema_name = ''; $fields = array('isnewdz' => 0); $filter = array();
 	if ($touid) {
+		$schema_name = $schemas[$tag] . '_list';
+
+		$pubuser = $tag == 4 ? 'pubuser' : 'pubuser';
+		$filter = array(
+			$pubuser => $uid,
+		);
+		if ($tag == '1' or $tag == '2') $filter['type'] = $tag;
+	} else {
+		$schema_name = $schemas[$tag];
+		$subsql = "SELECT tid FROM hh_techuser_dianzan WHERE uid=%s AND tag=%s AND touid=%s";
+		$filter = array(
+			'id' => array('IN', sprintf($subsql, $uid, $tag, $touid)),
+		);
+		StorageEdit($schema_name, $fields, $filter);
+
 		$pubuser = $tag == 4 ? 'ofuser' : 'pubuser';
 		$filter = array(
 			$pubuser => $uid,
 		);
-		if ($tag == 1 or $tag == 2) {
-			$filter['type'] = $tag;
-		}
-
+		if ($tag == '1' or $tag == '2') $filter['type'] = $tag;
 	}
 	StorageEdit($schema_name, $fields, $filter, $debug);
 }

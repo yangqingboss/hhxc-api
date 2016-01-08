@@ -48,6 +48,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'no'  => array('EGT', Assign($params['index'], 0)),
 			),
 		);
+
 		$recordset = StorageFind($condition);
 		if (is_array($recordset) and empty($recordset) == FALSE) {
 			foreach ($recordset as $number => $row) {
@@ -137,13 +138,17 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			}
 
 			## 取消點贊狀態
-			RefreshMsgByCDZ($params['uid'], 4, 0);
-			RefreshMsgByCDZ($params['uid'], 4, 1);
-
-			RefreshMsg(Assign($params['uid'], 0));
+			RefreshMsgByCDZ($buffer_host['ofuser'], 4, 0);
+			RefreshMsgByCDZ($buffer_host['ofuser'], 4, 1);
 			RefreshMsg(Assign($buffer_host['ofuser'], 0));
 
 		}
 	}
+
+	## 清除點贊狀態
+	StorageEditByID('hh_zhaopin', array('isnewdz' => 0), Assign($params['tid'], 0));
+	RefreshMsgByCDZ($params['uid'], 4, 0);
+	RefreshMsgByCDZ($params['uid'], 4, 1);
+	RefreshMsg(Assign($params['uid'], 0));
 }
 

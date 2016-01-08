@@ -44,7 +44,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'touid' => $index,
 				'uid'   => array('GT', 0),
 			),
-			'others' => 'ORDER BY tid DESC LIMIT ' . (10 * PRAISE_NUMBER),
+			'others' => 'ORDER BY tid DESC LIMIT ' . (20 * PRAISE_NUMBER),
 		);
 		$recordset_main = StorageFind($condition_main);
 		if (is_array($recordset_main) == FALSE or empty($recordset_main) == TRUE) {

@@ -9,6 +9,9 @@
 // @version 1.0.0
 // @package hhxc
 $GLOBALS['DATA'] = array(
+	array(
+		'uid'         => 81,
+	),
 	## 樓主通知統計
 	array(
 		'uid'         => 967,

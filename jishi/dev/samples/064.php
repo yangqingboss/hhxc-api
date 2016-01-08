@@ -10,6 +10,10 @@
 // @package hhxc
 $GLOBALS['DATA'] = array(
 	array(
+		'phone_d' => '18684594520',
+		'pwd'     => md5(12345678),
+	),
+	array(
 		'phone_d' => '1344510152',
 		'pwd'     => '12345677889',
 	),

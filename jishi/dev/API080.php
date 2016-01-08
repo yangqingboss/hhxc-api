@@ -32,6 +32,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		),
 	);
 
+	
 	$recordset = StorageFind($condition);
 	if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 		$result['msg'] = MESSAGE_EMPTY;
@@ -120,12 +121,16 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		}
 
 		## 取消點贊狀態
-		RefreshMsgByCDZ($params['uid'], $params['tag'], 0);
-		RefreshMsgByCDZ($params['uid'], $params['tag'], 1);
-
-		RefreshMsg(Assign($params['uid'], 0));
+		RefreshMsgByCDZ($buffer_host['pubuser'], $params['tag'], 0);
+		RefreshMsgByCDZ($buffer_host['pubuser'], $params['tag'], 1);
 		RefreshMsg(Assign($buffer_host['pubuser'], 0));
 
 	}
+
+	## 消除點贊狀態
+	StorageEditByID('hh_techforum', array('isnewdz' => 0), Assign($params['tid'], 0));
+	RefreshMsgByCDZ($params['uid'], $params['tag'], 0);
+	RefreshMsgByCDZ($params['uid'], $params['tag'], 1);
+	RefreshMsg(Assign($params['uid'], 0));
 }
 

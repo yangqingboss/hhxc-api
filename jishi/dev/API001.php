@@ -10,6 +10,7 @@
 // @package hhxc
 if (!defined('HHXC')) die('Permission denied');
 
+//var_dump(RefreshMsgByDianzan(89, 4, 0));die;
 $record = array(
 	'deviceid'  => Assign($params['deviceid']),
 	'type'      => strtoupper(Assign($params['device'])),

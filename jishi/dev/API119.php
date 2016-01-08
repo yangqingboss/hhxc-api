@@ -29,7 +29,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		$sql_in = "SELECT id FROM {$schema} WHERE {$keys[$index][0]}=%d";
 		if ($tag == 1 or $tag == 2) $sql_in .= " AND type={$tag}";
 		if ($index == '1') {
-			$sql_in = "SELECT id FROM {$schema} WHERE at=%d AND type={$tag}";
+			$sql_in = "SELECT id FROM {$schema} WHERE {$keys[1][0]}=%d AND type={$tag}";
 		}
 
 		$condition_main = array(
@@ -44,7 +44,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'touid' => $index,
 				'uid'   => array('GT', 0),
 			),
-			'others' => 'ORDER BY tid DESC LIMIT ' . (4 * PRAISE_NUMBER),
+			'others' => 'ORDER BY tid DESC LIMIT ' . (20 * PRAISE_NUMBER),
 		);
 		$recordset_main = StorageFind($condition_main);
 		if (is_array($recordset_main) == FALSE or empty($recordset_main) == TRUE) {

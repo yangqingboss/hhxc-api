@@ -77,6 +77,8 @@ if (is_array($record) == FALSE or empty($record) == TRUE) {
 
 			## 更新登陸積分
 			Techuser_setScore($record['id'], 1); 
+
+			RefreshMsg($record['id']);
 		}
 	}
 }
