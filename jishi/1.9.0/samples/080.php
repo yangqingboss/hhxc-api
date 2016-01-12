@@ -10,6 +10,12 @@
 // @package hhxc
 $GLOBALS['DATA'] = array(
 	array(
+		'uid'         => 0,
+		'tid'         => 4190,
+		'tag'         => 1,
+		'index'       => 2,
+	),
+	array(
 		'uid'         => 81,
 		'tid'         => 3825,
 		'tag'         => 1,

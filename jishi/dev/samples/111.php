@@ -10,6 +10,17 @@
 // @package hhxc
 $GLOBALS['DATA'] = array(
 	array(
+		'uid'      => 1667,
+		'openid'   => '4063f795ff45e71ec0c811f3c8ff754c',
+		'deviceid' => '147f11a50ef8f4e2',
+		'tolistid' => 314,
+		'touid'    => 709,
+		'tag'      => 4,
+		'type'     => 1,
+	),
+
+
+	array(
 		'uid'      => 90,
 		'openid'   => '4063f795ff45e71ec0c811f3c8ff754c',
 		'deviceid' => '147f11a50ef8f4e2',

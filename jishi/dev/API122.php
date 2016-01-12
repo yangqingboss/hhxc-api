@@ -52,6 +52,9 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		}
 
 		foreach ($recordset_main as $number_main => $row_main) {
+			$buffer_info = StorageFindID($schemas[0], $row_main['tid']);
+			if ($buffer_info['zhuangtai'] == 0) continue;
+
 			$buffer_main = array(
 				'tid'        => $row_main['tid'],
 				'pubtime'    => 0,

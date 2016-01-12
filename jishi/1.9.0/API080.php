@@ -104,21 +104,30 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'touid' => 1,
 			);
 			//if (empty($params['uid']) == FALSE) $filter['uid'] = Assign($params['uid'], 0);
-			$buffer['praises'] = StorageCount('hh_techuser_dianzan', $filter);
+			$buffer['praises'] = Assign(StorageCount('hh_techuser_dianzan', $filter), 0);
 
 			$result['data'][] = $buffer;
 		}
 
-		$filter = array('tid' => Assign($params['tid'], 0), 'at' => Assign($params['uid'], 0));
+		$schema = 'hh_techforum';
+		$filter0 = array(
+			'tid'     => Assign($params['tid'], 0), 
+			'pubuser' => Assign($params['uid'], 0),
+			'type'    => Assign($params['tag'], 0),
+		);
+		$filter1 = array( 
+			'type' => Assign($params['tag'], 0),
+			'tid'  => Assign($params['tid'], 0),
+			'at'   => Assign($params['uid'], 0),
+		);
 		$buffer_host = StorageFindID('hh_techforum', Assign($params['tid'], 0));
 		if (is_array($buffer_host) and empty($buffer_host) == FALSE) {
 			if ($params['uid'] == $buffer_host['pubuser']) {
-				$schema = 'hh_techforum';
-				StorageEdit($schema . '_list', array('isnew' => 0, 'isnewat' => 0), $filter);
 				StorageEditByID($schema, array('isnewmsg' => 0, 'isnewat' => 0), $params['tid']);
-
 			}
 		}
+		StorageEdit($schema . '_list', array('isnew' => 0, 'isnewat' => 0), $filter0);
+		StorageEdit($schema . '_list', array('isnew' => 0, 'isnewat' => 0), $filter1);
 
 		## 取消點贊狀態
 		RefreshMsgByCDZ($buffer_host['pubuser'], $params['tag'], 0);

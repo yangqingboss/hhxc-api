@@ -98,7 +98,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 					'tid'  => $msg['listid'],
 					'type' => 1,
 				);
-				$msg['praises'] = StorageCount('hh_techuser_dianzan', $filter_total);
+				$msg['praises'] = Assign(StorageCount('hh_techuser_dianzan', $filter_total), 0);
 
 
 				$condition_sub = array(
@@ -128,21 +128,28 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		$result['data'][] = $buffer;
 
 		$schema = 'hh_techqzhi';
-		$filter = array('tid' => Assign($params['tid'], 0), 'at' => Assign($params['uid'], 0));
+		$filter0 = array(
+			'tid'     => Assign($params['tid'], 0), 
+			'pubuser' => Assign($params['uid'], 0),
+		);
+		$filter1 = array(
+			'tid' => Assign($params['tid'], 0), 
+			'at'  => Assign($params['uid'], 0),
+		);
 		$buffer_host = StorageFindID($schema, Assign($params['tid'], 0));
 		if (is_array($buffer_host) and empty($buffer_host) == FALSE) {
 			if ($params['uid'] == $buffer_host['pubuser']) {
-				StorageEdit($schema . '_list', array('isnew' => 0, 'isnewat' => 0), $filter);
 				StorageEditByID($schema, array('isnewmsg' => 0, 'isnewat' => 0), $params['tid']);
-
 			}
-
-			## 取消點贊狀態
-			RefreshMsgByCDZ($buffer_host['pubuser'], 3, 0);
-			RefreshMsgByCDZ($buffer_host['pubuser'], 3, 1);
-			RefreshMsg(Assign($buffer_host['pubuser'], 0));
-
 		}
+		StorageEdit($schema . '_list', array('isnew' => 0, 'isnewat' => 0), $filter0);
+		StorageEdit($schema . '_list', array('isnew' => 0, 'isnewat' => 0), $filter1);
+
+		## 取消點贊狀態
+		RefreshMsgByCDZ($buffer_host['pubuser'], 3, 0);
+		RefreshMsgByCDZ($buffer_host['pubuser'], 3, 1);
+		RefreshMsg(Assign($buffer_host['pubuser'], 0));
+
 	}
 
 	## 清除點贊狀態

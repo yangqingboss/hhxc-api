@@ -45,7 +45,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			),
 			'filter' => array(
 				'tid' => Assign($params['tid'], 0),
-				'no'  => array('EGT', Assign($params['index'], 0)),
+				'no'  => array('GT', Assign($params['index'], 0)),
 			),
 		);
 
@@ -77,7 +77,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 
 				$filter_count = array(
 					'uid'  => Assign($params['uid'], 0),
-					'tag'  => 3,
+					'tag'  => 4,
 					'tid'  => $buf['listid'],
 					'type' => 1,
 				);
@@ -89,18 +89,18 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 					continue;
 				}
 
-				$filter_count['touid'] = 0;
+				$filter_count['touid'] = 1;
 				if (StorageCount('hh_techuser_dianzan', $filter_count)) {
 					$buf['mypraise'] = '1';
 				}
 
 				$filter_total = array(
-					'tag'  => 3,
+					'tag'  => 4,
 					'tid'  => $buf['listid'],
 					'type' => 1,
 					'touid' => 1,
 				);
-				$buf['praises'] = StorageCount('hh_techuser_dianzan', $filter_total);
+				$buf['praises'] = Assign(StorageCount('hh_techuser_dianzan', $filter_total), 0);
 
 				$condition_img = array(
 					'schema' => 'hh_zhaopin_list_img',
@@ -128,21 +128,28 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 		$result['data'][] = $buffer;
 
 		$schema = 'hh_zhaopin';
-		$filter = array('tid' => Assign($params['tid'], 0), 'at' => Assign($params['uid'], 0));
+		$filter0 = array(
+			'tid' => Assign($params['tid'], 0), 
+			'pubuser' => Assign($params['uid'], 0),
+		);
+		$filter1 = array(
+			'tid' => Assign($params['tid'], 0), 
+			'at' => Assign($params['uid'], 0),
+		);
+
 		$buffer_host = StorageFindID($schema, Assign($params['tid'], 0));
 		if (is_array($buffer_host) and empty($buffer_host) == FALSE) {
 			if ($params['uid'] == $buffer_host['ofuser']) {
-				StorageEdit($schema . '_list', array('isnew' => 0, 'isnewat' => 0), $filter);
 				StorageEditByID($schema, array('isnewmsg' => 0, 'isnewat' => 0), $params['tid']);
-
 			}
-
-			## 取消點贊狀態
-			RefreshMsgByCDZ($buffer_host['ofuser'], 4, 0);
-			RefreshMsgByCDZ($buffer_host['ofuser'], 4, 1);
-			RefreshMsg(Assign($buffer_host['ofuser'], 0));
-
 		}
+		StorageEdit($schema . '_list', array('isnew' => 0, 'isnewat' => 0), $filter0);
+		StorageEdit($schema . '_list', array('isnew' => 0, 'isnewat' => 0), $filter1);
+
+		## 取消點贊狀態
+		RefreshMsgByCDZ($buffer_host['ofuser'], 4, 0);
+		RefreshMsgByCDZ($buffer_host['ofuser'], 4, 1);
+		RefreshMsg(Assign($buffer_host['ofuser'], 0));
 	}
 
 	## 清除點贊狀態

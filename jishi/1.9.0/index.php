@@ -261,6 +261,8 @@ function Techuser_rankinit($uid) {
 
 ## 設置技師用戶經驗並且記錄經驗日誌
 function Techuser_setRank($id, $ranktype) {
+	$info_ranktype = StorageFindID('hh_rank_type', $ranktype);
+	
 }
 
 ## 設置技師用戶經驗值並且記錄經驗日誌

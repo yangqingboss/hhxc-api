@@ -84,6 +84,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'rank'       => 'h_rank',
 				'rankname'   => 'h_rankname',
 				'reward'     => 'rewarded',
+				'rewardata'  => 'reward',
 
 			),
 		);
@@ -181,6 +182,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'rank'       => 'h_rank',
 				'rankname'   => 'h_rankname',
 				'reward'     => 'rewarded',
+				'rewardata'  => 'reward',
 
 			),
 		);
@@ -279,6 +281,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'rank'       => 'h_rank',
 				'rankname'   => 'h_rankname',
 				'reward'     => 'rewarded',
+				'rewardata'  => 'reward',
 
 			),
 		);
@@ -359,7 +362,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'type' => '1',
 				'touid' => 1,
 			);
-			$buffer['praises'] = StorageCount('hh_techuser_dianzan', $filter_total);
+			$buffer['praises'] = Assign(StorageCount('hh_techuser_dianzan', $filter_total), 0);
 
 			## 獲取圖片信息
 			if (in_array($params['tag'], array('1', '2', '3', '4'))) {
@@ -418,7 +421,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			$result['data'][] = $buffer;
 		}
 
-		StorageEdit($edit['schema'], $edit['fields'], $edit['filter']);
+		//StorageEdit($edit['schema'], $edit['fields'], $edit['filter']);
 	}
 }
 

@@ -30,7 +30,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			'pubuser'   => Assign($params['uid'], 0),
 			'type'      => Assign($params['tag'], 0),
 			'title'     => Assign($params['title']),
-			'content'   => Assign($params['content']),
+			'content'   => Assign($params['context']),
 			'pubtime'   => 'NOW()',
 			'anonymous' => Assign($params['anonymous'], 0),
 			'reward'    => Assign($params['reward'], 0),

@@ -95,6 +95,7 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 			'rankname'   => Assign($row['h_rankname']),
 
 			'reward'     => Assign($row['rewarded'], 0),
+			'rewardata'  => Assign($row['reward'], 0),
 
 		);
 
@@ -122,7 +123,7 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 			'tid'  => $buffer['tid'],
 			'type' => 1,
 		);
-		$buffer['praises'] = StorageCount('hh_techuser_dianzan', $filter_total);
+		$buffer['praises'] = Assign(StorageCount('hh_techuser_dianzan', $filter_total), 0);
 
 		$condition_sub = array(
 			'schema' => 'hh_techforum_img',

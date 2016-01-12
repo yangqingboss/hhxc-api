@@ -81,6 +81,7 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 			'rankname'   => Assign($row['h_rankname']),
 
 			'reward'     => Assign($row['rewarded'], 0),
+			'rewardata'  => Assign($row['reward'], 0),
 
 		);
 
@@ -109,7 +110,7 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 			'type' => 1,
 			'touid' => 0,
 		);
-		$buffer['praises'] = StorageCount('hh_techuser_dianzan', $filter_total);
+		$buffer['praises'] = Assign(StorageCount('hh_techuser_dianzan', $filter_total), 0);
 
 		## 獲取圖片信息
 		$condition_buf = array(

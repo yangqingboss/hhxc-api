@@ -104,7 +104,7 @@ if (is_array($recordset) == FALSE or empty($recordset) == TRUE) {
 			'type' => 1,
 			'touid' => 0,
 		);
-		$buffer['praises'] = StorageCount('hh_techuser_dianzan', $filter_total);
+		$buffer['praises'] = Assign(StorageCount('hh_techuser_dianzan', $filter_total), 0);
 
 		$result['data'][] = $buffer;
 	}

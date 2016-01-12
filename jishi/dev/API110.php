@@ -19,6 +19,11 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	$user_uid   = StorageFindID('hh_techuser', Assign($params['uid'], 0));
 	$user_touid = StorageFindID('hh_techuser', Assign($params['touid'], 0));
 
+	$info_tid   = StorageFindID('hh_techforum', Assign($params['tid'], 0));
+	if ($info_tid['rewarded'] == 1) {
+		die(JsonEncode(array('code' => '100', 'msg' => '该回复已经被采纳！')));
+	}
+
 	## 設置回帖的採納狀態
 	$fields_tolist = array(
 		'adopt' => 1,

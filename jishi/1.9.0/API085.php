@@ -50,6 +50,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'rank'       => 'h_rank',
 				'rankname'   => 'h_rankname',
 				'reward'     => 'rewarded',
+				'rewardata'  => 'reward',
 
 			),
 		);
@@ -99,6 +100,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'rank'       => 'h_rank',
 				'rankname'   => 'h_rankname',
 				'reward'     => 'rewarded',
+				'rewardata'  => 'reward',
 			),
 		);
 		$condition['filter']['id'] = array('LT', Assign($params['tid'], 0));
@@ -149,6 +151,7 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 				'rank'       => 'h_rank',
 				'rankname'   => 'h_rankname',
 				'reward'     => 'rewarded',
+				'rewardata'  => 'reward',
 			),
 
 		);

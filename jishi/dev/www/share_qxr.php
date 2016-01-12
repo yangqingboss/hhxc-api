@@ -33,7 +33,7 @@ if ($record['h_headerimg']) {
 } else {
 	$headerimg = "<img src=\"http://haohaoxiuche.com/css/icon_default.png\" height=\"32\" />";
 }
-$headerimg .= $record['h_nick'];
+$headerimg .= Assign($record['h_nick'], '汽修人');
 switch ($_REQUEST['tag']) {
 case '3':
 	$title = '我的简历如下：';
