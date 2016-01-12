@@ -10,6 +10,28 @@
 // @package hhxc
 define('HHXC', TRUE);
 require_once('common.php');
+
+$condition = array(
+	'schema' => 'hh_tuijian_code',
+	'filter' => array(
+		'code'      => Assign($_REQUEST['needcode']),
+		'createdat' => date('Y-m-d'),
+	),
+);
+if (empty($_REQUEST['needcode']) == FALSE) {
+	$buffer = StorageFind($condition);
+	if (is_array($buffer) and empty($buffer) == FALSE) {
+		$fields = array('number' => 'number+1');
+		StorageEdit($condition['schema'], $fields, $condition['filter']);
+	} else {
+		$data = array(
+			'code'      => Assign($_REQUEST['needcode']),
+			'createdat' => date('Y-m-d'),
+			'number'    => 1,
+		);
+		StorageAdd($condition['schema'], $data);
+	}
+}
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -19,6 +41,8 @@ require_once('common.php');
 <title>好好修车-免费修车老师,私人汽车医生！</title>
 <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo URL_MOBILE;?>/style.css" />
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <style type="text/css">
 .h-share-content {background-color:#e6e6e6;color:#323232;min-height:15em;padding:1em 2em;}
 .h-header .container-fluid, .h-bottom .container-fluid {
@@ -113,7 +137,14 @@ require_once('common.php');
 	.navbar-brand {font-size:16px;}
 	.h-top-common img {height: 108px}
 }
+h3 strong, div strong {text-decoration:underline;}
 </style>
+<script type="text/javascript">
+function hshow() {
+	jQuery('#myModal').modal('show');
+	//http://www.haohaoxiuche.com/download/nendcode/hhxcjsb.apk
+}
+</script>
 </head>
 <nav class="navbar navbar-default container-fluid h-header">
 	<div class="container-fluid">
@@ -156,14 +187,35 @@ require_once('common.php');
 			</a>
 		</div>
 		<div class="col-xs-6 col-sm-6" style="text-align:left">
-			<a href="http://www.haohaoxiuche.com/download/nendcode/hhxcjsb.apk">
+			<a onclick="hshow()" href="http://www.haohaoxiuche.com/download/nendcode/hhxcjsb.apk">
 				<img src="<?php echo URL_MOBILE;?>/images/anzapp.png" 
-					style="max-width:200px;width:100%" 
+					style="max-width:200px;width:100%"
 				/>
 			</a>
 		</div>
 	</div>
+	<h3 style="color:red;font-size:16px;text-align:center">
+	注册时请填写邀请码<strong><?php echo $_REQUEST['needcode'];?></strong>，可免费获得1000积分。
+	</h3>
 </div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+        			<h3 class="modal-title" id="myModalLabel" style="color:red;font-size:20px;text-align:center">遇汽修难题 找好好修车</h3>
+      			</div>
+      			<div class="modal-body">
+      				<div style="font-size:16px">注册时请填写邀请码<strong><?php echo $_REQUEST['needcode'];?></strong>，可免费获得1000积分。</div>
+      				<h3 style="color:red;font-size:20px;text-align:center">免费下载 免费使用</h3>
+      				<div style="font-size:16px">免费汽车维修技术查询软件，行业交流平台。</div>
+      			</div>
+      		</div>
+      	</div>
+</div>
+	
 <div class="h-content" style="padding-bottom:0">
 	<div class="h-top-common h-top-one">
 		<div class="h-left"><strong>老</strong>汽修人</div>
@@ -205,13 +257,16 @@ QQ群里问？乱！<strong>来好好修车汽修人论坛</strong>，三百万�
 			</a>
 		</div>
 		<div class="col-xs-6 col-sm-6" style="text-align:left">
-			<a href="http://www.haohaoxiuche.com/download/nendcode/hhxcjsb.apk">
+			<a href="http://www.haohaoxiuche.com/download/nendcode/hhxcjsb.apk"  onclick="hshow()">
 				<img src="<?php echo URL_MOBILE;?>/images/anzapp.png" 
-					style="max-width:200px;width:100%" 
+					style="max-width:200px;width:100%" onclick="h-show('#level-2')"
 				/>
 			</a>
 		</div>
 	</div>
+	<h3 style="color:red;font-size:16px;text-align:center">
+	注册时请填写邀请码<strong><?php echo $_REQUEST['needcode'];?></strong>，可免费获得1000积分。
+	</h3>
 </div>
 <div class="h-news-content h-huodong h-bottom">
 	<img src="<?php echo URL_MOBILE;?>//huodong/2015-12-23-1.png" style="max-width:420px"/>
