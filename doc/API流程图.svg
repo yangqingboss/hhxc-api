@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="85cm" height="55cm" viewBox="-159 -2 1696 1083" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <rect style="fill: #ffffff" x="311" y="-8.88178e-15" width="609" height="94"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="311" y="-8.88178e-15" width="609" height="94"/>
+    <text font-size="23.7067" style="fill: #000000;text-anchor:middle;font-family:Nimbus Mono L;font-style:normal;font-weight:700" x="615.5" y="52.8333">
+      <tspan x="615.5" y="52.8333">HTTP POST Request(Andorid / iOS)</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="615.5,95.0059 615.5,105.006 615.5,194.994 615.5,200.522 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="610.5,192.758 615.5,202.758 620.5,192.758 "/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="309" y="206" width="613" height="95"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="309" y="206" width="613" height="95"/>
+    <text font-size="23.7067" style="fill: #000000;text-anchor:middle;font-family:Nimbus Mono L;font-style:normal;font-weight:700" x="615.5" y="244.517">
+      <tspan x="615.5" y="244.517">Configurate Initial</tspan>
+      <tspan x="615.5" y="274.15">(Development, Test, Production Mode)</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="307" y="432" width="616" height="100"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="307" y="432" width="616" height="100"/>
+    <text font-size="23.7067" style="fill: #000000;text-anchor:middle;font-family:Nimbus Mono L;font-style:normal;font-weight:700" x="615" y="473.017">
+      <tspan x="615" y="473.017">Load Common Module</tspan>
+      <tspan x="615" y="502.65">(Database Class, JSON, SMS, JPush...)</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="615.5,301 615.5,366.5 615,366.5 615,427.528 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="610,419.764 615,429.764 620,419.764 "/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="306.004" y="662" width="617" height="102"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="306.004" y="662" width="617" height="102"/>
+    <text font-size="23.7067" style="fill: #000000;text-anchor:middle;font-family:Nimbus Mono L;font-style:normal;font-weight:700" x="614.504" y="718.833">
+      <tspan x="614.504" y="718.833">Initial Database / Parse Request Data</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="1228" y="420" width="308.002" height="118"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1228" y="420" width="308.002" height="118"/>
+    <text font-size="23.7067" style="fill: #000000;text-anchor:middle;font-family:Nimbus Mono L;font-style:normal;font-weight:700" x="1382" y="484.833">
+      <tspan x="1382" y="484.833">Index.php Module</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="1296" y="41.2647" width="166" height="146.471"/>
+    <ellipse style="fill: #ffffff" cx="1379" cy="187.735" rx="83" ry="24.4118"/>
+    <ellipse style="fill: #ffffff" cx="1379" cy="41.2647" rx="83" ry="24.4118"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1379" cy="41.2647" rx="83" ry="24.4118"/>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 1462 41.2647 L 1462,187.735 C 1462,201.218 1424.84,212.147 1379,212.147 C 1333.16,212.147 1296,201.218 1296,187.735 L 1296,41.2647"/>
+    <text font-size="23.7067" style="fill: #000000;text-anchor:middle;font-family:Nimbus Mono L;font-style:normal;font-weight:700" x="1379" y="232.89">
+      <tspan x="1379" y="232.89">MySQL Data Server</tspan>
+      <tspan x="1379" y="262.524"></tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="1305.9" y="728.112" width="166" height="146.471"/>
+    <ellipse style="fill: #ffffff" cx="1388.9" cy="874.582" rx="83" ry="24.4118"/>
+    <ellipse style="fill: #ffffff" cx="1388.9" cy="728.112" rx="83" ry="24.4118"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1388.9" cy="728.112" rx="83" ry="24.4118"/>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 1471.9 728.112 L 1471.9,874.582 C 1471.9,888.065 1434.74,898.994 1388.9,898.994 C 1343.06,898.994 1305.9,888.065 1305.9,874.582 L 1305.9,728.112"/>
+    <text font-size="23.7067" style="fill: #000000;text-anchor:middle;font-family:Nimbus Mono L;font-style:normal;font-weight:700" x="1388.9" y="919.737">
+      <tspan x="1388.9" y="919.737"></tspan>
+      <tspan x="1388.9" y="949.371">SSDB Log Server</tspan>
+      <tspan x="1388.9" y="979.004"></tspan>
+      <tspan x="1388.9" y="1008.64"></tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="1382,420 1382,332 1381,332 1381,242.705 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1386,255.353 1381,239.353 1376,255.353 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="1382,538 1382,608.25 1384,608.25 1384,679.795 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1379,667.147 1384,683.147 1389,667.147 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="922,253.5 1071,253.5 1071,479 1221.3,479 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1208.65,484 1224.65,479 1208.65,474 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="923,482 1071.5,482 1071.5,479 1221.3,479 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1208.65,484 1224.65,479 1208.65,474 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="923.004,713 1071.5,713 1071.5,479 1221.3,479 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1208.65,484 1224.65,479 1208.65,474 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="615,532 615,597 614.504,597 614.504,657.528 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="609.504,649.764 614.504,659.764 619.504,649.764 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="614.504,764 614.504,864.25 613.504,864.25 613.504,960.028 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="608.504,952.264 613.504,962.264 618.504,952.264 "/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="461.004" y="964.5" width="305" height="115"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="461.004" y="964.5" width="305" height="115"/>
+    <text font-size="23.7067" style="fill: #000000;text-anchor:middle;font-family:Nimbus Mono L;font-style:normal;font-weight:700" x="613.504" y="1027.83">
+      <tspan x="613.504" y="1027.83">APIXXX(New APIs)</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="-6.396" y="964.7" width="320.2" height="115"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="-6.396" y="964.7" width="320.2" height="115"/>
+    <text font-size="23.7067" style="fill: #000000;text-anchor:middle;font-family:Nimbus Mono L;font-style:normal;font-weight:700" x="153.704" y="1028.03">
+      <tspan x="153.704" y="1028.03">API_HHXC4(Old APIs)</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="921.408" y="965.9" width="305" height="115"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="921.408" y="965.9" width="305" height="115"/>
+    <text font-size="23.7067" style="fill: #000000;text-anchor:middle;font-family:Nimbus Mono L;font-style:normal;font-weight:700" x="1073.91" y="1029.23">
+      <tspan x="1073.91" y="1029.23">Failth Request</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="614.504,764 614.504,864.35 153.704,864.35 153.704,960.228 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="148.704,952.464 153.704,962.464 158.704,952.464 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="614.504,764 614.504,864.95 1073.91,864.95 1073.91,961.428 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1068.91,953.664 1073.91,963.664 1078.91,953.664 "/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="-152.99" y="299" width="306" height="100"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="-152.99" y="299" width="306" height="100"/>
+    <text font-size="23.7067" style="fill: #000000;text-anchor:middle;font-family:Nimbus Mono L;font-style:normal;font-weight:700" x="0.01" y="340.017">
+      <tspan x="0.01" y="340.017">Web Pages /www</tspan>
+      <tspan x="0.01" y="369.65">(Share Pages ...)</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="-157.89" y="594.75" width="320.2" height="110.9"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="-157.89" y="594.75" width="320.2" height="110.9"/>
+    <text font-size="23.7067" style="fill: #000000;text-anchor:middle;font-family:Nimbus Mono L;font-style:normal;font-weight:700" x="2.21" y="641.217">
+      <tspan x="2.21" y="641.217">Unit Tests /samples</tspan>
+      <tspan x="2.21" y="670.85">(Test Data Array ...)</tspan>
+    </text>
+  </g>
+</svg>
