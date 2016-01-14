@@ -260,9 +260,34 @@ function Techuser_rankinit($uid) {
 }
 
 ## 設置技師用戶經驗並且記錄經驗日誌
-function Techuser_setRank($id, $ranktype) {
+function Techuser_setRank($uid, $ranktype) {
 	$info_ranktype = StorageFindID('hh_rank_type', $ranktype);
-	
+	$info_techuser = StorageFindID('hh_techuser',  $uid);
+
+	if ($info_techuser['r' . $ranktype] >= $info_ranktype['dayscore']) {
+		return -1;
+	}
+
+	$fields = array(
+		'r' . $ranktype => 'r' . $ranktype . '+' . $info_ranktype['score'],
+		'rank' => 'rank+' . $info_ranktype['score'],
+	);
+	StorageEditByID('hh_techuser', $fields, $uid);
+	Techuser_updateRankName($uid);
+
+	## 記錄日誌
+	$rank_log = array(
+		'uid'       => $uid,
+		'rank'      => $info_techuser['rank'],
+		'rankname'  => $info_techuser['rankname'],
+		'message'   => $message,
+		'score'     => $info_ranktype['score'],
+		'createdat' => time(),
+	);
+	$rank_log_key =  "rank_{$uid}_" . time();
+	KVStorageSet($rank_log_key, $rank_log);
+
+	return $info_ranktype['score'];
 }
 
 ## 設置技師用戶經驗值並且記錄經驗日誌
@@ -290,6 +315,13 @@ function Techuser_setRankByScore($uid, $score, $message) {
 }
 
 function Techuser_updateRankName($uid) {
+	$info_techuser = StorageFindID('hh_techuser',  $uid);
+	$info_ranktype = StorageFindID('hh_rank', Assign($info_techuser['rankname'], 0)+2);
+
+	if ($info_techuser['rank'] >= $info_ranktype['score']) {
+		$fields = array('rankname' => 'rankname+1');
+		StorageEditByID('hh_techuser', $fields, $uid);
+	}
 }
 
 function Techuser_score2rank($score) {

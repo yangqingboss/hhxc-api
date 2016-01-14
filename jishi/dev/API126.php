@@ -21,6 +21,7 @@ case '1':
 		);
 		StorageEditByID('hh_identification', $fields, Assign($params['tid'], 0));
 
+		$rankscore = 0;
 		## 若認證通過
 		if ($params['status'] == '3') {
 			## 更新用戶信息之認真狀態
@@ -30,10 +31,10 @@ case '1':
 			StorageEditByID('hh_techuser', $fields, Assign($record_identification['uid'], 0));
 
 			## 添加用戶經驗值
-			Techuser_setRank($record_identification['uid'], 3);
+			$rankscore = Techuser_setRank($record_identification['uid'], 3);
 		}
 
-		$result = array('code' => '101', 'msg' => MESSAGE_SUCCESS);
+		$result = array('code' => '101', 'msg' => MESSAGE_SUCCESS, 'score' => $rankscore);
 	}
 	break;
 

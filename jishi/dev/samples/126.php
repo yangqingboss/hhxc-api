@@ -10,8 +10,8 @@
 // @package hhxc
 $GLOBALS['DATA'] = array(
 	array(
-		'tid' => 20,
-		'status' => 4,
+		'tid' => 19,
+		'status' => 3,
 		'type' => 1,
 	),
 );
