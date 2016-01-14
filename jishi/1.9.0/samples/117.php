@@ -10,7 +10,7 @@
 // @package hhxc
 $GLOBALS['DATA'] = array(
 	array(
-		'faultType' => 2,
+		'faultType' => 29,
 	),
 );
 

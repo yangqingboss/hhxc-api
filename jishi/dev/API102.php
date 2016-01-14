@@ -21,7 +21,7 @@ if ($word_id == '0') {
 	$result = array('code' => '101', 'data' => array('keys' => array(), 'list' => array()));
 
 	$condition = array(
-		'schema' => 'car_newword3',
+		'schema' => 'car_word',
 		'filter' => array(
 			'id' => array('IN', $word_id),
 		),
