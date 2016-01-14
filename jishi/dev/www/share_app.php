@@ -10,6 +10,28 @@
 // @package hhxc
 define('HHXC', TRUE);
 require_once('common.php');
+
+$condition = array(
+	'schema' => 'hh_tuijian_code',
+	'filter' => array(
+		'code'      => Assign($_REQUEST['needcode']),
+		'createdat' => date('Y-m-d'),
+	),
+);
+if (empty($_REQUEST['needcode']) == FALSE) {
+	$buffer = StorageFind($condition);
+	if (is_array($buffer) and empty($buffer) == FALSE) {
+		$fields = array('number' => 'number+1');
+		StorageEdit($condition['schema'], $fields, $condition['filter']);
+	} else {
+		$data = array(
+			'code'      => Assign($_REQUEST['needcode']),
+			'createdat' => date('Y-m-d'),
+			'number'    => 1,
+		);
+		StorageAdd($condition['schema'], $data);
+	}
+}
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -19,177 +41,253 @@ require_once('common.php');
 <title>好好修车-免费修车老师,私人汽车医生！</title>
 <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo URL_MOBILE;?>/style.css" />
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <style type="text/css">
-.h-share-content {background-color:#e6e6e6;color:#323232;min-height:15em;padding:1em 2em;}
-.h-header .container-fluid, .h-bottom .container-fluid {
+.h-header {padding-top: 0.75em;}
+.h-header .col-xs-4, .h-header .col-xs-8 {
 	padding-left: 0.25em;
 	padding-right: 0.25em;
 }
-.navbar-brand {
-	font-weight: bold;
-	color:#ffffff !important;
-	padding-left: 0.25em;
-}
-.h-brand-logo {
-	padding-top: 4px;
-	padding-left: 0.5em;
-	padding-right: 0;
-}
-.h-icon-button {
-	line-height: 48px;
-	position:absolute;
-	right: 0.25em;
-	display: block !important;
-}
-.h-header {
-	background:#d01109;
-	border: 0;
-	border-radius: 0;
-	padding-left: 1em;
-	padding-right: 1em;
-	//margin: -0.75em;
-}
-.h-bottom {
-	display: bold;
-	width: 100%;
-	margin: -0.75em -0.75em 0 -0.75em;
-	background-color: #eeeeee !important;
-}
-.h-bottom .navbar-brand {
-	color: #353535 !important;
-	font-size: 18px;
-	line-height: 1.25em;
-	margin-bottom: 0.125em;
-}
-.h-bottom .navbar-brand span {
-	display: block;
-	font-size: 14px;
-	padding-left: 0.25em;
-	margin-top: -0.5em;
-} 
-.h-bottom .navbar-brand .h-em {
-	font-size: 12px;
-	color: #b3b3b3;
-	margin-top: -0.125em;
-}
-.h-top-common {
-	background-color: #e6e6e6;
-	margin-bottom: 1em;
-	padding: 1em 0.5em;
-}
-.h-top-common .h-left {
-	float: left;
-}
-.h-top-common .h-right {
-	float: right;
-}
-.h-top-common .h-clear {
-	clear: both;
-}
-.h-top-common .h-left, .h-top-common .h-right {
-	width: 49%;
-	text-align: center;
-}
-.h-top-common .h-text {
-	margin-top: 0.5em;
-}
-.h-top-common .h-text strong {
-	color: #d01109;
-}
-.h-top-one {
-	background: #e6e6e6 url('<?php echo URL_MOBILE;?>/images/pk.png') center no-repeat;
-	height: 85px;
-}
-.h-top-one .h-left, .h-top-one .h-right {
-	line-height: 60px;
-	font-size: 24px;
-	width: 35%;
-}
-.h-top-one strong {
-	font-size: 30px;
-}
-@media screen and (max-width: 767px) {
-	.h-huodong h1 {font-size:14px;font-weight:bold; line-height: 2.5em}
-	.h-header {padding-left:0.75em; padding-right:0.75em}
-	.navbar-brand {font-size:16px;}
-	.h-top-common img {height: 108px}
-}
+.h-header .col-xs-4 img {border: 1px #d01108 solid;}
+.h-header .col-xs-8 h4 {font-weight:bold;font-size:20px;text-align:center;margin-top:0;margin-bottom:4px}
+.h-header .col-xs-6 {padding-left:2px; padding-right:2px}
+.h-content {background:#e6e6e6;padding-top:1em}
+.h-info {padding: 1em}
+.h-info h4 {font-weight:bold;}
+.h-info .table {border:0 !important}
+.h-info .table th {width:92px;padding: 8px 0;font-weight:normal;border:0 !important}
+.h-info .table td {padding: 8px 0;border:0 !important}
+.h-info .h-table th {color:#adadad;width:84px}
+.h-info .h-table-inner {margin:0}
+.h-info .h-table-inner th, .h-info .h-table-inner td {color:#333;padding:0}
+.h-info .h-table-inner th {width:42px}
 </style>
 </head>
-<nav class="navbar navbar-default container-fluid h-header">
-	<div class="container-fluid">
-		<div class="navbar-header">
-			<a class="navbar-brand h-brand-logo" href="#">
-				<img src="<?php echo URL_MOBILE;?>/images/logo-bottom.png" height="42" />
-			</a>
-			<a class="navbar-brand" href="#">有修车难题，找好好修车！</a>
-			<a href="<?php echo URL_MOBILE;?>/index.php/home" class="h-icon-button">
-				<img src="<?php echo URL_MOBILE;?>/images/top_buttom.png" height="42" />
-			</a>
-			<!--<div style="clear:both"></div>-->
+<body>
+<div class="container-fluid h-header">
+	<div class="row">
+		<div class="col-xs-4 col-sm-4 col-md-4" style="text-align:center">
+			<img src="<?php echo URL_MOBILE;?>/images/share_code_app/logo.png" style="width:100%;max-width:140px"/>
 		</div>
-	</div>
-</nav>
-<div class="h-content" style="padding-bottom:0">
-	<div class="h-top-common h-top-one">
-		<div class="h-left"><strong>老</strong>汽修人</div>
-		<div class="h-right"><strong>新</strong>汽修人</div>
-		<div class="h-clear"></div>
-	</div>
-	<div class="h-top-common">
-		<div class="h-left"><img src="<?php echo URL_MOBILE;?>/images/11.png" height="200" /></div>
-		<div class="h-right"><img src="<?php echo URL_MOBILE;?>/images/12.png" height="200" /></div>
-		<div class="h-clear"></div>
-		<div class="h-text">
-上网找？慢！<strong>来好好修车找汽修案例</strong>，百度上有的，我们都有，还更专业更准确更快速！
-		</div>
-	</div>
-	<div class="h-top-common">
-		<div class="h-left"><img src="<?php echo URL_MOBILE;?>/images/21.png" height="200" /></div>
-		<div class="h-right"><img src="<?php echo URL_MOBILE;?>/images/22.png" height="200" /></div>
-		<div class="h-clear"></div>
-		<div class="h-text">
-跟着老师傅学？难！<strong>来好好修车学故障分析</strong>，二十年百万技师修车经验，毫无保留 免费传授！
-		</div>
-	</div>
-	<div class="h-top-common">
-		<div class="h-left"><img src="<?php echo URL_MOBILE;?>/images/31.png" height="200" /></div>
-		<div class="h-right"><img src="<?php echo URL_MOBILE;?>/images/32.png" height="200" /></div>
-		<div class="h-clear"></div>
-		<div class="h-text">
-QQ群里问？乱！<strong>来好好修车汽修人论坛</strong>，三百万维修技师专业专属线上聚集地，汽修人的朋友圈！
+		<div class="col-xs-8 col-sm-8 col-md-8">
+			<h4>遇汽修难题 找好好修车</h4>
+			<div class="container-fluid h-picture h-download" style="padding: 0 !important">
+				<div class="row">
+					<div class="col-xs-6 col-sm-6" style="text-align:right">
+						<a href="https://appsto.re/hk/pzy-9.i">
+							<img src="<?php echo URL_MOBILE;?>/images/share_code_app/download_ios_big.png" 
+								style="max-width:250px;width:100%" 
+							/>
+						</a>
+					</div>
+					<div class="col-xs-6 col-sm-6" style="text-align:left">
+						<a href="http://www.haohaoxiuche.com/download/hhxcjsb.apk">
+							<img src="<?php echo URL_MOBILE;?>/images/share_code_app/download_android_big.png" 
+								style="max-width:250px;width:100%" 
+							/>
+						</a>
+					</div>
+				</div>
+			</div>
+			<ul class="list-inline" style="margin-top:6px;margin-left:2px">
+				<li><img src="<?php echo URL_MOBILE;?>/images/share_code_app/stat.png" style="width:20px" /></li>
+				<li><img src="<?php echo URL_MOBILE;?>/images/share_code_app/stat.png" style="width:20px" /></li>
+				<li><img src="<?php echo URL_MOBILE;?>/images/share_code_app/stat.png" style="width:20px" /></li>
+				<li><img src="<?php echo URL_MOBILE;?>/images/share_code_app/stat.png" style="width:20px" /></li>
+				<li><img src="<?php echo URL_MOBILE;?>/images/share_code_app/stat.png" style="width:20px" /></li>
+			</ul>
+			<h5>下载量 100000<strong>+</strong></h5>
 		</div>
 	</div>
 </div>
-<div class="container-fluid h-picture h-download" style="padding-top: 0 !important">
+<?php
+$pictures = array('31.png', '32.png', '33.png', '34.png', '35.png');
+$pictures_id = 0;
+?>
+<div class="h-content">
+	<div id="carousel-example-generic-<?php echo $pictures_id;?>" class="carousel slide" data-ride="carousel">
+		<ol class="carousel-indicators">
+		<?php foreach ($pictures as $index => $picture): ?>
+			<li data-target="#carousel-example-generic-<?php echo $pictures_id;?>" data-slide-to="<?php echo $index;?>" class="<?php echo ($index == 0) ? 'active' : '';?>"></li>
+		<?php endforeach; ?>
+		</ol>
+		
+		 <div class="carousel-inner" role="listbox">
+		 <?php foreach ($pictures as $index => $picture): ?>
+		 	<div class="item <?php echo ($index == 0) ? 'active' : '';?>">
+		 		<img src="<?php echo URL_MOBILE;?>/images/share_code_app/<?php echo $picture;?>" />
+		 		<div class="carousel-caption"></div>
+		 	</div>
+		 <?php endforeach; ?>
+		 </div>
+		 
+		 <a class="left carousel-control" href="#carousel-example-generic-<?php echo $pictures_id;?>" role="button" data-slide="prev">
+    			<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    			<span class="sr-only">Previous</span>
+  		</a>
+  		<a class="right carousel-control" href="#carousel-example-generic-<?php echo $pictures_id;?>" role="button" data-slide="next">
+    			<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    			<span class="sr-only">Next</span>
+  		</a>
+	</div>
+</div>
+<div class="h-info">
+	<h4>好好修车已支持所有手机平台下载，百万技师应用，好评如潮，下载免费使用</h4>
+	<hr />
+	<h4>信息</h4>
+	<table class="table h-table">
+		<tr>
+			<th>开发商</th>
+			<td>Goviewtech Co.,Ltd</td>
+		</tr>
+		<tr>
+			<th>类别</th>
+			<td>工具</td>
+		</tr>
+		<tr>
+			<th>更新日期</th>
+			<td>
+				<table class="table h-table-inner">
+					<tr>
+						<th>iOS:</th>
+						<td>2015年12月22日</td>
+					</tr>
+					<tr>
+						<th>安卓:</th>
+						<td>2016年1月9日</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<th>版本</th>
+			<td>
+				<table class="table h-table-inner">
+					<tr>
+						<th>iOS:</th>
+						<td>1.7.3</td>
+					</tr>
+					<tr>
+						<th>安卓:</th>
+						<td>1.9.0</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<th>大小</th>
+			<td>
+				<table class="table h-table-inner">
+					<tr>
+						<th>iOS:</th>
+						<td>15.9MB</td>
+					</tr>
+					<tr>
+						<th>安卓:</th>
+						<td>6.32MB</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<th>兼容性</th>
+			<td>
+				<table class="table h-table-inner">
+					<tr>
+						<th>iOS:</th>
+						<td>需要iOS 7.0或更高版本。与iPhone、iPad、iPod touch兼容。</td>
+					</tr>
+					<tr>
+						<th>安卓:</th>
+						<td>4.0系统以上99%的手机。</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	<hr />
+	<h4>功能</h4>
+	<table class="table">
+		<tr>
+			<th>1) 故障分析：</th>
+			<td>通过搜索或检索，输入故障现象精确的判断车辆故障并提供解决方案；</td>
+		</tr>
+		<tr>
+			<th>2) 汽修案例：</th>
+			<td>互联网最全面的汽车维修案例大全。图文并茂更直观；</td>
+		</tr>
+		<tr>
+			<th>3) 常用资料：</th>
+			<td>覆盖热门车型的最新汽车维修手册，包含正时匹配，电脑阵脚，保养归零等；</td>
+		</tr>
+		<tr>
+			<th>4) 查故障码：</th>
+			<td>搜索故障码，提供详细解释和解决方案；</td>
+		</tr>
+		<tr>
+			<th>5) 汽&nbsp;修&nbsp;人：</th>
+			<td>提供汽修问答交流和生活交友交流平台；</td>
+		</tr>
+		<tr>
+			<th>6) 助&nbsp;&nbsp;&nbsp;&nbsp;人：</th>
+			<td>对接车主，为车主提供服务，提升个人价值；</td>
+		</tr>
+	</table>
+	
+</div>
+<?php
+$pictures = array('21.png', '22.png', '23.png', '24.png', '25.png');
+$pictures_id = 1;
+?>
+<div class="h-content">
+	<div id="carousel-example-generic-<?php echo $pictures_id;?>" class="carousel slide" data-ride="carousel">
+		<ol class="carousel-indicators">
+		<?php foreach ($pictures as $index => $picture): ?>
+			<li data-target="#carousel-example-generic-<?php echo $pictures_id;?>" data-slide-to="<?php echo $index;?>" class="<?php echo ($index == 0) ? 'active' : '';?>"></li>
+		<?php endforeach; ?>
+		</ol>
+		
+		 <div class="carousel-inner" role="listbox">
+		 <?php foreach ($pictures as $index => $picture): ?>
+		 	<div class="item <?php echo ($index == 0) ? 'active' : '';?>">
+		 		<img src="<?php echo URL_MOBILE;?>/images/share_code_app/<?php echo $picture;?>" />
+		 		<div class="carousel-caption"></div>
+		 	</div>
+		 <?php endforeach; ?>
+		 </div>
+		 
+		 <a class="left carousel-control" href="#carousel-example-generic-<?php echo $pictures_id;?>" role="button" data-slide="prev">
+    			<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    			<span class="sr-only">Previous</span>
+  		</a>
+  		<a class="right carousel-control" href="#carousel-example-generic-<?php echo $pictures_id;?>" role="button" data-slide="next">
+    			<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    			<span class="sr-only">Next</span>
+  		</a>
+	</div>
+</div>
+<div class="container-fluid h-picture h-download" style="padding-bottom:0 !important">
 	<div class="row">
 		<div class="col-xs-6 col-sm-6" style="text-align:right">
 			<a href="https://appsto.re/hk/pzy-9.i">
-				<img src="<?php echo URL_MOBILE;?>/images/appios.png" 
-					style="max-width:200px;width:100%" 
+				<img src="<?php echo URL_MOBILE;?>/images/share_code_app/download_ios_big.png" 
+					style="max-width:250px;width:100%" 
 				/>
 			</a>
 		</div>
 		<div class="col-xs-6 col-sm-6" style="text-align:left">
 			<a href="http://www.haohaoxiuche.com/download/hhxcjsb.apk">
-				<img src="<?php echo URL_MOBILE;?>/images/anzapp.png" 
-					style="max-width:200px;width:100%" 
+				<img src="<?php echo URL_MOBILE;?>/images/share_code_app/download_android_big.png" 
+					style="max-width:250px;width:100%" 
 				/>
 			</a>
 		</div>
 	</div>
 </div>
-<div class="h-news-content h-huodong h-bottom">
-	<img src="<?php echo URL_MOBILE;?>//huodong/2015-12-23-1.png" style="max-width:420px"/>
-	<h1>
-		<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-		二十年来互联网上的修车经验毫无保留免费查看！<br />
-		<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-		百度能查到的我们都有，还更专业更快速更准确！<br />
-		<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-		三百万技师的专属线上聚集区，汽修人的朋友圈！<br />
-	</h1>
-</div>
-<body>
+<h3 style="color:#db1800;text-align:center">遇汽修难题 找好好修车</h3>
 </body>
 </html>
+
+
+

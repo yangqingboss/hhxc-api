@@ -52,7 +52,7 @@ if (empty($_REQUEST['needcode']) == FALSE) {
 .h-header .col-xs-4 img {border: 1px #d01108 solid;}
 .h-header .col-xs-8 h4 {font-weight:bold;font-size:20px;text-align:center;margin-top:0;margin-bottom:4px}
 .h-header .col-xs-6 {padding-left:2px; padding-right:2px}
-.h-content {background:#e6e6e6}
+.h-content {background:#e6e6e6;padding-top:1em}
 .h-info {padding: 1em}
 .h-info h4 {font-weight:bold;}
 .h-info .table {border:0 !important}
@@ -82,7 +82,7 @@ if (empty($_REQUEST['needcode']) == FALSE) {
 						</a>
 					</div>
 					<div class="col-xs-6 col-sm-6" style="text-align:left">
-						<a href="http://www.haohaoxiuche.com/download/hhxcjsb.apk">
+						<a href="http://www.haohaoxiuche.com/download/nendcode/hhxcjsb.apk">
 							<img src="<?php echo URL_MOBILE;?>/images/share_code_app/download_android_big.png" 
 								style="max-width:250px;width:100%" 
 							/>
@@ -101,8 +101,35 @@ if (empty($_REQUEST['needcode']) == FALSE) {
 		</div>
 	</div>
 </div>
+<?php
+$pictures = array('31.png', '32.png', '33.png', '34.png', '35.png');
+$pictures_id = 0;
+?>
 <div class="h-content">
-	<div id="carousel-example-generic-1" class="carousel slide" data-ride="carousel">
+	<div id="carousel-example-generic-<?php echo $pictures_id;?>" class="carousel slide" data-ride="carousel">
+		<ol class="carousel-indicators">
+		<?php foreach ($pictures as $index => $picture): ?>
+			<li data-target="#carousel-example-generic-<?php echo $pictures_id;?>" data-slide-to="<?php echo $index;?>" class="<?php echo ($index == 0) ? 'active' : '';?>"></li>
+		<?php endforeach; ?>
+		</ol>
+		
+		 <div class="carousel-inner" role="listbox">
+		 <?php foreach ($pictures as $index => $picture): ?>
+		 	<div class="item <?php echo ($index == 0) ? 'active' : '';?>">
+		 		<img src="<?php echo URL_MOBILE;?>/images/share_code_app/<?php echo $picture;?>" />
+		 		<div class="carousel-caption"></div>
+		 	</div>
+		 <?php endforeach; ?>
+		 </div>
+		 
+		 <a class="left carousel-control" href="#carousel-example-generic-<?php echo $pictures_id;?>" role="button" data-slide="prev">
+    			<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    			<span class="sr-only">Previous</span>
+  		</a>
+  		<a class="right carousel-control" href="#carousel-example-generic-<?php echo $pictures_id;?>" role="button" data-slide="next">
+    			<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    			<span class="sr-only">Next</span>
+  		</a>
 	</div>
 </div>
 <div class="h-info">
@@ -209,7 +236,36 @@ if (empty($_REQUEST['needcode']) == FALSE) {
 	</table>
 	
 </div>
+<?php
+$pictures = array('21.png', '22.png', '23.png', '24.png', '25.png');
+$pictures_id = 1;
+?>
 <div class="h-content">
+	<div id="carousel-example-generic-<?php echo $pictures_id;?>" class="carousel slide" data-ride="carousel">
+		<ol class="carousel-indicators">
+		<?php foreach ($pictures as $index => $picture): ?>
+			<li data-target="#carousel-example-generic-<?php echo $pictures_id;?>" data-slide-to="<?php echo $index;?>" class="<?php echo ($index == 0) ? 'active' : '';?>"></li>
+		<?php endforeach; ?>
+		</ol>
+		
+		 <div class="carousel-inner" role="listbox">
+		 <?php foreach ($pictures as $index => $picture): ?>
+		 	<div class="item <?php echo ($index == 0) ? 'active' : '';?>">
+		 		<img src="<?php echo URL_MOBILE;?>/images/share_code_app/<?php echo $picture;?>" />
+		 		<div class="carousel-caption"></div>
+		 	</div>
+		 <?php endforeach; ?>
+		 </div>
+		 
+		 <a class="left carousel-control" href="#carousel-example-generic-<?php echo $pictures_id;?>" role="button" data-slide="prev">
+    			<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    			<span class="sr-only">Previous</span>
+  		</a>
+  		<a class="right carousel-control" href="#carousel-example-generic-<?php echo $pictures_id;?>" role="button" data-slide="next">
+    			<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    			<span class="sr-only">Next</span>
+  		</a>
+	</div>
 </div>
 <div class="container-fluid h-picture h-download" style="padding-bottom:0 !important">
 	<div class="row">
@@ -221,7 +277,7 @@ if (empty($_REQUEST['needcode']) == FALSE) {
 			</a>
 		</div>
 		<div class="col-xs-6 col-sm-6" style="text-align:left">
-			<a href="http://www.haohaoxiuche.com/download/hhxcjsb.apk">
+			<a href="http://www.haohaoxiuche.com/download/nendcode/hhxcjsb.apk">
 				<img src="<?php echo URL_MOBILE;?>/images/share_code_app/download_android_big.png" 
 					style="max-width:250px;width:100%" 
 				/>

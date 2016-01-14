@@ -82,7 +82,7 @@ if (empty($_REQUEST['needcode']) == FALSE) {
 						</a>
 					</div>
 					<div class="col-xs-6 col-sm-6" style="text-align:left">
-						<a href="http://www.haohaoxiuche.com/download/hhxcjsb.apk">
+						<a href="http://www.haohaoxiuche.com/download/nendcode/hhxcjsb.apk">
 							<img src="<?php echo URL_MOBILE;?>/images/share_code_app/download_android_big.png" 
 								style="max-width:250px;width:100%" 
 							/>
@@ -277,7 +277,7 @@ $pictures_id = 1;
 			</a>
 		</div>
 		<div class="col-xs-6 col-sm-6" style="text-align:left">
-			<a href="http://www.haohaoxiuche.com/download/hhxcjsb.apk">
+			<a href="http://www.haohaoxiuche.com/download/nendcode/hhxcjsb.apk">
 				<img src="<?php echo URL_MOBILE;?>/images/share_code_app/download_android_big.png" 
 					style="max-width:250px;width:100%" 
 				/>
