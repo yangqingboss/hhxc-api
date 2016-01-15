@@ -18,6 +18,7 @@ case '1':
 		## 更新認證狀態
 		$fields = array(
 			'status' => Assign($params['status'], 0),
+			'grade'  => Assign($params['grade']),
 		);
 		StorageEditByID('hh_identification', $fields, Assign($params['tid'], 0));
 

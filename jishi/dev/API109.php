@@ -17,6 +17,7 @@ $message = array(
 	'身份证信息有问题，请重新提交！',
 	'证书有问题，请重新提交！',
 );
+$image_url = 'http://www.haohaoxiuche.com/hhxc-api/mobile/images';
 
 if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 	$result['msg'] = MESSAGE_WARNING;
@@ -52,9 +53,9 @@ if (CheckOpenID($params['openid'], $params['uid']) == FALSE) {
 			'name'           => $record['name'],
 			'states'         => $record['status'],
 			'images'         => $images,
-			'fileid'         => $record['fileid'],
-			'filerz1'        => $record['filerz1'],
-			'filerz2'        => $record['filerz2'],
+			'fileid'         => Assign($record['fileid'],  "{$image_url}/def_iden.png"),
+			'filerz1'        => Assign($record['filerz1'], "{$image_url}/def_filerz1.png"),
+			'filerz2'        => Assign($record['filerz2'], "{$image_url}/def_filerz2.png"),
 		);
 	}
 }
